@@ -5,81 +5,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Limpaê - Início</title>
 
-  <!-- Fonte estilo cinema -->
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+  <!-- Fonte cinematográfica -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
   <style>
-    body { margin: 0; font-family: Arial, sans-serif; background: #fff; color: #222; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #222;
+    }
 
-    header { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #ddd; z-index: 1000; }
-    .topbar { background: #15803d; color: #fff; text-align: center; font-size: 14px; padding: 6px; }
-    .container { max-width: 1100px; margin: auto; padding: 0 16px; }
-    nav { display: flex; justify-content: space-between; align-items: center; height: 60px; }
-    nav a { margin-left: 16px; text-decoration: none; color: #222; font-size: 14px; }
-    nav a:hover { color: #15803d; }
-    nav img { height: 60px; object-fit: contain; }
+    /* ================= INTRO CINEMATOGRÁFICA ================= */
 
-    .hero { background: #ecfdf5; padding: 60px 20px; text-align: center; }
-    .hero h1 { color: #166534; font-size: 36px; margin-bottom: 16px; }
-    .hero p { max-width: 600px; margin: auto; margin-bottom: 24px; color: #444; }
-    .btn { display: inline-block; padding: 12px 24px; background: #15803d; color: #fff; border-radius: 8px; text-decoration: none; }
-    .btn:hover { background: #166534; }
-
-    section { padding: 60px 20px; }
-    section h2 { text-align: center; font-size: 28px; color: #166534; margin-bottom: 20px; }
-
-    .grid { display: grid; gap: 20px; }
-    .impacto .grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-    .card { background: #fff; border: 1px solid #cce3d2; padding: 20px; border-radius: 12px; }
-    .card h3 { color: #15803d; margin-bottom: 8px; }
-
-    details { padding: 14px; }
-    summary { cursor: pointer; font-weight: bold; }
-
-    footer { background: #fff; border-top: 1px solid #ddd; padding: 40px 20px; font-size: 14px; }
-    footer .grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-    footer a { text-decoration: none; color: #444; }
-    footer a:hover { color: #15803d; }
-
-    /* ===== INTRO MANUT ===== */
-
-    .manut-intro {
+    .intro {
       position: fixed;
       inset: 0;
-      background: #ffffff;
+      z-index: 9999;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.85);
       animation: introFadeOut 1.2s ease forwards;
-      animation-delay: 3.2s;
+      animation-delay: 4.5s;
     }
 
-    .manut-logo {
-      font-family: 'Cinzel', serif;
-      font-size: 72px;
-      font-weight: 800;
-      letter-spacing: 6px;
-      color: white;
-      -webkit-text-stroke: 2px #15803d;
-      text-shadow: 0 0 14px rgba(21,128,61,0.6);
-      animation: logoEntrada 3s ease forwards;
+    .manut {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 96px;
+      letter-spacing: 10px;
+      background: linear-gradient(90deg, #166534, #22c55e, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 25px rgba(22, 101, 52, 0.45);
+      animation: manutMove 4.5s cubic-bezier(.22,.61,.36,1) forwards;
+      z-index: 10000;
+      pointer-events: none;
     }
 
-    @keyframes logoEntrada {
+    @keyframes manutMove {
       0% {
         opacity: 0;
-        transform: scale(0.85);
+        transform: translate(-50%, -50%) scale(0.85);
       }
-      40% {
+      20% {
         opacity: 1;
-        transform: scale(1);
+        transform: translate(-50%, -50%) scale(1);
       }
-      70% {
-        transform: translateY(0);
+      60% {
+        transform: translate(-50%, -50%) scale(1);
       }
       100% {
-        transform: translateY(-38vh) scale(0.55);
+        transform: translate(-50%, -90vh) scale(0.45);
       }
     }
 
@@ -90,29 +72,135 @@
       }
     }
 
-    .manut-fixo {
-      position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%) scale(0.55);
-      font-family: 'Cinzel', serif;
-      font-size: 72px;
-      font-weight: 800;
-      letter-spacing: 6px;
-      color: white;
-      -webkit-text-stroke: 2px #15803d;
-      text-shadow: 0 0 14px rgba(21,128,61,0.6);
-      z-index: 1100;
-      opacity: 0;
-      animation: fixaManut 0.8s ease forwards;
-      animation-delay: 3.2s;
-      pointer-events: none;
+    /* ================= SITE NORMAL ================= */
+
+    header {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      z-index: 1000;
     }
 
-    @keyframes fixaManut {
-      to {
-        opacity: 1;
-      }
+    .topbar {
+      background: #15803d;
+      color: #fff;
+      text-align: center;
+      font-size: 14px;
+      padding: 6px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 0 16px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 60px;
+    }
+
+    nav a {
+      margin-left: 16px;
+      text-decoration: none;
+      color: #222;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: #15803d;
+    }
+
+    nav img {
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .hero {
+      background: #ecfdf5;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      color: #166534;
+      font-size: 36px;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      max-width: 600px;
+      margin: auto;
+      margin-bottom: 24px;
+      color: #444;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #15803d;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #166534;
+    }
+
+    section {
+      padding: 60px 20px;
+    }
+
+    section h2 {
+      text-align: center;
+      font-size: 28px;
+      color: #166534;
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .impacto .grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #cce3d2;
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .card h3 {
+      color: #15803d;
+      margin-bottom: 8px;
+    }
+
+    footer {
+      background: #fff;
+      border-top: 1px solid #ddd;
+      padding: 40px 20px;
+      font-size: 14px;
+    }
+
+    footer .grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    footer a {
+      text-decoration: none;
+      color: #444;
+    }
+
+    footer a:hover {
+      color: #15803d;
     }
   </style>
 </head>
@@ -120,16 +208,12 @@
 <body>
 
   <!-- INTRO -->
-  <div class="manut-intro">
-    <div class="manut-logo">MANUT</div>
-  </div>
+  <div class="intro"></div>
+  <div class="manut">MANUT</div>
 
-  <div class="manut-fixo">MANUT</div>
-
-  <!-- Topbar -->
+  <!-- TOPO -->
   <div class="topbar">Denuncie focos de lixo e ajude a manter sua cidade limpa 🌱</div>
 
-  <!-- Header -->
   <header>
     <div class="container">
       <nav>
@@ -145,51 +229,34 @@
     </div>
   </header>
 
-  <!-- Hero -->
+  <!-- HERO -->
   <section class="hero">
     <h1>Juntos contra o lixo irregular</h1>
-    <p>Sua denúncia ajuda a Prefeitura e órgãos ambientais a identificarem focos de acúmulo de lixo,
-    promovendo uma cidade mais limpa e saudável para todos.</p>
+    <p>Sua denúncia ajuda a tornar a cidade mais limpa e saudável.</p>
     <a href="denuncia.html" class="btn">Fazer uma denúncia agora</a>
   </section>
 
-  <!-- Impacto -->
+  <!-- IMPACTO -->
   <section id="impacto" class="impacto">
     <h2>Por que denunciar?</h2>
-    <p style="text-align:center; max-width:600px; margin:auto;">
-      O descarte incorreto de lixo gera riscos à saúde, proliferação de doenças, entupimento de bueiros
-      e degradação ambiental.
-    </p>
-    <div class="grid" style="margin-top:30px;">
-      <div class="card"><h3>Saúde pública</h3><p>Ajuda a combater focos de mosquitos e pragas.</p></div>
-      <div class="card"><h3>Meio ambiente</h3><p>Preserva áreas verdes e rios.</p></div>
-      <div class="card"><h3>Infraestrutura</h3><p>Evita enchentes e entupimentos.</p></div>
-      <div class="card"><h3>Comunidade</h3><p>Espaços mais limpos e seguros.</p></div>
+    <div class="grid">
+      <div class="card"><h3>Saúde pública</h3><p>Combate pragas.</p></div>
+      <div class="card"><h3>Meio ambiente</h3><p>Protege rios.</p></div>
+      <div class="card"><h3>Infraestrutura</h3><p>Evita enchentes.</p></div>
+      <div class="card"><h3>Comunidade</h3><p>Espaços melhores.</p></div>
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section id="faq">
-    <h2>Perguntas Frequentes</h2>
-    <div style="max-width:600px; margin:auto; border:1px solid #ddd; border-radius:12px;">
-      <details><summary>Posso denunciar anonimamente?</summary><p>Sim.</p></details>
-      <details><summary>O que acontece após a denúncia?</summary><p>A Prefeitura avalia.</p></details>
-      <details><summary>Preciso pagar algo?</summary><p>Não.</p></details>
-    </div>
-  </section>
-
-  <!-- Footer -->
+  <!-- FOOTER -->
   <footer>
     <div class="container grid">
       <div>
-        <img src="assets/logo.png" alt="Limpaê" style="height:40px;"><br>
+        <img src="assets/logo.png" style="height:40px"><br>
         <p>Plataforma colaborativa para uma cidade mais limpa.</p>
       </div>
       <div>
-        <strong>Links úteis</strong><br>
+        <strong>Links</strong><br>
         <a href="denuncia.html">Denunciar</a><br>
-        <a href="#impacto">Impacto</a><br>
-        <a href="#faq">FAQ</a><br>
         <a href="sobre.html">Sobre Nós</a>
       </div>
     </div>
