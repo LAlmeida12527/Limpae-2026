@@ -12,7 +12,7 @@
     nav { display: flex; justify-content: space-between; align-items: center; height: 60px; }
     nav a { margin-left: 16px; text-decoration: none; color: #222; font-size: 14px; }
     nav a:hover { color: #15803d; }
-    nav img { height: 60px; object-fit: contain; } /* Ajuste do tamanho da logo */
+    nav img { height: 60px; object-fit: contain; }
     .hero { background: #ecfdf5; padding: 60px 20px; text-align: center; }
     .hero h1 { color: #166534; font-size: 36px; margin-bottom: 16px; }
     .hero p { max-width: 600px; margin: auto; margin-bottom: 24px; color: #444; }
@@ -30,9 +30,61 @@
     footer .grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
     footer a { text-decoration: none; color: #444; }
     footer a:hover { color: #15803d; }
+
+    /* =========================
+       ANIMAÇÃO MANUT (ACRÉSCIMO)
+    ========================= */
+
+    .manut-intro {
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      animation: manutMove 2.5s ease forwards;
+      animation-delay: 0.8s;
+    }
+
+    .manut-intro span {
+      font-size: 56px;
+      font-weight: bold;
+      color: #15803d;
+      letter-spacing: 4px;
+      animation: manutFade 1.2s ease;
+    }
+
+    @keyframes manutFade {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes manutMove {
+      to {
+        inset: auto;
+        top: 12px;
+        left: 16px;
+        background: transparent;
+        transform: scale(0.55);
+      }
+    }
   </style>
 </head>
+
 <body>
+
+  <!-- MANUT ANIMAÇÃO (ACRÉSCIMO) -->
+  <div class="manut-intro">
+    <span>MANUT</span>
+  </div>
+
   <!-- Topbar -->
   <div class="topbar">Denuncie focos de lixo e ajude a manter sua cidade limpa 🌱</div>
 
@@ -102,5 +154,6 @@
       </div>
     </div>
   </footer>
+
 </body>
 </html>
