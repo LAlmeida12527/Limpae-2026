@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Limpaê - Início</title>
 
-  <!-- Fonte cinematográfica -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@600;700&display=swap" rel="stylesheet">
 
   <style>
@@ -22,58 +21,46 @@
     .hero p { max-width: 600px; margin: auto; margin-bottom: 24px; color: #444; }
     .btn { display: inline-block; padding: 12px 24px; background: #15803d; color: #fff; border-radius: 8px; text-decoration: none; }
     .btn:hover { background: #166534; }
-    section { padding: 60px 20px; }
-    section h2 { text-align: center; font-size: 28px; color: #166534; margin-bottom: 20px; }
-    .grid { display: grid; gap: 20px; }
-    .impacto .grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-    .card { background: #fff; border: 1px solid #cce3d2; padding: 20px; border-radius: 12px; }
-    .card h3 { color: #15803d; margin-bottom: 8px; }
-    details { padding: 14px; }
-    summary { cursor: pointer; font-weight: bold; }
-    footer { background: #fff; border-top: 1px solid #ddd; padding: 40px 20px; font-size: 14px; }
-    footer .grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-    footer a { text-decoration: none; color: #444; }
-    footer a:hover { color: #15803d; }
 
     /* =========================
-       MANUT – ESTILO CINEMA
+       MANUT – CORRIGIDO
     ========================= */
 
     .manut-intro {
       position: fixed;
       inset: 0;
-      background: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      animation: manutMove 4.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      animation-delay: 0.8s;
+      animation: manutMove 4.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: 0.4s;
+      background: white;
     }
 
     .manut-intro span {
       font-family: 'Montserrat Alternates', sans-serif;
-      font-size: 60px;
+      font-size: 58px;
       font-weight: 700;
       letter-spacing: 8px;
 
       background: linear-gradient(
-        120deg,
-        #ffffff 0%,
-        #bbf7d0 30%,
-        #15803d 60%,
-        #ffffff 100%
+        135deg,
+        #0f3d24 0%,
+        #15803d 50%,
+        #e5ffe5 100%
       );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
 
-      animation: manutAppear 2s ease;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      animation: manutAppear 1.2s ease;
     }
 
     @keyframes manutAppear {
       from {
         opacity: 0;
-        transform: scale(0.85);
+        transform: scale(0.9);
       }
       to {
         opacity: 1;
@@ -83,13 +70,15 @@
 
     @keyframes manutMove {
       0% {
-        transform: translate(0, 0) scale(1);
+        transform: translateY(0) scale(1);
+        background: white;
       }
-      60% {
-        transform: translate(0, -10vh) scale(0.9);
+      45% {
+        transform: translateY(-8vh) scale(0.95);
+        background: white;
       }
       100% {
-        transform: translate(0, -38vh) scale(0.45);
+        transform: translateY(-36vh) scale(0.48);
         background: transparent;
       }
     }
@@ -130,6 +119,5 @@
     <a href="denuncia.html" class="btn">Fazer uma denúncia agora</a>
   </section>
 
-  <!-- resto do site permanece igual -->
 </body>
 </html>
