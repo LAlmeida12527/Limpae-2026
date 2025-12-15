@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Limpaê - Início</title>
 
-  <!-- Fonte bonita / cinematográfica -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
+  <!-- Fonte estilo cinema -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
 
   <style>
     body { margin: 0; font-family: Arial, sans-serif; background: #fff; color: #222; }
@@ -27,6 +27,7 @@
 
     section { padding: 60px 20px; }
     section h2 { text-align: center; font-size: 28px; color: #166534; margin-bottom: 20px; }
+
     .grid { display: grid; gap: 20px; }
     .impacto .grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
     .card { background: #fff; border: 1px solid #cce3d2; padding: 20px; border-radius: 12px; }
@@ -40,49 +41,77 @@
     footer a { text-decoration: none; color: #444; }
     footer a:hover { color: #15803d; }
 
-    /* =========================
-       MANUT — SEM QUADRADO
-    ========================= */
+    /* ===== INTRO MANUT ===== */
 
-    .manut-logo {
+    .manut-intro {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(1);
-      font-family: 'Montserrat Alternates', sans-serif;
-      font-size: 58px;
-      letter-spacing: 8px;
-      font-weight: 700;
-      z-index: 2000;
-
-      background: linear-gradient(
-        135deg,
-        #0b3d22 0%,
-        #15803d 45%,
-        #ffffff 100%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-
-      text-shadow: 0 2px 6px rgba(0,0,0,0.25);
-
-      animation: manutIntro 5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      inset: 0;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      animation: introFadeOut 1.2s ease forwards;
+      animation-delay: 3.2s;
     }
 
-    @keyframes manutIntro {
+    .manut-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 72px;
+      font-weight: 800;
+      letter-spacing: 6px;
+      color: white;
+      -webkit-text-stroke: 2px #15803d;
+      text-shadow: 0 0 14px rgba(21,128,61,0.6);
+      animation: logoEntrada 3s ease forwards;
+    }
+
+    @keyframes logoEntrada {
       0% {
-        transform: translate(-50%, -50%) scale(1);
         opacity: 0;
-      }
-      15% {
-        opacity: 1;
+        transform: scale(0.85);
       }
       40% {
-        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+        transform: scale(1);
+      }
+      70% {
+        transform: translateY(0);
       }
       100% {
-        transform: translate(-50%, 0) scale(0.45);
-        top: 12px;
+        transform: translateY(-38vh) scale(0.55);
+      }
+    }
+
+    @keyframes introFadeOut {
+      to {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    .manut-fixo {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.55);
+      font-family: 'Cinzel', serif;
+      font-size: 72px;
+      font-weight: 800;
+      letter-spacing: 6px;
+      color: white;
+      -webkit-text-stroke: 2px #15803d;
+      text-shadow: 0 0 14px rgba(21,128,61,0.6);
+      z-index: 1100;
+      opacity: 0;
+      animation: fixaManut 0.8s ease forwards;
+      animation-delay: 3.2s;
+      pointer-events: none;
+    }
+
+    @keyframes fixaManut {
+      to {
+        opacity: 1;
       }
     }
   </style>
@@ -90,8 +119,12 @@
 
 <body>
 
-  <!-- MANUT (SOMENTE TEXTO, SEM FUNDO) -->
-  <div class="manut-logo">MANUT</div>
+  <!-- INTRO -->
+  <div class="manut-intro">
+    <div class="manut-logo">MANUT</div>
+  </div>
+
+  <div class="manut-fixo">MANUT</div>
 
   <!-- Topbar -->
   <div class="topbar">Denuncie focos de lixo e ajude a manter sua cidade limpa 🌱</div>
@@ -116,7 +149,7 @@
   <section class="hero">
     <h1>Juntos contra o lixo irregular</h1>
     <p>Sua denúncia ajuda a Prefeitura e órgãos ambientais a identificarem focos de acúmulo de lixo,
-      promovendo uma cidade mais limpa e saudável para todos.</p>
+    promovendo uma cidade mais limpa e saudável para todos.</p>
     <a href="denuncia.html" class="btn">Fazer uma denúncia agora</a>
   </section>
 
@@ -129,9 +162,9 @@
     </p>
     <div class="grid" style="margin-top:30px;">
       <div class="card"><h3>Saúde pública</h3><p>Ajuda a combater focos de mosquitos e pragas.</p></div>
-      <div class="card"><h3>Meio ambiente</h3><p>Preserva áreas verdes e rios contra a poluição.</p></div>
-      <div class="card"><h3>Infraestrutura</h3><p>Evita entupimento de bueiros e enchentes.</p></div>
-      <div class="card"><h3>Comunidade</h3><p>Garante espaços mais limpos e seguros.</p></div>
+      <div class="card"><h3>Meio ambiente</h3><p>Preserva áreas verdes e rios.</p></div>
+      <div class="card"><h3>Infraestrutura</h3><p>Evita enchentes e entupimentos.</p></div>
+      <div class="card"><h3>Comunidade</h3><p>Espaços mais limpos e seguros.</p></div>
     </div>
   </section>
 
@@ -139,9 +172,9 @@
   <section id="faq">
     <h2>Perguntas Frequentes</h2>
     <div style="max-width:600px; margin:auto; border:1px solid #ddd; border-radius:12px;">
-      <details><summary>Posso denunciar anonimamente?</summary><p>Sim, você não precisa se identificar.</p></details>
-      <details><summary>O que acontece após a denúncia?</summary><p>A equipe da Prefeitura avalia e agenda a coleta.</p></details>
-      <details><summary>Preciso pagar algo?</summary><p>Não, o serviço de coleta é público e gratuito.</p></details>
+      <details><summary>Posso denunciar anonimamente?</summary><p>Sim.</p></details>
+      <details><summary>O que acontece após a denúncia?</summary><p>A Prefeitura avalia.</p></details>
+      <details><summary>Preciso pagar algo?</summary><p>Não.</p></details>
     </div>
   </section>
 
@@ -149,7 +182,7 @@
   <footer>
     <div class="container grid">
       <div>
-        <img src="assets/logo.png" alt="Limpaê" style="height:40px;">
+        <img src="assets/logo.png" alt="Limpaê" style="height:40px;"><br>
         <p>Plataforma colaborativa para uma cidade mais limpa.</p>
       </div>
       <div>
