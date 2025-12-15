@@ -3,35 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Limpaê - Denunciar</title>
+  <title>Limpaê - Denúncia</title>
 
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #fff;
+      background: #f9f9f9;
       color: #222;
     }
 
     header {
-      position: sticky;
-      top: 0;
       background: #fff;
       border-bottom: 1px solid #ddd;
-      z-index: 1000;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 0 16px;
     }
 
     nav {
+      max-width: 1100px;
+      margin: auto;
+      padding: 10px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 60px;
     }
 
     nav a {
@@ -45,20 +38,13 @@
       color: #15803d;
     }
 
-    nav img {
-      height: 60px;
-      object-fit: contain;
-    }
-
     section {
       padding: 40px 20px;
     }
 
-    section h2 {
+    h2 {
       text-align: center;
-      font-size: 28px;
       color: #166534;
-      margin-bottom: 20px;
     }
 
     form {
@@ -66,32 +52,27 @@
       margin: auto;
       background: #fff;
       padding: 20px;
+      border-radius: 10px;
       border: 1px solid #ddd;
-      border-radius: 12px;
     }
 
-    form input,
-    form textarea,
-    form select {
+    input, textarea, select, button {
       width: 100%;
       padding: 12px;
       margin-bottom: 12px;
+      border-radius: 6px;
       border: 1px solid #ccc;
-      border-radius: 8px;
+      font-size: 14px;
     }
 
-    form button {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
+    button {
       background: #15803d;
       color: #fff;
-      font-size: 16px;
+      border: none;
       cursor: pointer;
     }
 
-    form button:hover {
+    button:hover {
       background: #166534;
     }
   </style>
@@ -99,65 +80,36 @@
 
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <div class="container">
-      <nav>
-        <div>
-          <img src="assets/logo.png" alt="Limpaê">
-        </div>
-        <div>
-          <a href="index.html">Início</a>
-          <a href="denuncia.html">Denunciar</a>
-          <a href="sobre.html">Sobre Nós</a>
-        </div>
-      </nav>
+<header>
+  <nav>
+    <strong>Limpaê</strong>
+    <div>
+      <a href="index.html">Início</a>
+      <a href="denuncia.html">Denunciar</a>
+      <a href="sobre.html">Sobre</a>
     </div>
-  </header>
+  </nav>
+</header>
 
-  <!-- FORMULÁRIO -->
-  <section>
-    <h2>Formulário de Denúncia</h2>
+<section>
+  <h2>Formulário de Denúncia</h2>
 
-    <form action="https://formsubmit.co/limpaemanut@gmail.com" method="POST" enctype="multipart/form-data">
+  <!-- FORMULÁRIO FUNCIONAL -->
+  <form action="https://formsubmit.co/limpaemanut@gmail.com" method="POST">
 
-      <input type="hidden" name="_subject" value="Nova denúncia - Limpaê">
-      <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_subject" value="Nova denúncia - Limpaê">
+    <input type="hidden" name="_captcha" value="false">
 
-      <input type="text" name="nome" placeholder="Seu nome (opcional)">
+    <input type="text" name="nome" placeholder="Seu nome (opcional)">
 
-      <select name="genero">
-        <option value="">Gênero</option>
-        <option>Masculino</option>
-        <option>Feminino</option>
-        <option>Prefiro não informar</option>
-      </select>
+    <input type="text" name="local" placeholder="Local do lixo irregular" required>
 
-      <input type="number" name="idade" placeholder="Idade">
+    <textarea name="descricao" placeholder="Descreva o problema" required></textarea>
 
-      <input type="text" name="contato" placeholder="Número para contato">
+    <button type="submit">Enviar denúncia</button>
 
-      <input type="email" name="email" placeholder="Email para contato (opcional)">
-
-      <select name="tipo_lixo">
-        <option value="">Selecione o tipo de lixo</option>
-        <option>Lixo doméstico</option>
-        <option>Entulho de construção</option>
-        <option>Resíduos eletrônicos</option>
-        <option>Resíduos hospitalares</option>
-        <option>Podas de árvores</option>
-        <option>Outros</option>
-      </select>
-
-      <textarea name="descricao" rows="4" placeholder="Descreva o local do lixo irregular"></textarea>
-
-      <input type="file" name="foto">
-
-      <button type="submit">Enviar denúncia</button>
-
-    </form>
-  </section>
+  </form>
+</section>
 
 </body>
 </html>
-
