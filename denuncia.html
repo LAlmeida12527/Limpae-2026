@@ -45,6 +45,7 @@
     h2 {
       text-align: center;
       color: #166534;
+      margin-bottom: 20px;
     }
 
     form {
@@ -94,19 +95,19 @@
 <section>
   <h2>Formulário de Denúncia</h2>
 
-  <!-- FORMULÁRIO FUNCIONAL -->
   <form action="https://formsubmit.co/limpaemanut@gmail.com" method="POST">
 
+    <!-- CONFIGURAÇÕES -->
     <input type="hidden" name="_subject" value="Nova denúncia - Limpaê">
     <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_next" value="https://lalmeida12527.github.io/Limpae-2026/">
 
-    <!-- Campos de Dados Pessoais -->
+    <!-- DADOS -->
     <input type="text" name="nome" placeholder="Seu nome (opcional)">
     <input type="number" name="idade" placeholder="Idade">
     <input type="text" name="contato" placeholder="Número para contato">
     <input type="email" name="email" placeholder="Email para contato (opcional)">
 
-    <!-- Seleção de Gênero -->
     <select name="genero">
       <option value="">Gênero</option>
       <option>Masculino</option>
@@ -114,7 +115,6 @@
       <option>Prefiro não informar</option>
     </select>
 
-    <!-- Tipo de Lixo -->
     <select name="tipo_lixo">
       <option value="">Selecione o tipo de lixo</option>
       <option>Lixo doméstico</option>
@@ -125,14 +125,9 @@
       <option>Outros</option>
     </select>
 
-    <!-- Descrição e Local -->
     <textarea name="descricao" rows="4" placeholder="Descreva o local do lixo irregular"></textarea>
 
-    <!-- Anexar Foto -->
-    <input type="file" name="foto">
-
     <button type="submit">Enviar denúncia</button>
-
   </form>
 </section>
 
