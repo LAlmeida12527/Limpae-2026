@@ -100,11 +100,36 @@
     <input type="hidden" name="_subject" value="Nova denúncia - Limpaê">
     <input type="hidden" name="_captcha" value="false">
 
+    <!-- Campos de Dados Pessoais -->
     <input type="text" name="nome" placeholder="Seu nome (opcional)">
+    <input type="number" name="idade" placeholder="Idade">
+    <input type="text" name="contato" placeholder="Número para contato">
+    <input type="email" name="email" placeholder="Email para contato (opcional)">
 
-    <input type="text" name="local" placeholder="Local do lixo irregular" required>
+    <!-- Seleção de Gênero -->
+    <select name="genero">
+      <option value="">Gênero</option>
+      <option>Masculino</option>
+      <option>Feminino</option>
+      <option>Prefiro não informar</option>
+    </select>
 
-    <textarea name="descricao" placeholder="Descreva o problema" required></textarea>
+    <!-- Tipo de Lixo -->
+    <select name="tipo_lixo">
+      <option value="">Selecione o tipo de lixo</option>
+      <option>Lixo doméstico</option>
+      <option>Entulho de construção</option>
+      <option>Resíduos eletrônicos</option>
+      <option>Resíduos hospitalares</option>
+      <option>Podas de árvores</option>
+      <option>Outros</option>
+    </select>
+
+    <!-- Descrição e Local -->
+    <textarea name="descricao" rows="4" placeholder="Descreva o local do lixo irregular"></textarea>
+
+    <!-- Anexar Foto -->
+    <input type="file" name="foto">
 
     <button type="submit">Enviar denúncia</button>
 
