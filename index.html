@@ -16,21 +16,25 @@
       color: #222;
     }
 
-    /* ================= INTRO CINEMATOGRÁFICA ================= */
-
-    .intro {
+    /* ===== INTRO COM DESFOQUE ===== */
+    .intro-blur {
       position: fixed;
       inset: 0;
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(12px);
-      background: rgba(255, 255, 255, 0.85);
-      animation: introFadeOut 1.2s ease forwards;
-      animation-delay: 4.5s;
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.35);
+      z-index: 9000;
+      animation: blurOut 1s ease forwards;
+      animation-delay: 4s;
     }
 
+    @keyframes blurOut {
+      to {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    /* ===== MANUT ===== */
     .manut {
       position: fixed;
       left: 50%;
@@ -38,22 +42,29 @@
       transform: translate(-50%, -50%) scale(1);
       font-family: 'Bebas Neue', sans-serif;
       font-size: 96px;
-      letter-spacing: 10px;
-      background: linear-gradient(90deg, #166534, #22c55e, #ffffff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 25px rgba(22, 101, 52, 0.45);
-      animation: manutMove 4.5s cubic-bezier(.22,.61,.36,1) forwards;
+      letter-spacing: 12px;
+
+      /* TEXTO VISÍVEL (corrige o T) */
+      color: #ffffff;
+      -webkit-text-stroke: 2px #166534;
+
+      /* DESTAQUE */
+      text-shadow:
+        0 0 12px rgba(22,101,52,0.9),
+        0 0 30px rgba(34,197,94,0.6);
+
       z-index: 10000;
       pointer-events: none;
+
+      animation: manutMove 4s cubic-bezier(.22,.61,.36,1) forwards;
     }
 
     @keyframes manutMove {
       0% {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0.85);
+        transform: translate(-50%, -50%) scale(0.9);
       }
-      20% {
+      25% {
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
       }
@@ -61,19 +72,36 @@
         transform: translate(-50%, -50%) scale(1);
       }
       100% {
-        transform: translate(-50%, -90vh) scale(0.45);
+        transform: translate(-50%, 10px) scale(0.55);
       }
     }
 
-    @keyframes introFadeOut {
-      to {
-        opacity: 0;
-        pointer-events: none;
-      }
+    /* ===== MANUT FIXO NO TOPO ===== */
+    .manut-fixo {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.55);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 96px;
+      letter-spacing: 12px;
+      color: #ffffff;
+      -webkit-text-stroke: 2px #166534;
+      text-shadow:
+        0 0 12px rgba(22,101,52,0.9),
+        0 0 30px rgba(34,197,94,0.6);
+      z-index: 1100;
+      opacity: 0;
+      animation: fixaManut 0.8s ease forwards;
+      animation-delay: 4s;
+      pointer-events: none;
     }
 
-    /* ================= SITE NORMAL ================= */
+    @keyframes fixaManut {
+      to { opacity: 1; }
+    }
 
+    /* ===== SITE ===== */
     header {
       position: sticky;
       top: 0;
@@ -116,7 +144,6 @@
 
     nav img {
       height: 60px;
-      object-fit: contain;
     }
 
     .hero {
@@ -147,60 +174,14 @@
       text-decoration: none;
     }
 
-    .btn:hover {
-      background: #166534;
-    }
-
     section {
       padding: 60px 20px;
-    }
-
-    section h2 {
-      text-align: center;
-      font-size: 28px;
-      color: #166534;
-      margin-bottom: 20px;
-    }
-
-    .grid {
-      display: grid;
-      gap: 20px;
-    }
-
-    .impacto .grid {
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    }
-
-    .card {
-      background: #fff;
-      border: 1px solid #cce3d2;
-      padding: 20px;
-      border-radius: 12px;
-    }
-
-    .card h3 {
-      color: #15803d;
-      margin-bottom: 8px;
     }
 
     footer {
       background: #fff;
       border-top: 1px solid #ddd;
       padding: 40px 20px;
-      font-size: 14px;
-    }
-
-    footer .grid {
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-
-    footer a {
-      text-decoration: none;
-      color: #444;
-    }
-
-    footer a:hover {
-      color: #15803d;
     }
   </style>
 </head>
@@ -208,8 +189,9 @@
 <body>
 
   <!-- INTRO -->
-  <div class="intro"></div>
+  <div class="intro-blur"></div>
   <div class="manut">MANUT</div>
+  <div class="manut-fixo">MANUT</div>
 
   <!-- TOPO -->
   <div class="topbar">Denuncie focos de lixo e ajude a manter sua cidade limpa 🌱</div>
@@ -221,44 +203,21 @@
         <div>
           <a href="index.html">Início</a>
           <a href="denuncia.html">Denunciar</a>
-          <a href="#impacto">Impacto</a>
-          <a href="#faq">FAQ</a>
           <a href="sobre.html">Sobre Nós</a>
         </div>
       </nav>
     </div>
   </header>
 
-  <!-- HERO -->
   <section class="hero">
     <h1>Juntos contra o lixo irregular</h1>
-    <p>Sua denúncia ajuda a tornar a cidade mais limpa e saudável.</p>
-    <a href="denuncia.html" class="btn">Fazer uma denúncia agora</a>
+    <p>Sua denúncia ajuda a manter a cidade limpa.</p>
+    <a href="denuncia.html" class="btn">Denunciar agora</a>
   </section>
 
-  <!-- IMPACTO -->
-  <section id="impacto" class="impacto">
-    <h2>Por que denunciar?</h2>
-    <div class="grid">
-      <div class="card"><h3>Saúde pública</h3><p>Combate pragas.</p></div>
-      <div class="card"><h3>Meio ambiente</h3><p>Protege rios.</p></div>
-      <div class="card"><h3>Infraestrutura</h3><p>Evita enchentes.</p></div>
-      <div class="card"><h3>Comunidade</h3><p>Espaços melhores.</p></div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
   <footer>
-    <div class="container grid">
-      <div>
-        <img src="assets/logo.png" style="height:40px"><br>
-        <p>Plataforma colaborativa para uma cidade mais limpa.</p>
-      </div>
-      <div>
-        <strong>Links</strong><br>
-        <a href="denuncia.html">Denunciar</a><br>
-        <a href="sobre.html">Sobre Nós</a>
-      </div>
+    <div class="container">
+      <p>Plataforma colaborativa para uma cidade mais limpa.</p>
     </div>
   </footer>
 
