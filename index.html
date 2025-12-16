@@ -1,329 +1,301 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Limpaê - Início</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Limpaê</title>
 
-  <!-- Fonte cinematográfica -->
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<!-- Fonte cinematográfica -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
 
-  <style>
-    * { box-sizing: border-box; }
+<style>
+/* RESET */
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: Arial, sans-serif;
+  background:#ffffff;
+  color:#222;
+  overflow-x:hidden;
+}
 
-    body {
-      margin: 0;
-      font-family: 'Inter', Arial, sans-serif;
-      background: #f9fdfb;
-      color: #1f2937;
-    }
+/* ================= INTRO MANUT ================= */
+.intro {
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
+    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:3000;
+  animation:introFade 5.5s ease forwards;
+}
 
-    /* =========================
-       INTRO / MANUT
-    ========================= */
+.manut-intro {
+  font-family:'Cinzel', serif;
+  font-size:72px;
+  letter-spacing:10px;
+  background:linear-gradient(120deg,#166534,#22c55e,#ffffff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 6px 18px rgba(0,0,0,0.25);
+  animation:manutMove 5.5s cubic-bezier(.22,1,.36,1) forwards;
+}
 
-    .intro-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(236, 253, 245, 0.85);
-      backdrop-filter: blur(8px);
-      z-index: 3000;
-      animation: overlayFade 6s ease forwards;
-    }
+@keyframes manutMove {
+  0% { transform:translateY(0) scale(1); opacity:0; }
+  20% { opacity:1; }
+  60% { transform:translateY(0) scale(1); }
+  100% { transform:translateY(-220px) scale(0.45); }
+}
 
-    .manut-logo {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(1);
-      font-family: 'Cinzel', serif;
-      font-size: 64px;
-      letter-spacing: 10px;
-      z-index: 4000;
+@keyframes introFade {
+  0% { opacity:1; }
+  80% { opacity:1; }
+  100% { opacity:0; pointer-events:none; }
+}
 
-      background: linear-gradient(
-        135deg,
-        #064e3b 0%,
-        #16a34a 45%,
-        #ffffff 100%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+/* ================= HEADER ================= */
+header {
+  position:sticky;
+  top:0;
+  background:#fff;
+  border-bottom:1px solid #e5e5e5;
+  z-index:1000;
+}
 
-      text-shadow:
-        0 4px 12px rgba(0,0,0,0.25),
-        0 0 20px rgba(22,163,74,0.35);
+.topbar {
+  background:#15803d;
+  color:#fff;
+  text-align:center;
+  padding:6px;
+  font-size:14px;
+}
 
-      animation: manutMove 6s cubic-bezier(0.22,1,0.36,1) forwards;
-    }
+.nav {
+  max-width:1100px;
+  margin:auto;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
 
-    @keyframes manutMove {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(1);
-      }
-      15% {
-        opacity: 1;
-      }
-      45% {
-        transform: translate(-50%, -50%) scale(1);
-      }
-      100% {
-        transform: translate(-50%, 0) scale(0.42);
-        top: 14px;
-      }
-    }
+.nav img { height:42px; }
 
-    @keyframes overlayFade {
-      0% { opacity: 1; }
-      70% { opacity: 1; }
-      100% {
-        opacity: 0;
-        pointer-events: none;
-      }
-    }
+.nav a {
+  margin-left:18px;
+  text-decoration:none;
+  color:#222;
+  font-size:14px;
+  position:relative;
+}
 
-    /* =========================
-       HEADER / NAV
-    ========================= */
+.nav a::after {
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-4px;
+  width:0;
+  height:2px;
+  background:#22c55e;
+  transition:0.3s;
+}
 
-    header {
-      position: sticky;
-      top: 0;
-      background: #ffffff;
-      border-bottom: 1px solid #e5e7eb;
-      z-index: 1000;
-    }
+.nav a:hover::after { width:100%; }
 
-    .topbar {
-      background: #15803d;
-      color: #ffffff;
-      text-align: center;
-      font-size: 14px;
-      padding: 6px;
-    }
+/* ================= HERO ================= */
+.hero {
+  background:
+    linear-gradient(rgba(22,101,52,0.85), rgba(22,101,52,0.85)),
+    url("https://images.unsplash.com/photo-1500534623283-312aade485b7");
+  background-size:cover;
+  background-position:center;
+  color:#fff;
+  padding:100px 20px;
+  text-align:center;
+}
 
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 0 16px;
-    }
+.hero h1 {
+  font-size:42px;
+  margin-bottom:16px;
+}
 
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 60px;
-    }
+.hero p {
+  max-width:650px;
+  margin:auto;
+  margin-bottom:28px;
+  opacity:0.95;
+}
 
-    nav a {
-      margin-left: 16px;
-      text-decoration: none;
-      color: #1f2937;
-      font-size: 14px;
-      font-weight: 500;
-      transition: color .2s;
-    }
+.btn {
+  padding:14px 28px;
+  background:#22c55e;
+  color:#fff;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:bold;
+  transition:0.3s;
+}
 
-    nav a:hover {
-      color: #15803d;
-    }
+.btn:hover {
+  background:#16a34a;
+  transform:translateY(-2px);
+}
 
-    nav img {
-      height: 52px;
-      object-fit: contain;
-    }
+/* ================= SECTIONS ================= */
+section {
+  padding:70px 20px;
+}
 
-    /* =========================
-       HERO
-    ========================= */
+.container {
+  max-width:1100px;
+  margin:auto;
+}
 
-    .hero {
-      background: linear-gradient(
-        180deg,
-        #ecfdf5 0%,
-        #ffffff 100%
-      );
-      padding: 80px 20px;
-      text-align: center;
-    }
+h2 {
+  text-align:center;
+  color:#166534;
+  font-size:32px;
+  margin-bottom:24px;
+}
 
-    .hero h1 {
-      color: #065f46;
-      font-size: 38px;
-      margin-bottom: 16px;
-    }
+.sub {
+  text-align:center;
+  max-width:600px;
+  margin:0 auto 40px;
+  color:#444;
+}
 
-    .hero p {
-      max-width: 620px;
-      margin: auto;
-      margin-bottom: 28px;
-      color: #374151;
-      font-size: 16px;
-    }
+/* GRID */
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:24px;
+}
 
-    .btn {
-      display: inline-block;
-      padding: 14px 28px;
-      background: #15803d;
-      color: #ffffff;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: background .2s, transform .2s;
-    }
+.card {
+  background:#f0fdf4;
+  border-radius:18px;
+  padding:24px;
+  transition:0.3s;
+  border:1px solid #bbf7d0;
+}
 
-    .btn:hover {
-      background: #166534;
-      transform: translateY(-2px);
-    }
+.card:hover {
+  transform:translateY(-6px);
+  box-shadow:0 14px 30px rgba(0,0,0,0.12);
+}
 
-    /* =========================
-       SECTIONS
-    ========================= */
+.card h3 {
+  color:#15803d;
+  margin-bottom:10px;
+}
 
-    section {
-      padding: 70px 20px;
-    }
+/* ================= FAQ ================= */
+details {
+  background:#ffffff;
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:12px;
+}
 
-    section h2 {
-      text-align: center;
-      font-size: 30px;
-      color: #065f46;
-      margin-bottom: 24px;
-    }
+summary {
+  font-weight:bold;
+  cursor:pointer;
+}
 
-    .grid {
-      display: grid;
-      gap: 22px;
-    }
+/* ================= FOOTER ================= */
+footer {
+  background:#f0fdf4;
+  border-top:1px solid #c7f9cc;
+  padding:50px 20px;
+}
 
-    .impacto .grid {
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    }
+footer p, footer a {
+  font-size:14px;
+  color:#444;
+}
 
-    .card {
-      background: #ffffff;
-      border: 1px solid #d1fae5;
-      padding: 24px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-    }
+footer a:hover { color:#15803d; }
 
-    .card h3 {
-      color: #15803d;
-      margin-bottom: 10px;
-    }
-
-    details {
-      padding: 16px;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    summary {
-      cursor: pointer;
-      font-weight: 600;
-      color: #065f46;
-    }
-
-    /* =========================
-       FOOTER
-    ========================= */
-
-    footer {
-      background: #ffffff;
-      border-top: 1px solid #e5e7eb;
-      padding: 50px 20px;
-      font-size: 14px;
-    }
-
-    footer .grid {
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-
-    footer a {
-      text-decoration: none;
-      color: #374151;
-    }
-
-    footer a:hover {
-      color: #15803d;
-    }
-  </style>
+/* ================= MOBILE ================= */
+@media(max-width:768px) {
+  .hero h1 { font-size:32px; }
+  .manut-intro { font-size:52px; }
+  .nav { flex-direction:column; gap:12px; }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- INTRO -->
-  <div class="intro-overlay"></div>
-  <div class="manut-logo">MANUT</div>
+<!-- INTRO -->
+<div class="intro">
+  <div class="manut-intro">MANUT</div>
+</div>
 
-  <!-- Topbar -->
-  <div class="topbar">Denuncie focos de lixo e ajude a manter sua cidade limpa 🌱</div>
+<div class="topbar">Denuncie focos de lixo e ajude a manter sua cidade limpa 🌱</div>
 
-  <!-- Header -->
-  <header>
-    <div class="container">
-      <nav>
-        <div><img src="assets/logo.png" alt="Limpaê"></div>
-        <div>
-          <a href="index.html">Início</a>
-          <a href="denuncia.html">Denunciar</a>
-          <a href="#impacto">Impacto</a>
-          <a href="#faq">FAQ</a>
-          <a href="sobre.html">Sobre Nós</a>
-        </div>
-      </nav>
+<header>
+  <div class="nav">
+    <img src="assets/logo.png" alt="Limpaê">
+    <div>
+      <a href="index.html">Início</a>
+      <a href="denuncia.html">Denunciar</a>
+      <a href="#impacto">Impacto</a>
+      <a href="#faq">FAQ</a>
+      <a href="sobre.html">Sobre</a>
     </div>
-  </header>
+  </div>
+</header>
 
-  <!-- Hero -->
-  <section class="hero">
-    <h1>Juntos contra o lixo irregular</h1>
-    <p>Sua denúncia ajuda a identificar focos de acúmulo de lixo, promovendo uma cidade mais limpa e saudável para todos.</p>
-    <a href="denuncia.html" class="btn">Fazer uma denúncia agora</a>
-  </section>
+<section class="hero">
+  <h1>Juntos por uma cidade mais limpa</h1>
+  <p>Sua denúncia ajuda órgãos públicos a identificar pontos críticos de lixo e agir com mais rapidez.</p>
+  <a class="btn" href="denuncia.html">Fazer denúncia</a>
+</section>
 
-  <!-- Impacto -->
-  <section id="impacto" class="impacto">
+<section id="impacto">
+  <div class="container">
     <h2>Por que denunciar?</h2>
-    <p style="text-align:center; max-width:620px; margin:auto;">
-      O descarte incorreto de lixo gera riscos à saúde, degradação ambiental e problemas urbanos.
-    </p>
-    <div class="grid" style="margin-top:36px;">
-      <div class="card"><h3>Saúde pública</h3><p>Combate focos de doenças.</p></div>
-      <div class="card"><h3>Meio ambiente</h3><p>Protege rios e áreas verdes.</p></div>
-      <div class="card"><h3>Infraestrutura</h3><p>Evita enchentes e entupimentos.</p></div>
-      <div class="card"><h3>Comunidade</h3><p>Garante espaços limpos.</p></div>
+    <p class="sub">Denunciar é um ato de cidadania que melhora a saúde, o ambiente e a qualidade de vida.</p>
+    <div class="grid">
+      <div class="card"><h3>Saúde</h3><p>Reduz riscos de doenças e pragas.</p></div>
+      <div class="card"><h3>Ambiente</h3><p>Protege rios, áreas verdes e solos.</p></div>
+      <div class="card"><h3>Cidade</h3><p>Evita entupimentos e enchentes.</p></div>
+      <div class="card"><h3>Comunidade</h3><p>Espaços mais seguros e limpos.</p></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FAQ -->
-  <section id="faq">
+<section id="faq">
+  <div class="container">
     <h2>Perguntas Frequentes</h2>
-    <div style="max-width:620px; margin:auto; background:#ffffff; border-radius:16px; border:1px solid #e5e7eb;">
-      <details><summary>Posso denunciar anonimamente?</summary><p>Sim, você não precisa se identificar.</p></details>
-      <details><summary>O que acontece após a denúncia?</summary><p>A denúncia é avaliada pelos órgãos responsáveis.</p></details>
-      <details><summary>Preciso pagar algo?</summary><p>Não, o serviço é gratuito.</p></details>
-    </div>
-  </section>
+    <details><summary>Preciso me identificar?</summary><p>Não. A denúncia pode ser anônima.</p></details>
+    <details><summary>Quem recebe a denúncia?</summary><p>Órgãos responsáveis pela limpeza urbana.</p></details>
+    <details><summary>É gratuito?</summary><p>Sim. O serviço é público.</p></details>
+  </div>
+</section>
 
-  <!-- Footer -->
-  <footer>
-    <div class="container grid">
-      <div>
-        <img src="assets/logo.png" alt="Limpaê" style="height:40px;"><br>
-        <p>Plataforma colaborativa para uma cidade mais limpa.</p>
-      </div>
-      <div>
-        <strong>Links úteis</strong><br>
-        <a href="denuncia.html">Denunciar</a><br>
-        <a href="#impacto">Impacto</a><br>
-        <a href="#faq">FAQ</a><br>
-        <a href="sobre.html">Sobre Nós</a>
-      </div>
+<footer>
+  <div class="container grid">
+    <div>
+      <img src="assets/logo.png" style="height:40px">
+      <p>Plataforma colaborativa para uma cidade mais limpa.</p>
     </div>
-  </footer>
+    <div>
+      <strong>Links</strong><br>
+      <a href="denuncia.html">Denunciar</a><br>
+      <a href="#impacto">Impacto</a><br>
+      <a href="#faq">FAQ</a>
+    </div>
+  </div>
+</footer>
 
 </body>
 </html>
