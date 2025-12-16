@@ -3,231 +3,217 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Limpaê</title>
+<title>Limpaê — Projeto Conceitual</title>
 
 <!-- Fonte cinematográfica -->
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-/* RESET */
-* { margin:0; padding:0; box-sizing:border-box; }
+/* ===== BASE ===== */
 body {
-  font-family: Arial, sans-serif;
+  margin:0;
+  font-family:'Inter', Arial, sans-serif;
   background:#ffffff;
-  color:#222;
-  overflow-x:hidden;
+  color:#1f2937;
 }
 
-/* ================= INTRO MANUT ================= */
+/* ===== INTRO LIMPAÊ ===== */
 .intro {
   position:fixed;
   inset:0;
-  background:
-    linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
-    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
-  background-size:cover;
-  background-position:center;
+  background:linear-gradient(135deg,#ecfdf5,#ffffff);
   display:flex;
   align-items:center;
   justify-content:center;
   z-index:3000;
-  animation:introFade 5.5s ease forwards;
+  animation:introFade 1.2s ease forwards;
+  animation-delay:5.5s;
 }
 
-.manut-intro {
+.intro-logo {
   font-family:'Cinzel', serif;
-  font-size:72px;
-  letter-spacing:10px;
-  background:linear-gradient(120deg,#166534,#22c55e,#ffffff);
+  font-size:64px;
+  letter-spacing:6px;
+  background:linear-gradient(135deg,#14532d,#22c55e,#ffffff);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  text-shadow:0 6px 18px rgba(0,0,0,0.25);
-  animation:manutMove 5.5s cubic-bezier(.22,1,.36,1) forwards;
+  text-shadow:0 6px 18px rgba(0,0,0,.25);
+  animation:logoMove 6s cubic-bezier(.22,1,.36,1) forwards;
 }
 
-@keyframes manutMove {
-  0% { transform:translateY(0) scale(1); opacity:0; }
-  20% { opacity:1; }
-  60% { transform:translateY(0) scale(1); }
-  100% { transform:translateY(-220px) scale(0.45); }
+@keyframes logoMove {
+  0% {opacity:0; transform:translateY(0) scale(1);}
+  15% {opacity:1;}
+  45% {transform:translateY(0) scale(1);}
+  100% {transform:translateY(-160px) scale(.55);}
 }
 
 @keyframes introFade {
-  0% { opacity:1; }
-  80% { opacity:1; }
-  100% { opacity:0; pointer-events:none; }
+  to {opacity:0; visibility:hidden;}
 }
 
-/* ================= HEADER ================= */
-header {
-  position:sticky;
-  top:0;
-  background:#fff;
-  border-bottom:1px solid #e5e5e5;
-  z-index:1000;
-}
-
+/* ===== TOPBAR ===== */
 .topbar {
   background:#15803d;
   color:#fff;
   text-align:center;
-  padding:6px;
+  padding:8px;
   font-size:14px;
 }
 
-.nav {
-  max-width:1100px;
-  margin:auto;
-  padding:14px 16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.nav img { height:42px; }
-
-.nav a {
-  margin-left:18px;
-  text-decoration:none;
-  color:#222;
-  font-size:14px;
-  position:relative;
-}
-
-.nav a::after {
-  content:"";
-  position:absolute;
-  left:0;
-  bottom:-4px;
-  width:0;
-  height:2px;
-  background:#22c55e;
-  transition:0.3s;
-}
-
-.nav a:hover::after { width:100%; }
-
-/* ================= HERO ================= */
-.hero {
-  background:
-    linear-gradient(rgba(22,101,52,0.85), rgba(22,101,52,0.85)),
-    url("https://images.unsplash.com/photo-1500534623283-312aade485b7");
-  background-size:cover;
-  background-position:center;
-  color:#fff;
-  padding:100px 20px;
-  text-align:center;
-}
-
-.hero h1 {
-  font-size:42px;
-  margin-bottom:16px;
-}
-
-.hero p {
-  max-width:650px;
-  margin:auto;
-  margin-bottom:28px;
-  opacity:0.95;
-}
-
-.btn {
-  padding:14px 28px;
-  background:#22c55e;
-  color:#fff;
-  border-radius:10px;
-  text-decoration:none;
-  font-weight:bold;
-  transition:0.3s;
-}
-
-.btn:hover {
-  background:#16a34a;
-  transform:translateY(-2px);
-}
-
-/* ================= SECTIONS ================= */
-section {
-  padding:70px 20px;
+/* ===== HEADER ===== */
+header {
+  position:sticky;
+  top:0;
+  background:#ffffff;
+  border-bottom:1px solid #e5e7eb;
+  z-index:1000;
 }
 
 .container {
   max-width:1100px;
   margin:auto;
+  padding:0 16px;
 }
 
-h2 {
+nav {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  height:64px;
+}
+
+nav img { height:48px; }
+
+nav a {
+  margin-left:18px;
+  text-decoration:none;
+  color:#1f2937;
+  font-size:14px;
+  font-weight:500;
+}
+
+nav a:hover { color:#15803d; }
+
+/* ===== HERO ===== */
+.hero {
+  background:linear-gradient(180deg,#ecfdf5,#ffffff);
+  padding:96px 20px;
   text-align:center;
-  color:#166534;
+}
+
+.hero h1 {
+  font-size:40px;
+  color:#14532d;
+  margin-bottom:16px;
+}
+
+.hero p {
+  max-width:680px;
+  margin:auto;
+  color:#374151;
+  font-size:17px;
+}
+
+.btn {
+  display:inline-block;
+  margin-top:32px;
+  padding:14px 32px;
+  background:#15803d;
+  color:#fff;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:600;
+  transition:.3s;
+}
+
+.btn:hover {
+  background:#166534;
+  transform:translateY(-2px);
+}
+
+/* ===== SEÇÕES ===== */
+section {
+  padding:80px 20px;
+}
+
+section h2 {
+  text-align:center;
   font-size:32px;
-  margin-bottom:24px;
+  color:#14532d;
+  margin-bottom:20px;
 }
 
-.sub {
+.section-desc {
+  max-width:720px;
+  margin:0 auto 48px;
   text-align:center;
-  max-width:600px;
-  margin:0 auto 40px;
-  color:#444;
+  color:#4b5563;
 }
 
-/* GRID */
+/* ===== CARDS ===== */
 .grid {
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:24px;
+  gap:28px;
+}
+
+.cards {
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
 }
 
 .card {
-  background:#f0fdf4;
+  background:#ffffff;
+  border:1px solid #d1fae5;
   border-radius:18px;
-  padding:24px;
-  transition:0.3s;
-  border:1px solid #bbf7d0;
+  padding:28px;
+  text-align:center;
+  transition:.35s ease;
 }
 
 .card:hover {
   transform:translateY(-6px);
-  box-shadow:0 14px 30px rgba(0,0,0,0.12);
+  box-shadow:0 18px 40px rgba(0,0,0,.08);
 }
 
-.card h3 {
-  color:#15803d;
-  margin-bottom:10px;
-}
-
-/* ================= FAQ ================= */
-details {
-  background:#ffffff;
-  border:1px solid #ddd;
-  border-radius:12px;
-  padding:14px;
+.card span {
+  font-size:36px;
+  display:block;
   margin-bottom:12px;
 }
 
-summary {
-  font-weight:bold;
-  cursor:pointer;
-}
-
-/* ================= FOOTER ================= */
-footer {
+/* ===== BLOCO INSTITUCIONAL ===== */
+.notice {
   background:#f0fdf4;
-  border-top:1px solid #c7f9cc;
-  padding:50px 20px;
+  border-left:6px solid #22c55e;
+  padding:24px;
+  border-radius:14px;
+  max-width:900px;
+  margin:0 auto;
+  color:#065f46;
 }
 
-footer p, footer a {
+/* ===== FOOTER ===== */
+footer {
+  border-top:1px solid #e5e7eb;
+  padding:48px 20px;
   font-size:14px;
-  color:#444;
+}
+
+footer .grid {
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+}
+
+footer a {
+  color:#374151;
+  text-decoration:none;
 }
 
 footer a:hover { color:#15803d; }
 
-/* ================= MOBILE ================= */
-@media(max-width:768px) {
+/* ===== MOBILE ===== */
+@media(max-width:600px){
   .hero h1 { font-size:32px; }
-  .manut-intro { font-size:52px; }
-  .nav { flex-direction:column; gap:12px; }
+  .intro-logo { font-size:46px; }
 }
 </style>
 </head>
@@ -236,49 +222,64 @@ footer a:hover { color:#15803d; }
 
 <!-- INTRO -->
 <div class="intro">
-  <div class="manut-intro">MANUT</div>
+  <div class="intro-logo">Limpaê</div>
 </div>
 
-<div class="topbar">Denuncie focos de lixo e ajude a manter sua cidade limpa 🌱</div>
+<div class="topbar">Projeto conceitual de cidadania digital 🌱</div>
 
 <header>
-  <div class="nav">
-    <img src="assets/logo.png" alt="Limpaê">
-    <div>
-      <a href="index.html">Início</a>
-      <a href="denuncia.html">Denunciar</a>
-      <a href="#impacto">Impacto</a>
-      <a href="#faq">FAQ</a>
-      <a href="sobre.html">Sobre</a>
-    </div>
+  <div class="container">
+    <nav>
+      <img src="assets/logo.png" alt="Limpaê">
+      <div>
+        <a href="index.html">Início</a>
+        <a href="denuncia.html">Denunciar</a>
+        <a href="#como">Como funciona</a>
+        <a href="sobre.html">Sobre</a>
+      </div>
+    </nav>
   </div>
 </header>
 
 <section class="hero">
-  <h1>Juntos por uma cidade mais limpa</h1>
-  <p>Sua denúncia ajuda órgãos públicos a identificar pontos críticos de lixo e agir com mais rapidez.</p>
-  <a class="btn" href="denuncia.html">Fazer denúncia</a>
+  <h1>Uma cidade limpa começa com você</h1>
+  <p>
+    O Limpaê é um projeto conceitual que propõe uma solução digital para facilitar
+    a denúncia cidadã de descarte irregular de lixo urbano.
+  </p>
+  <a href="denuncia.html" class="btn">Simular uma denúncia</a>
 </section>
 
-<section id="impacto">
-  <div class="container">
-    <h2>Por que denunciar?</h2>
-    <p class="sub">Denunciar é um ato de cidadania que melhora a saúde, o ambiente e a qualidade de vida.</p>
-    <div class="grid">
-      <div class="card"><h3>Saúde</h3><p>Reduz riscos de doenças e pragas.</p></div>
-      <div class="card"><h3>Ambiente</h3><p>Protege rios, áreas verdes e solos.</p></div>
-      <div class="card"><h3>Cidade</h3><p>Evita entupimentos e enchentes.</p></div>
-      <div class="card"><h3>Comunidade</h3><p>Espaços mais seguros e limpos.</p></div>
-    </div>
+<section id="como">
+  <h2>Como funciona a proposta</h2>
+  <p class="section-desc">
+    Este projeto demonstra como a tecnologia pode aproximar cidadãos e o poder público
+    no combate ao descarte irregular.
+  </p>
+
+  <div class="container grid cards">
+    <div class="card"><span>📍</span><strong>Identificação</strong><p>O cidadão registra um ponto de lixo.</p></div>
+    <div class="card"><span>📝</span><strong>Envio</strong><p>As informações são centralizadas.</p></div>
+    <div class="card"><span>📨</span><strong>Encaminhamento</strong><p>O modelo sugere envio ao órgão responsável.</p></div>
+    <div class="card"><span>🌱</span><strong>Impacto</strong><p>Mais eficiência e qualidade urbana.</p></div>
   </div>
 </section>
 
-<section id="faq">
-  <div class="container">
-    <h2>Perguntas Frequentes</h2>
-    <details><summary>Preciso me identificar?</summary><p>Não. A denúncia pode ser anônima.</p></details>
-    <details><summary>Quem recebe a denúncia?</summary><p>Órgãos responsáveis pela limpeza urbana.</p></details>
-    <details><summary>É gratuito?</summary><p>Sim. O serviço é público.</p></details>
+<section>
+  <h2>Para quem é o Limpaê</h2>
+  <div class="container grid cards">
+    <div class="card"><span>👥</span><p>Cidadãos que desejam participar ativamente.</p></div>
+    <div class="card"><span>🏘️</span><p>Comunidades e associações locais.</p></div>
+    <div class="card"><span>🏛️</span><p>Gestores públicos como inspiração de solução.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Importante saber</h2>
+  <div class="notice">
+    <strong>Projeto conceitual:</strong><br>
+    O Limpaê não é um serviço oficial e não possui vínculo com órgãos públicos.
+    Este site representa uma proposta de solução digital e um protótipo de interface.
   </div>
 </section>
 
@@ -286,13 +287,12 @@ footer a:hover { color:#15803d; }
   <div class="container grid">
     <div>
       <img src="assets/logo.png" style="height:40px">
-      <p>Plataforma colaborativa para uma cidade mais limpa.</p>
+      <p>Limpaê — cidadania contra o descarte irregular.</p>
     </div>
     <div>
       <strong>Links</strong><br>
       <a href="denuncia.html">Denunciar</a><br>
-      <a href="#impacto">Impacto</a><br>
-      <a href="#faq">FAQ</a>
+      <a href="sobre.html">Sobre o projeto</a>
     </div>
   </div>
 </footer>
