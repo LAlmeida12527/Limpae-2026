@@ -8,109 +8,84 @@
   <!-- Fontes -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <!-- Leaflet (mapa) -->
+  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
     :root{
-      --green-700:#14532d;
-      --green-600:#15803d;
-      --accent:#f59e0b;
-      --bg:#f7fff9;
-      --card:#ffffff;
-      --max-width:1100px;
-      --safe-top: env(safe-area-inset-top, 0px);
+      --green-700:#14532d; --green-600:#15803d; --accent:#f59e0b;
+      --bg:#f7fff9; --card:#fff; --max-width:1100px; --safe-top:env(safe-area-inset-top,0px);
+      --control-size:16px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:"Poppins",system-ui, -apple-system, "Segoe UI", Roboto, Arial;-webkit-font-smoothing:antialiased;}
-    body{ background:var(--bg); color:#123; padding-top:var(--safe-top); }
+    html,body{height:100%;margin:0;font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial;}
+    body{ background:var(--bg); color:#123; padding-top:var(--safe-top); -webkit-font-smoothing:antialiased; }
+    .container{max-width:var(--max-width);margin:0 auto;padding:20px;}
 
-    .container{max-width:var(--max-width);margin:0 auto;padding:18px;}
+    header{ display:flex;align-items:center;justify-content:space-between;padding:12px 0; }
+    .logo{ font-family:"Cinzel Decorative",serif;background:linear-gradient(90deg,var(--green-700),var(--green-600));-webkit-background-clip:text;color:transparent;font-size:24px; }
+    .badge{ padding:6px 10px;border-radius:10px;background:#fff;color:var(--green-700);font-weight:700; box-shadow:0 8px 24px rgba(2,6,23,0.04); }
 
-    header{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; }
-    .brand{ display:flex; gap:12px; align-items:center; }
-    .logo{ font-family:"Cinzel Decorative",serif; background:linear-gradient(90deg,var(--green-700),var(--green-600)); -webkit-background-clip:text; color:transparent; font-size:22px; }
-    .badge{ font-size:12px; padding:6px 10px; border-radius:10px; background:#fff; box-shadow:0 6px 20px rgba(0,0,0,0.04); color:var(--green-700); font-weight:700; }
+    .note{ text-align:center;margin:12px 0;color:#334155;font-weight:700; }
+    .note small{ display:block;font-weight:500;color:#475569;margin-top:6px; }
 
-    .note{ text-align:center; margin:10px 0 6px; color:#334155; font-weight:600; }
-    .note small{ display:block; color:#475569; font-weight:500; margin-top:6px; }
+    .grid{ display:grid; grid-template-columns:1fr 420px; gap:24px; align-items:start; }
+    @media(max-width:980px){ .grid{ grid-template-columns:1fr; } }
 
-    .grid{ display:grid; grid-template-columns: 1fr 380px; gap:22px; margin-top:18px; align-items:start; }
-    @media (max-width:980px){ .grid{ grid-template-columns:1fr; } }
+    .card{ background:var(--card); border-radius:14px;padding:20px; box-shadow:0 20px 48px rgba(2,6,23,0.06); border:1px solid rgba(2,6,23,0.04); }
 
-    .card{ background:var(--card); border-radius:14px; padding:18px; box-shadow:0 18px 40px rgba(16,24,32,0.06); border:1px solid rgba(2,6,23,0.04); }
+    label{ display:block;font-weight:800;margin-bottom:6px;color:#263238; font-size:15px; }
+    input[type="text"], select, textarea { width:100%; padding:14px; border-radius:12px; border:1px solid #e6e8eb; font-size:15px; }
+    textarea{ min-height:140px; resize:vertical; }
 
-    h2{ margin:0 0 6px; color:var(--green-700); font-family:"Cinzel Decorative",serif; }
+    /* Lupa/search */
+    .geo-search{ display:flex; gap:8px; align-items:center; margin-top:8px; }
+    .geo-search input{ flex:1; padding:12px 14px; border-radius:10px; border:1px solid #e6e8eb; }
+    .geo-results{ position:relative; }
+    .geo-list{ position:absolute; left:0; right:0; top:100%; background:#fff; border:1px solid rgba(2,6,23,0.06); border-radius:8px; margin-top:6px; max-height:220px; overflow:auto; z-index:2000; box-shadow:0 12px 32px rgba(2,6,23,0.08); }
+    .geo-item{ padding:10px; cursor:pointer; border-bottom:1px solid rgba(2,6,23,0.03); }
+    .geo-item:hover{ background:#f3f7f3; }
 
-    label{ display:block; font-weight:700; font-size:13px; margin-bottom:6px; color:#263238; }
-    input[type="text"], select, textarea { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #e6e8eb; font-size:15px; background:#fff; color:#123; }
-    textarea{ min-height:120px; resize:vertical; border-radius:10px; }
+    #map{ width:100%; height:320px; border-radius:12px; border:1px solid rgba(2,6,23,0.06); margin-top:10px; }
 
-    .controls{ display:flex; gap:10px; justify-content:flex-end; margin-top:12px; }
-    .controls .btn{ min-width:140px; }
+    .step-actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:14px; }
+    .btn{ background:linear-gradient(90deg,var(--green-600),var(--green-700)); color:#fff; padding:12px 18px; border-radius:12px; border:0; font-weight:800; cursor:pointer; box-shadow:0 12px 36px rgba(20,83,45,0.12); }
+    .btn.ghost{ background:transparent; color:#475569; border:1px solid rgba(20,83,45,0.06); box-shadow:none; }
 
-    .btn{
-      background:linear-gradient(90deg,var(--green-600),var(--green-700));
-      color:#fff; padding:12px 16px; border-radius:10px; border:0; font-weight:800; cursor:pointer; box-shadow:0 12px 30px rgba(20,83,45,0.12);
-    }
-    .btn.secondary{ background:transparent; color:var(--green-700); border:1px solid rgba(20,83,45,0.08); box-shadow:none; font-weight:700; }
+    .photos{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .photo-thumb{ width:110px; height:110px; object-fit:cover; border-radius:10px; border:1px solid rgba(2,6,23,0.06); }
 
-    /* Right aligned action area inside each step */
-    .step-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
-
-    /* map */
-    #map{ width:100%; height:260px; border-radius:10px; border:1px solid rgba(2,6,23,0.06); margin-top:8px; }
-
-    /* photos */
-    .photos{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
-    .photo-thumb{ width:90px; height:90px; object-fit:cover; border-radius:8px; border:1px solid rgba(2,6,23,0.06); }
-
-    /* preview pane */
-    .preview { display:flex; flex-direction:column; gap:12px; }
+    .preview{ display:flex; flex-direction:column; gap:12px; }
     .report-card{ padding:12px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfff9); border:1px solid rgba(34,197,94,0.06); }
-    .small { font-size:13px; color:#475569; }
 
-    /* saved list */
-    .saved-list{ display:flex; flex-direction:column; gap:8px; max-height:360px; overflow:auto; margin-top:8px; padding-right:6px; }
+    .saved-list{ max-height:440px; overflow:auto; display:flex; flex-direction:column; gap:8px; margin-top:12px; padding-right:6px; }
 
-    /* mobile bottom bar for navigation (keeps Next on right visually) */
-    .mobile-bottom{
-      display:none;
-      position:fixed; left:0; right:0; bottom:0; padding:12px; background:#fff; box-shadow:0 -8px 30px rgba(2,6,23,0.08); z-index:9999;
-      justify-content:space-between; align-items:center; gap:10px;
-    }
-    @media (max-width:720px){
-      .mobile-bottom{ display:flex; }
-      body{ padding-bottom:84px; }
-    }
+    /* mobile bottom bar for navigation */
+    .mobile-bottom{ display:none; position:fixed; left:0; right:0; bottom:0; padding:12px; background:#fff; box-shadow:0 -8px 30px rgba(2,6,23,0.08); z-index:9999; gap:10px; justify-content:space-between; align-items:center; }
+    @media(max-width:720px){ .mobile-bottom{ display:flex; } body{ padding-bottom:100px; } }
 
-    /* improved buttons look */
-    .btn.ghost{ background:transparent; color:#475569; border:1px solid rgba(20,83,45,0.06); box-shadow:none; font-weight:700; }
-
-    /* final thank you */
-    .thanks{ text-align:center; padding:18px; }
+    .big { font-size:16px; }
   </style>
 </head>
 <body>
   <header class="container">
-    <div class="brand">
+    <div style="display:flex;gap:12px;align-items:center">
       <div class="logo">Limpaê</div>
       <div class="badge">Projeto Escolar</div>
     </div>
-    <nav aria-label="Topo"><a href="index.html" style="text-decoration:none;color:#334155;font-weight:700">Início</a></nav>
+    <nav><a href="index.html" style="text-decoration:none;color:#334155;font-weight:700">Início</a></nav>
   </header>
 
-  <main class="container" role="main">
+  <main class="container">
     <div class="note">Formulário de denúncia (simulada) — uso educacional. <small>As denúncias são salvas localmente para demonstração.</small></div>
 
     <div class="grid" role="region" aria-label="Formulário de denúncia">
-      <!-- LEFT: form -->
-      <div class="card" id="form-card">
-        <h2>Denunciar ponto de descarte</h2>
+      <!-- LEFT -->
+      <div class="card" id="left-card">
+        <h2 style="margin:0 0 10px">Denunciar ponto de descarte</h2>
 
         <form id="report-form" method="POST" action="https://formsubmit.co/limpaemanut@gmail.com" enctype="multipart/form-data" autocomplete="off" novalidate>
-          <!-- hidden fields for FormSubmit -->
           <input type="hidden" name="_subject" value="Denúncia simulada — Limpaê" />
           <input type="hidden" name="_captcha" value="false" />
           <input type="hidden" name="source" value="limpae-prototipo-escolar" />
@@ -118,8 +93,8 @@
 
           <!-- STEP 1 -->
           <fieldset data-step="1">
-            <label for="category">Categoria *</label>
-            <select id="category" name="category" required>
+            <label class="big" for="category">Categoria *</label>
+            <select id="category" name="category" required style="padding:14px;border-radius:12px;">
               <option value="">Escolha...</option>
               <option value="residencial">Descarte residencial</option>
               <option value="comercial">Descarte comercial</option>
@@ -129,8 +104,8 @@
               <option value="outro">Outro</option>
             </select>
 
-            <label for="severity" style="margin-top:12px">Gravidade *</label>
-            <select id="severity" name="severity" required>
+            <label class="big" for="severity" style="margin-top:12px">Gravidade *</label>
+            <select id="severity" name="severity" required style="padding:14px;border-radius:12px;">
               <option value="">Selecione</option>
               <option value="baixo">Baixo</option>
               <option value="medio">Médio</option>
@@ -138,29 +113,38 @@
               <option value="critico">Crítico</option>
             </select>
 
-            <label for="description" style="margin-top:12px">Descrição *</label>
-            <textarea id="description" name="description" required placeholder="Descreva o local, quantidade e observações"></textarea>
+            <label class="big" for="description" style="margin-top:12px">Descrição *</label>
+            <textarea id="description" name="description" required placeholder="Descreva o local, quantidade e observações" style="font-size:15px;"></textarea>
 
             <div class="step-actions">
-              <!-- Next on the right -->
               <button type="button" class="btn" id="next-1">Próximo</button>
             </div>
           </fieldset>
 
-          <!-- STEP 2 -->
+          <!-- STEP 2: Map + search -->
           <fieldset data-step="2" style="display:none">
-            <label>Localização</label>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
-              <button type="button" class="btn ghost" id="detect-location">Detectar minha posição</button>
-              <button type="button" class="btn ghost" id="manual-pos-btn">Inserir manualmente</button>
+            <label class="big">Localização</label>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+              <div class="geo-search" style="flex:1;gap:8px">
+                <div class="geo-results" style="flex:1">
+                  <input id="geo-input" placeholder="Pesquisar endereço ou referência (lupa)" aria-label="Pesquisar local" />
+                  <div id="geo-list" class="geo-list" style="display:none"></div>
+                </div>
+                <button type="button" class="btn ghost" id="geo-clear">✕</button>
+              </div>
+
+              <div style="display:flex;gap:8px">
+                <button type="button" class="btn ghost" id="detect-location">Detectar minha posição</button>
+              </div>
             </div>
 
-            <div id="map" aria-label="Mapa"></div>
+            <div id="map"></div>
 
-            <label for="address" style="margin-top:12px">Endereço / referência</label>
+            <label for="address" style="margin-top:12px" class="big">Endereço / referência</label>
             <input id="address" name="address" type="text" placeholder="Ex.: Rua X, próximo ao número Y">
 
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
               <div class="small">Lat: <span id="lat">—</span> &nbsp; Lng: <span id="lng">—</span></div>
               <div class="step-actions">
                 <button type="button" class="btn ghost" id="back-2">Voltar</button>
@@ -171,8 +155,8 @@
 
           <!-- STEP 3 -->
           <fieldset data-step="3" style="display:none">
-            <label for="photos">Fotos (até 6)</label>
-            <input id="photos" type="file" accept="image/*" multiple>
+            <label class="big" for="photos">Fotos (até 6)</label>
+            <input id="photos" type="file" accept="image/*" multiple />
             <div class="photos" id="photos-preview" aria-live="polite"></div>
 
             <div class="step-actions">
@@ -181,9 +165,9 @@
             </div>
           </fieldset>
 
-          <!-- STEP 4 (REVIEW) -->
+          <!-- STEP 4 -->
           <fieldset data-step="4" style="display:none">
-            <label>Revisar denúncia</label>
+            <label class="big">Revisar denúncia</label>
             <div id="review-area" class="report-card" aria-live="polite"></div>
 
             <div style="display:flex;gap:8px;align-items:center;margin-top:10px">
@@ -192,17 +176,16 @@
 
             <div class="step-actions">
               <button type="button" class="btn ghost" id="back-4">Voltar</button>
-              <!-- final submit -->
               <button type="submit" class="btn" id="submit-report">Enviar denúncia</button>
             </div>
           </fieldset>
         </form>
       </div>
 
-      <!-- RIGHT: preview + saved -->
+      <!-- RIGHT -->
       <aside>
         <div class="card preview">
-          <h3 style="margin:0 0 6px">Visualização rápida</h3>
+          <h3 style="margin:0 0 8px">Visualização rápida</h3>
           <div class="report-card">
             <div style="display:flex;justify-content:space-between">
               <div><strong>Categoria:</strong> <span id="pv-category">—</span></div>
@@ -212,321 +195,240 @@
             <div id="pv-photos" style="display:flex;gap:8px;margin-top:8px"></div>
           </div>
 
-          <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
+          <div style="margin-top:12px;display:flex;justify-content:flex-end;gap:8px">
             <button class="btn" id="open-review">Ir para revisão</button>
           </div>
         </div>
 
-        <div class="card" style="margin-top:12px">
-          <h3 style="margin:0 0 6px">Denúncias simuladas</h3>
+        <div class="card" style="margin-top:14px">
+          <h3 style="margin:0 0 8px">Denúncias simuladas</h3>
           <div class="saved-list" id="saved-list"></div>
-          <div style="margin-top:8px; display:flex; justify-content:flex-end;">
-            <button class="btn ghost" id="clear-storage">Limpar todas</button>
-          </div>
+          <div style="margin-top:8px;display:flex;justify-content:flex-end"><button class="btn ghost" id="clear-storage">Limpar todas</button></div>
         </div>
       </aside>
     </div>
   </main>
 
-  <!-- mobile bottom nav (Next/Back, keeps primary action on right) -->
   <div class="mobile-bottom" id="mobile-bottom" aria-hidden="true">
-    <div id="mobile-step" style="font-weight:700;color:#334155"></div>
-    <div style="display:flex;gap:8px;">
+    <div id="mobile-step" style="font-weight:700;color:#334155">Passo</div>
+    <div style="display:flex;gap:8px">
       <button class="btn ghost" id="mb-back">Voltar</button>
       <button class="btn" id="mb-next">Próximo</button>
     </div>
   </div>
 
   <script>
-    // State
-    const state = { step:1, lat:null, lng:null, photos: [], map:null, marker:null };
+  /* ---------- State & elements ---------- */
+  const state = { step:1, lat:null, lng:null, photos: [], map:null, marker:null };
+  const form = document.getElementById('report-form');
+  const fieldsets = Array.from(form.querySelectorAll('fieldset[data-step]'));
+  const next1 = document.getElementById('next-1'), next2 = document.getElementById('next-2'), next3 = document.getElementById('next-3');
+  const back2 = document.getElementById('back-2'), back3 = document.getElementById('back-3'), back4 = document.getElementById('back-4');
+  const openReview = document.getElementById('open-review');
+  const photosInput = document.getElementById('photos'), photosPreview = document.getElementById('photos-preview');
+  const pvCategory = document.getElementById('pv-category'), pvSeverity = document.getElementById('pv-severity'), pvDesc = document.getElementById('pv-desc'), pvPhotos = document.getElementById('pv-photos');
+  const reviewArea = document.getElementById('review-area'), photosDataInput = document.getElementById('photos-data');
+  const savedList = document.getElementById('saved-list'), clearStorageBtn = document.getElementById('clear-storage');
 
-    // Elements
-    const form = document.getElementById('report-form');
-    const fieldsets = Array.from(form.querySelectorAll('fieldset[data-step]'));
-    const next1 = document.getElementById('next-1');
-    const next2 = document.getElementById('next-2');
-    const next3 = document.getElementById('next-3');
-    const back2 = document.getElementById('back-2');
-    const back3 = document.getElementById('back-3');
-    const back4 = document.getElementById('back-4');
-    const openReview = document.getElementById('open-review');
-    const savedList = document.getElementById('saved-list');
-    const photosInput = document.getElementById('photos');
-    const photosPreview = document.getElementById('photos-preview');
-    const pvCategory = document.getElementById('pv-category');
-    const pvSeverity = document.getElementById('pv-severity');
-    const pvDesc = document.getElementById('pv-desc');
-    const pvPhotos = document.getElementById('pv-photos');
-    const reviewArea = document.getElementById('review-area');
-    const photosDataInput = document.getElementById('photos-data');
-    const clearStorageBtn = document.getElementById('clear-storage');
+  const detectBtn = document.getElementById('detect-location'), manualPosBtn = document.getElementById('manual-pos-btn'), addressEl = document.getElementById('address'), latEl = document.getElementById('lat'), lngEl = document.getElementById('lng');
 
-    const detectBtn = document.getElementById('detect-location');
-    const manualPosBtn = document.getElementById('manual-pos-btn');
-    const latEl = document.getElementById('lat');
-    const lngEl = document.getElementById('lng');
-    const addressEl = document.getElementById('address');
+  const geoInput = document.getElementById('geo-input'), geoList = document.getElementById('geo-list'), geoClear = document.getElementById('geo-clear');
 
-    const mobileBottom = document.getElementById('mobile-bottom');
-    const mbBack = document.getElementById('mb-back');
-    const mbNext = document.getElementById('mb-next');
-    const mobileStepLabel = document.getElementById('mobile-step');
+  const mobileBottom = document.getElementById('mobile-bottom'), mbBack = document.getElementById('mb-back'), mbNext = document.getElementById('mb-next'), mobileStep = document.getElementById('mobile-step');
 
-    // helpers
-    function showStep(n){
-      state.step = n;
-      fieldsets.forEach(fs => fs.style.display = Number(fs.dataset.step) === n ? '' : 'none');
-      updatePreview();
-      updateMobileBar();
-      if(n === 2) initMapOnce();
-      if(state.map) setTimeout(()=>state.map.invalidateSize(), 150);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+  /* ---------- Helpers ---------- */
+  function showStep(n){
+    state.step = n;
+    fieldsets.forEach(fs => fs.style.display = Number(fs.dataset.step) === n ? '' : 'none');
+    updatePreview();
+    updateMobileBar();
+    if(n === 2) initMapOnce();
+    if(state.map) setTimeout(()=> state.map.invalidateSize(), 150);
+    window.scrollTo({ top: 0, behavior:'smooth' });
+  }
 
-    function updatePreview(){
-      const cat = document.getElementById('category').value || '—';
-      const sev = document.getElementById('severity').value || '—';
-      const desc = document.getElementById('description').value || '—';
-      pvCategory.textContent = cat;
-      pvSeverity.textContent = sev;
-      pvDesc.textContent = desc;
-      pvPhotos.innerHTML = '';
-      state.photos.slice(0,4).forEach(u => {
-        const img = document.createElement('img'); img.src = u; img.className = 'photo-thumb'; img.alt='foto';
-        pvPhotos.appendChild(img);
+  function updatePreview(){
+    const cat = document.getElementById('category').value || '—';
+    const sev = document.getElementById('severity').value || '—';
+    const desc = document.getElementById('description').value || '—';
+    pvCategory.textContent = cat; pvSeverity.textContent = sev; pvDesc.textContent = desc;
+    pvPhotos.innerHTML = '';
+    state.photos.slice(0,4).forEach(u => { const img = document.createElement('img'); img.src = u; img.className='photo-thumb'; pvPhotos.appendChild(img); });
+  }
+
+  function validateStep1(){
+    const cat = document.getElementById('category').value, sev = document.getElementById('severity').value, desc = document.getElementById('description').value.trim();
+    if(!cat || !sev || !desc){ alert('Preencha categoria, gravidade e descrição.'); return false; }
+    return true;
+  }
+
+  /* ---------- Map + Geocoding (Nominatim) ---------- */
+  function initMapOnce(){
+    if(state.map) return;
+    const mapEl = document.getElementById('map');
+    state.map = L.map(mapEl, { scrollWheelZoom:false }).setView([-23.55052,-46.633308], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(state.map);
+    state.marker = L.marker([-23.55052,-46.633308], { draggable:true }).addTo(state.map);
+    state.marker.on('dragend', function(e){ const p = e.target.getLatLng(); state.lat = p.lat; state.lng = p.lng; latEl.textContent = state.lat.toFixed(6); lngEl.textContent = state.lng.toFixed(6); });
+  }
+
+  detectBtn && detectBtn.addEventListener('click', function(){
+    if(!navigator.geolocation){ alert('Geolocalização não suportada neste navegador.'); return; }
+    if(location.protocol !== 'https:' && location.hostname !== 'localhost'){ if(!confirm('Geolocalização funciona melhor em HTTPS. Tentar mesmo assim?')) return; }
+    detectBtn.textContent = 'Detectando…';
+    navigator.geolocation.getCurrentPosition(function(pos){
+      detectBtn.textContent = 'Detectar minha posição';
+      const lat = pos.coords.latitude, lng = pos.coords.longitude; state.lat = lat; state.lng = lng;
+      latEl.textContent = lat.toFixed(6); lngEl.textContent = lng.toFixed(6);
+      if(!state.map) initMapOnce();
+      state.map.setView([lat,lng], 16); state.marker.setLatLng([lat,lng]);
+      addressEl.value = '';
+    }, function(err){ detectBtn.textContent = 'Detectar minha posição'; alert('Erro ao obter localização: ' + (err.message||'')); }, { enableHighAccuracy:true, timeout:10000, maximumAge:60000 });
+  });
+
+  manualPosBtn && manualPosBtn.addEventListener('click', ()=> addressEl.focus());
+
+  // Geocoding search (Nominatim)
+  let geoTimeout = null;
+  geoInput.addEventListener('input', function(){
+    const q = this.value.trim();
+    geoList.style.display = 'none'; geoList.innerHTML = '';
+    if(geoTimeout) clearTimeout(geoTimeout);
+    if(!q) return;
+    geoTimeout = setTimeout(()=> searchNominatim(q), 350);
+  });
+
+  geoClear.addEventListener('click', function(){ geoInput.value=''; geoList.innerHTML=''; geoList.style.display='none'; });
+
+  async function searchNominatim(query){
+    try{
+      geoList.innerHTML = '<div style="padding:10px;color:#6b7280">Buscando…</div>'; geoList.style.display = 'block';
+      const res = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=6&q=' + encodeURIComponent(query), { headers:{ 'Accept-Language':'pt-BR' }});
+      const json = await res.json();
+      if(!json || !json.length){ geoList.innerHTML = '<div style="padding:10px;color:#6b7280">Nenhum resultado</div>'; return; }
+      geoList.innerHTML = '';
+      json.forEach(item=>{
+        const div = document.createElement('div'); div.className='geo-item';
+        div.textContent = item.display_name;
+        div.addEventListener('click', function(){
+          if(!state.map) initMapOnce();
+          const lat = parseFloat(item.lat), lon = parseFloat(item.lon);
+          state.map.setView([lat,lon], 16);
+          state.marker.setLatLng([lat,lon]);
+          state.lat = lat; state.lng = lon;
+          latEl.textContent = lat.toFixed(6); lngEl.textContent = lon.toFixed(6);
+          addressEl.value = item.display_name;
+          geoList.style.display = 'none';
+          geoInput.value = item.display_name;
+        });
+        geoList.appendChild(div);
       });
+    }catch(err){
+      geoList.innerHTML = '<div style="padding:10px;color:#b91c1c">Erro na busca</div>';
     }
+  }
 
-    function validateStep1(){
-      const cat = document.getElementById('category').value;
-      const sev = document.getElementById('severity').value;
-      const desc = document.getElementById('description').value.trim();
-      if(!cat || !sev || !desc){ alert('Preencha categoria, gravidade e descrição.'); return false; }
-      return true;
-    }
-
-    // Map
-    function initMapOnce(){
-      if(state.map) return;
-      const mapEl = document.getElementById('map');
-      state.map = L.map(mapEl, { scrollWheelZoom:false }).setView([-23.55052, -46.633308], 12);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap contributors' }).addTo(state.map);
-      state.marker = L.marker([-23.55052, -46.633308], { draggable:true }).addTo(state.map);
-      state.marker.on('dragend', function(e){
-        const p = e.target.getLatLng(); state.lat = p.lat; state.lng = p.lng;
-        latEl.textContent = state.lat.toFixed(6); lngEl.textContent = state.lng.toFixed(6);
-      });
-    }
-
-    detectBtn && detectBtn.addEventListener('click', function(){
-      if(!navigator.geolocation){ alert('Geolocalização não suportada neste navegador.'); return; }
-      if(location.protocol !== 'https:' && location.hostname !== 'localhost'){ if(!confirm('Geolocalização funciona melhor em HTTPS. Tentar mesmo assim?')) return; }
-      detectBtn.textContent = 'Detectando…';
-      navigator.geolocation.getCurrentPosition(function(pos){
-        detectBtn.textContent = 'Detectar minha posição';
-        const lat = pos.coords.latitude, lng = pos.coords.longitude; state.lat = lat; state.lng = lng;
-        latEl.textContent = lat.toFixed(6); lngEl.textContent = lng.toFixed(6);
-        if(!state.map) initMapOnce();
-        state.map.setView([lat,lng], 16);
-        state.marker.setLatLng([lat,lng]);
-        addressEl.value = '';
-      }, function(err){ detectBtn.textContent = 'Detectar minha posição'; alert('Erro ao obter localização: ' + (err.message||'')); }, { enableHighAccuracy:true, timeout:10000, maximumAge:60000 });
-    });
-
-    manualPosBtn && manualPosBtn.addEventListener('click', ()=> addressEl.focus());
-
-    // Photos
-    photosInput.addEventListener('change', function(){
-      const files = Array.from(this.files).slice(0,6);
-      state.photos = []; photosPreview.innerHTML = '';
-      if(!files.length) return;
-      files.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = function(e){
-          const url = e.target.result;
-          state.photos.push(url);
-          const img = document.createElement('img'); img.src = url; img.className = 'photo-thumb'; img.alt = file.name;
-          photosPreview.appendChild(img);
-          updatePreview();
-        };
-        reader.readAsDataURL(file);
-      });
-    });
-
-    // Steps navigation
-    next1.addEventListener('click', ()=> { if(validateStep1()){ showStep(2); }});
-    back2.addEventListener('click', ()=> showStep(1));
-    next2.addEventListener('click', ()=> showStep(3));
-    back3.addEventListener('click', ()=> showStep(2));
-    next3.addEventListener('click', ()=> { populateReview(); showStep(4); });
-    back4.addEventListener('click', ()=> showStep(3));
-
-    openReview.addEventListener('click', ()=> { if(!validateStep1()){ showStep(1); return; } populateReview(); showStep(4); });
-
-    function populateReview(){
-      const cat = document.getElementById('category').value || '—';
-      const sev = document.getElementById('severity').value || '—';
-      const desc = document.getElementById('description').value || '—';
-      const addr = document.getElementById('address').value || '—';
-      const dt = document.getElementById('datetime') ? document.getElementById('datetime').value : '';
-      const photosHtml = state.photos.map(u => `<img src="${u}" style="width:96px;height:96px;object-fit:cover;border-radius:8px">`).join(' ');
-      reviewArea.innerHTML = `
-        <div><strong>Categoria:</strong> ${escapeHtml(cat)}</div>
-        <div><strong>Gravidade:</strong> ${escapeHtml(sev)}</div>
-        <div style="margin-top:8px;"><strong>Descrição:</strong><div style="margin-top:6px">${escapeHtml(desc)}</div></div>
-        <div style="margin-top:8px;"><strong>Local:</strong> ${escapeHtml(addr)} <small style="display:block;color:#6b7280">Lat: ${state.lat||'—'} Lng: ${state.lng||'—'}</small></div>
-        <div style="margin-top:8px;"><strong>Data/Hora:</strong> ${escapeHtml(dt)}</div>
-        <div style="margin-top:12px;"><strong>Fotos:</strong><div style="display:flex;gap:8px;margin-top:8px">${photosHtml || '<span style="color:#6b7280">Sem fotos</span>'}</div></div>
-      `;
-      photosDataInput.value = JSON.stringify(state.photos);
-    }
-
-    function escapeHtml(s){ if(!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
-
-    // Form submit: save local + submit to FormSubmit in new tab
-    form.addEventListener('submit', function(ev){
-      // ensure step1 valid
-      if(!validateStep1()){ ev.preventDefault(); showStep(1); return; }
-
-      // build report object and save locally
-      const report = {
-        id: 'r' + Date.now(),
-        category: document.getElementById('category').value,
-        severity: document.getElementById('severity').value,
-        description: document.getElementById('description').value,
-        datetime: document.getElementById('datetime') ? document.getElementById('datetime').value : '',
-        address: document.getElementById('address').value,
-        lat: state.lat,
-        lng: state.lng,
-        photos: state.photos.slice(),
-        anonymous: document.getElementById('anonymous').checked,
-        createdAt: new Date().toISOString()
+  // Photos preview
+  photosInput.addEventListener('change', function(){
+    const files = Array.from(this.files).slice(0,6);
+    state.photos = []; photosPreview.innerHTML = '';
+    if(!files.length) return;
+    files.forEach(file=>{
+      const reader = new FileReader();
+      reader.onload = function(e){
+        const url = e.target.result;
+        state.photos.push(url);
+        const img = document.createElement('img'); img.src = url; img.className='photo-thumb'; photosPreview.appendChild(img);
+        updatePreview();
       };
-      saveReport(report);
-      populateSavedList();
-
-      // update hidden photos_data
-      photosDataInput.value = JSON.stringify(report.photos || []);
-
-      // submit to FormSubmit in new tab (open temporary form)
-      ev.preventDefault();
-      const tmp = document.createElement('form');
-      tmp.method = 'POST';
-      tmp.action = form.action;
-      tmp.target = '_blank';
-      tmp.style.display = 'none';
-      const data = {
-        _subject: 'Denúncia simulada — Limpaê',
-        _captcha: 'false',
-        source: 'limpae-prototipo-escolar',
-        category: report.category,
-        severity: report.severity,
-        description: report.description,
-        datetime: report.datetime,
-        address: report.address,
-        lat: report.lat,
-        lng: report.lng,
-        anonymous: report.anonymous ? 'Sim' : 'Não',
-        photos_data: JSON.stringify(report.photos || [])
-      };
-      for(const k in data){
-        const i = document.createElement('input');
-        i.type = 'hidden'; i.name = k; i.value = data[k] == null ? '' : data[k];
-        tmp.appendChild(i);
-      }
-      document.body.appendChild(tmp);
-      tmp.submit();
-      setTimeout(()=> tmp.remove(), 800);
-
-      // show thanks locally
-      showThanksLocal();
-      // reset
-      form.reset();
-      state.photos = []; photosPreview.innerHTML=''; updatePreview();
-      state.lat = null; state.lng = null; if(latEl) latEl.textContent='—'; if(lngEl) lngEl.textContent='—';
-      showStep(1);
+      reader.readAsDataURL(file);
     });
+  });
 
-    function showThanksLocal(){
-      const box = document.createElement('div');
-      box.style.position='fixed'; box.style.left='50%'; box.style.top='50%'; box.style.transform='translate(-50%,-50%)';
-      box.style.zIndex=99999; box.style.background='#fff'; box.style.padding='18px'; box.style.borderRadius='12px';
-      box.style.boxShadow='0 18px 40px rgba(2,6,23,0.2)';
-      box.innerHTML = `<h3 style="margin:0 0 8px;color:${'#14532d'}">Denúncia simulada enviada</h3>
-        <p style="margin:0 0 12px;color:#374151">A denúncia foi salva localmente e a submissão foi aberta em nova aba.</p>
-        <div style="text-align:right"><button id="close-thanks" style="background:linear-gradient(90deg,var(--green-600),var(--green-700));color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer">Fechar</button></div>`;
-      document.body.appendChild(box); document.body.style.overflow='hidden';
-      document.getElementById('close-thanks').addEventListener('click', ()=>{ box.remove(); document.body.style.overflow=''; });
+  // Steps navigation
+  next1.addEventListener('click', ()=> { if(validateStep1()) showStep(2); });
+  back2.addEventListener('click', ()=> showStep(1));
+  next2.addEventListener('click', ()=> showStep(3));
+  back3.addEventListener('click', ()=> showStep(2));
+  next3.addEventListener('click', ()=> { populateReview(); showStep(4); });
+  back4.addEventListener('click', ()=> showStep(3));
+
+  openReview.addEventListener('click', ()=> { if(!validateStep1()){ showStep(1); return; } populateReview(); showStep(4); });
+
+  function populateReview(){
+    const cat = document.getElementById('category').value || '—';
+    const sev = document.getElementById('severity').value || '—';
+    const desc = document.getElementById('description').value || '—';
+    const addr = document.getElementById('address').value || '—';
+    const dt = document.getElementById('datetime') ? document.getElementById('datetime').value : '';
+    const photosHtml = state.photos.map(u => `<img src="${u}" style="width:110px;height:110px;object-fit:cover;border-radius:10px">`).join(' ');
+    reviewArea.innerHTML = `
+      <div><strong>Categoria:</strong> ${escapeHtml(cat)}</div>
+      <div><strong>Gravidade:</strong> ${escapeHtml(sev)}</div>
+      <div style="margin-top:8px;"><strong>Descrição:</strong><div style="margin-top:6px">${escapeHtml(desc)}</div></div>
+      <div style="margin-top:8px;"><strong>Local:</strong> ${escapeHtml(addr)} <small style="display:block;color:#6b7280">Lat: ${state.lat||'—'} Lng: ${state.lng||'—'}</small></div>
+      <div style="margin-top:8px;"><strong>Data/Hora:</strong> ${escapeHtml(dt)}</div>
+      <div style="margin-top:12px;"><strong>Fotos:</strong><div style="display:flex;gap:8px;margin-top:8px">${photosHtml || '<span style="color:#6b7280">Sem fotos</span>'}</div></div>
+    `;
+    photosDataInput.value = JSON.stringify(state.photos);
+  }
+
+  function escapeHtml(s){ if(!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+  // Submit handler: save local + submit to FormSubmit in new tab
+  form.addEventListener('submit', function(ev){
+    if(!validateStep1()){ ev.preventDefault(); showStep(1); return; }
+    const report = {
+      id: 'r' + Date.now(),
+      category: document.getElementById('category').value,
+      severity: document.getElementById('severity').value,
+      description: document.getElementById('description').value,
+      datetime: document.getElementById('datetime') ? document.getElementById('datetime').value : '',
+      address: document.getElementById('address').value,
+      lat: state.lat, lng: state.lng, photos: state.photos.slice(),
+      anonymous: document.getElementById('anonymous').checked, createdAt: new Date().toISOString()
+    };
+    saveReport(report); populateSavedList();
+    photosDataInput.value = JSON.stringify(report.photos || []);
+    ev.preventDefault();
+    const tmp = document.createElement('form'); tmp.method='POST'; tmp.action=form.action; tmp.target='_blank'; tmp.style.display='none';
+    const data = { _subject:'Denúncia simulada — Limpaê', _captcha:'false', source:'limpae-prototipo-escolar', category:report.category, severity:report.severity, description:report.description, datetime:report.datetime, address:report.address, lat:report.lat, lng:report.lng, anonymous:report.anonymous ? 'Sim' : 'Não', photos_data: JSON.stringify(report.photos||[]) };
+    for(const k in data){ const i=document.createElement('input'); i.type='hidden'; i.name=k; i.value=data[k]||''; tmp.appendChild(i); }
+    document.body.appendChild(tmp); tmp.submit(); setTimeout(()=>tmp.remove(),800);
+    showThanksLocal();
+    form.reset(); state.photos=[]; photosPreview.innerHTML=''; updatePreview(); state.lat=null; state.lng=null; if(latEl) latEl.textContent='—'; if(lngEl) lngEl.textContent='—'; showStep(1);
+  });
+
+  function showThanksLocal(){ const box=document.createElement('div'); box.style.position='fixed'; box.style.left='50%'; box.style.top='50%'; box.style.transform='translate(-50%,-50%)'; box.style.zIndex=99999; box.style.background='#fff'; box.style.padding='18px'; box.style.borderRadius='12px'; box.style.boxShadow='0 18px 40px rgba(2,6,23,0.2)'; box.innerHTML=`<h3 style="margin:0 0 8px;color:${'#14532d'}">Denúncia simulada enviada</h3><p style="margin:0 0 12px;color:#374151">A denúncia foi salva localmente e a submissão foi aberta em nova aba.</p><div style="text-align:right"><button id="close-thanks" style="background:linear-gradient(90deg,var(--green-600),var(--green-700));color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer">Fechar</button></div>`; document.body.appendChild(box); document.body.style.overflow='hidden'; document.getElementById('close-thanks').addEventListener('click', ()=>{ box.remove(); document.body.style.overflow=''; }); }
+
+  // localStorage helpers
+  function getReports(){ try{ return JSON.parse(localStorage.getItem('limpae_reports')||'[]'); }catch(e){ return []; } }
+  function saveReport(r){ const arr=getReports(); arr.unshift(r); localStorage.setItem('limpae_reports', JSON.stringify(arr.slice(0,200))); }
+  function populateSavedList(){ const arr=getReports(); savedList.innerHTML=''; if(!arr.length){ savedList.innerHTML='<div style="color:#6b7280">Nenhuma denúncia simulada ainda.</div>'; return; } arr.forEach(item=>{ const el=document.createElement('div'); el.style.display='flex'; el.style.justifyContent='space-between'; el.style.alignItems='center'; el.style.padding='8px'; el.style.borderRadius='8px'; el.style.border='1px solid rgba(2,6,23,0.04)'; el.style.background='#fff'; el.innerHTML = `<div style="display:flex;gap:10px;align-items:center;min-width:0"><div style="width:56px;height:56px;border-radius:8px;overflow:hidden;background:#f3f4f6;display:flex;align-items:center;justify-content:center">${item.photos&&item.photos[0] ? `<img src="${item.photos[0]}" style="width:56px;height:56px;object-fit:cover">` : '🗑️'}</div><div style="min-width:0"><div style="font-weight:700;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:160px">${escapeHtml(item.category)} · ${escapeHtml(item.severity)}</div><div style="color:#6b7280;font-size:13px;max-width:220px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden">${escapeHtml(item.description)}</div><div style="color:#6b7280;font-size:12px;margin-top:4px">${new Date(item.createdAt).toLocaleString()}</div></div></div><div><button data-id="${item.id}" class="remove-btn" style="background:transparent;border:0;color:#ef4444;font-weight:700;cursor:pointer">Remover</button></div>`; savedList.appendChild(el); }); Array.from(savedList.querySelectorAll('.remove-btn')).forEach(btn=>btn.addEventListener('click', function(){ const id=this.dataset.id; const arr=getReports().filter(x=>x.id!==id); localStorage.setItem('limpae_reports', JSON.stringify(arr)); populateSavedList(); })); }
+
+  clearStorageBtn.addEventListener('click', ()=>{ if(confirm('Limpar todas as denúncias simuladas armazenadas localmente?')){ localStorage.removeItem('limpae_reports'); populateSavedList(); } });
+
+  // Prevent Enter => submit; instead go to next step (except textarea)
+  form.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+      const active = document.activeElement;
+      if(active && active.tagName && active.tagName.toLowerCase() === 'textarea') return;
+      e.preventDefault();
+      if(state.step===1){ if(validateStep1()) showStep(2); }
+      else if(state.step===2) showStep(3);
+      else if(state.step===3){ populateReview(); showStep(4); }
     }
+  });
 
-    // localStorage helpers
-    function getReports(){ try{ return JSON.parse(localStorage.getItem('limpae_reports')||'[]'); }catch(e){ return []; } }
-    function saveReport(r){ const arr = getReports(); arr.unshift(r); localStorage.setItem('limpae_reports', JSON.stringify(arr.slice(0,200))); }
-    function populateSavedList(){
-      const arr = getReports(); savedList.innerHTML = '';
-      if(!arr.length){ savedList.innerHTML = '<div style="color:#6b7280">Nenhuma denúncia simulada ainda.</div>'; return; }
-      arr.forEach(item=>{
-        const el = document.createElement('div'); el.style.display='flex'; el.style.justifyContent='space-between'; el.style.alignItems='center';
-        el.style.padding='8px'; el.style.borderRadius='8px'; el.style.border='1px solid rgba(2,6,23,0.04)'; el.style.background='#fff';
-        el.innerHTML = `<div style="display:flex;gap:10px;align-items:center;min-width:0">
-          <div style="width:56px;height:56px;border-radius:8px;overflow:hidden;background:#f3f4f6;display:flex;align-items:center;justify-content:center">${item.photos && item.photos[0] ? `<img src="${item.photos[0]}" style="width:56px;height:56px;object-fit:cover">` : '🗑️'}</div>
-          <div style="min-width:0">
-            <div style="font-weight:700;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:160px">${escapeHtml(item.category)} · ${escapeHtml(item.severity)}</div>
-            <div style="color:#6b7280;font-size:13px;max-width:220px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden">${escapeHtml(item.description)}</div>
-            <div style="color:#6b7280;font-size:12px;margin-top:4px">${new Date(item.createdAt).toLocaleString()}</div>
-          </div>
-        </div>
-        <div><button data-id="${item.id}" class="remove-btn" style="background:transparent;border:0;color:#ef4444;font-weight:700;cursor:pointer">Remover</button></div>`;
-        savedList.appendChild(el);
-      });
-      Array.from(savedList.querySelectorAll('.remove-btn')).forEach(btn=> btn.addEventListener('click', function(){
-        const id = this.dataset.id; const arr = getReports().filter(x=>x.id !== id); localStorage.setItem('limpae_reports', JSON.stringify(arr)); populateSavedList();
-      }));
-    }
+  // Mobile bottom bar
+  function updateMobileBar(){ if(window.innerWidth>720){ mobileBottom.style.display='none'; mobileBottom.setAttribute('aria-hidden','true'); return; } mobileBottom.style.display='flex'; mobileBottom.setAttribute('aria-hidden','false'); mobileStep.textContent=`Passo ${state.step} de 4`; mbBack.style.display = state.step===1 ? 'none' : 'inline-flex'; mbNext.style.display = state.step===4 ? 'none' : 'inline-flex'; }
+  mbBack.addEventListener('click', ()=>{ if(state.step>1) showStep(state.step-1); });
+  mbNext.addEventListener('click', ()=>{ if(state.step===1){ if(validateStep1()) showStep(2); } else if(state.step===2) showStep(3); else if(state.step===3){ populateReview(); showStep(4); } });
+  window.addEventListener('resize', updateMobileBar);
 
-    clearStorageBtn.addEventListener('click', ()=>{ if(confirm('Limpar todas as denúncias simuladas armazenadas localmente?')){ localStorage.removeItem('limpae_reports'); populateSavedList(); }});
-
-    // keyboard: prevent Enter submitting; Enter moves to next step (except in textarea)
-    form.addEventListener('keydown', function(e){
-      if(e.key === 'Enter'){
-        const active = document.activeElement;
-        if(active && active.tagName && active.tagName.toLowerCase() === 'textarea') return; // allow newlines in textarea
-        // prevent default submit
-        e.preventDefault();
-        // route to next step
-        if(state.step === 1) { if(validateStep1()) showStep(2); }
-        else if(state.step === 2) showStep(3);
-        else if(state.step === 3) { populateReview(); showStep(4); }
-        else if(state.step === 4) {
-          // do nothing — require explicit submit click to send
-        }
-      }
-    });
-
-    // Mobile bottom controls mirror current step
-    function updateMobileBar(){
-      if(window.innerWidth > 720){ mobileBottom.style.display = 'none'; mobileBottom.setAttribute('aria-hidden','true'); return; }
-      mobileBottom.style.display = 'flex'; mobileBottom.setAttribute('aria-hidden','false');
-      mobileStepLabel.textContent = `Passo ${state.step} de 4`;
-      mbBack.style.display = state.step === 1 ? 'none' : 'inline-flex';
-      mbNext.style.display = state.step === 4 ? 'none' : 'inline-flex';
-    }
-    mbBack.addEventListener('click', ()=> { if(state.step>1) showStep(state.step-1); });
-    mbNext.addEventListener('click', ()=> {
-      if(state.step === 1){ if(validateStep1()) showStep(2); }
-      else if(state.step === 2) showStep(3);
-      else if(state.step === 3){ populateReview(); showStep(4); }
-    });
-
-    window.addEventListener('resize', updateMobileBar);
-
-    // init
-    showStep(1); populateSavedList(); updatePreview(); updateMobileBar();
-
-    // ensure map resizes if created
-    const observer = new MutationObserver(()=> { if(state.map) state.map.invalidateSize(); });
-    observer.observe(document.getElementById('form-card'), { attributes:true, childList:true, subtree:true });
+  // init
+  showStep(1); populateSavedList(); updatePreview(); updateMobileBar();
+  const observer = new MutationObserver(()=>{ if(state.map) state.map.invalidateSize(); }); observer.observe(document.getElementById('left-card'), { attributes:true, childList:true, subtree:true });
 
   </script>
 </body>
