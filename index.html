@@ -20,6 +20,7 @@
     --glass: rgba(255,255,255,0.80);
     --max-content-width:1140px;
     --safe-top: env(safe-area-inset-top, 0px);
+    --flag-height:44px; /* altura fixa para a faixa */
   }
   *,*::before,*::after{box-sizing:border-box}
   html,body{height:100%; margin:0; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
@@ -32,36 +33,45 @@
       url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 24 24"><g fill="none" stroke="%230d1f13" stroke-opacity="0.03" stroke-width="1"><path d="M3 12c2-4 6-5 9-5s7 1 9 5"/><path d="M6 16c1-2 4-3 6-3s5 1 6 3"/></g></svg>') repeat;
     overflow-x:hidden;
     -webkit-overflow-scrolling:touch;
-    padding-top:var(--safe-top);
+    padding-top:0;
     line-height:1.45;
   }
 
   .container{max-width:var(--max-content-width); margin:0 auto; padding:0 16px;}
 
-  /* ===== CLAREZA: PROJETO ESCOLAR ===== */
+  /* ===== FAIXA FIXA (corrigida) ===== */
   .school-flag{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:var(--flag-height);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:6000;
     background:linear-gradient(90deg,var(--accent),#f97316);
-    color:#111;
-    text-align:center;
-    padding:10px 12px;
-    font-size:13px;
+    color:#081013;
     font-weight:700;
-    line-height:1.2;
-    word-break:break-word;
+    font-size:13px;
+    padding:0 12px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.06);
+    line-height:1;
+    text-align:center;
   }
 
-  /* ===== HEADER ===== */
+  /* ===== HEADER (posicionado abaixo da faixa) ===== */
   header{
     position:sticky;
-    top:var(--safe-top);
-    z-index:1200;
+    top:calc(var(--safe-top) + var(--flag-height)); /* garante que o header não fique em cima da faixa */
+    z-index:5000;
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:12px;
     padding:12px 16px;
     backdrop-filter: blur(6px);
-    background:linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.75));
+    background:linear-gradient(180deg, rgba(255,255,255,0.90), rgba(255,255,255,0.86));
     border-bottom:1px solid rgba(16,24,32,0.04);
   }
   .header-left{display:flex; align-items:center; gap:12px;}
@@ -70,7 +80,9 @@
     font-size:26px;
     letter-spacing:1px;
     background:linear-gradient(90deg,var(--green-700),var(--green-500));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
     text-shadow:0 6px 10px rgba(0,0,0,0.06);
     white-space:nowrap;
   }
@@ -108,7 +120,7 @@
 
   /* mobile menu (initially hidden) */
   .mobile-menu{
-    position:fixed; top:calc(var(--safe-top) + 64px); right:12px;
+    position:fixed; top:calc(var(--safe-top) + var(--flag-height) + 16px); right:12px;
     background:#fff; width:260px; border-radius:10px; box-shadow:0 24px 60px rgba(2,6,23,0.14);
     display:flex; flex-direction:column; gap:6px; padding:10px; z-index:1400;
   }
@@ -179,13 +191,6 @@
   footer{ border-top:1px solid rgba(16,24,32,0.04); padding:20px 16px; background:linear-gradient(180deg, rgba(250,251,250,0.9), rgba(255,255,255,0.98)); display:flex; gap:18px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
   footer small{ color:#6b7280; }
 
-  /* MODAL */
-  .modal-backdrop{ position:fixed; inset:0; background:rgba(2,6,23,0.6); display:flex; align-items:center; justify-content:center; z-index:5000; padding:20px; }
-  .modal{ background:#fff; border-radius:12px; width:100%; max-width:720px; box-shadow:0 20px 60px rgba(2,6,23,0.4); padding:20px; max-height:90vh; overflow:auto; }
-  .modal h3{ margin:0 0 8px; color:var(--green-700); }
-  .form-row{ display:flex; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
-  .form-row input,.form-row textarea,.form-row select{ flex:1 1 220px; padding:12px 14px; border-radius:8px; border:1px solid #e6e8eb; font-size:15px; }
-
   /* small helpers */
   .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
 
@@ -204,7 +209,7 @@
     .logo-text{ font-size:22px; }
 
     /* mobile menu controlled via JS (class .open) */
-    .mobile-menu{ right:8px; top:calc(var(--safe-top) + 56px); width:84%; max-width:320px; }
+    .mobile-menu{ right:8px; top:calc(var(--safe-top) + var(--flag-height) + 12px); width:84%; max-width:320px; }
 
     /* hero adjustments */
     .hero{ padding:82px 12px 48px; }
@@ -219,10 +224,6 @@
     /* hero-note: keep visible and not overlapped */
     .hero-note{ display:block; margin:10px auto 0; }
 
-    /* modal full-screen for better usability */
-    .modal{ width:100%; height:100%; max-width:none; max-height:none; border-radius:0; padding:18px; overflow:auto; align-self:stretch; }
-    .modal h3{ font-size:18px; }
-
     /* footer stacking */
     footer{ flex-direction:column; align-items:flex-start; gap:12px; }
   }
@@ -233,10 +234,10 @@
 </head>
 <body>
 
-  <!-- VISUAL NOTE: projeto escolar -->
-  <div class="school-flag">Projeto escolar — Este site é um protótipo estudantil e NÃO é um serviço oficial do governo</div>
+  <!-- VISUAL NOTE: projeto escolar (FAIXA FIXA NO TOPO) -->
+  <div class="school-flag" role="note" aria-live="polite">Projeto escolar — Este site é um protótipo estudantil e NÃO é um serviço oficial do governo</div>
 
-  <!-- INTRO (removido pelo script após load) -->
+  <!-- INTRO (mantida; será removida pelo script após carregamento) -->
   <div class="intro" id="site-intro" aria-hidden="true">
     <div class="intro-inner">
       <h1 class="intro-logo">Limpaê</h1>
@@ -255,7 +256,9 @@
       <a class="nav-link" href="index.html">Início</a>
       <a class="nav-link" href="#como">Como funciona</a>
       <a class="nav-link" href="sobre.html">Sobre</a>
-      <a class="nav-link" href="denuncia.html">Denunciar (exemplo)</a>
+
+      <!-- Denunciar agora é um link integrado junto aos outros (leva à mesma página denuncia.html) -->
+      <a class="nav-link" href="denuncia.html" aria-label="Denunciar">Denunciar</a>
     </nav>
 
     <!-- mobile toggle -->
@@ -269,7 +272,7 @@
     <a href="index.html" role="menuitem">Início</a>
     <a href="#como" role="menuitem">Como funciona</a>
     <a href="sobre.html" role="menuitem">Sobre</a>
-    <a href="denuncia.html" role="menuitem">Denunciar (exemplo)</a>
+    <a href="denuncia.html" role="menuitem">Denunciar</a>
   </div>
 
   <!-- HERO -->
@@ -279,10 +282,8 @@
       <p>O Limpaê aproxima cidadãos e poder público por meio de um protótipo colaborativo — ferramenta educacional e conceitual.</p>
 
       <div class="cta-wrapper" aria-hidden="false">
-        <button id="open-sim" class="btn" type="button" aria-haspopup="dialog" aria-controls="modal-sim">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3v18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Simular denúncia
-        </button>
+        <!-- Simular denúncia agora leva para a mesma página de denúncia -->
+        <a class="btn" href="denuncia.html" role="button">Simular denúncia</a>
 
         <a class="btn secondary" href="#como" aria-label="Saber como funciona">Como funciona</a>
       </div>
@@ -349,51 +350,9 @@
 
     <div>
       <strong>Links</strong><br>
-      <a href="denuncia.html">Denunciar (exemplo)</a> — <a href="sobre.html">Sobre</a>
+      <a href="denuncia.html">Denunciar</a> — <a href="sobre.html">Sobre</a>
     </div>
   </footer>
-
-  <!-- MODAL TEMPLATE -->
-  <template id="modal-template">
-    <div class="modal-backdrop" id="modal-backdrop">
-      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" id="modal-sim">
-        <button aria-label="Fechar" id="modal-close" style="float:right;background:transparent;border:0;font-size:20px;cursor:pointer;color:#9ca3af">✕</button>
-        <h3 id="modal-title">Simular denúncia</h3>
-        <p>Este formulário é uma simulação para fins escolares. Nenhuma informação é enviada a órgãos reais.</p>
-
-        <form id="sim-form">
-          <div class="form-row">
-            <input id="field-name" name="name" placeholder="Seu nome (opcional)" aria-label="Seu nome (opcional)">
-            <select id="field-type" name="type" aria-label="Tipo de descarte" required>
-              <option value="">Tipo de descarte</option>
-              <option value="residencial">Residencial</option>
-              <option value="comercial">Comercial</option>
-              <option value="entulho">Entulho</option>
-              <option value="outro">Outro</option>
-            </select>
-          </div>
-
-          <div class="form-row">
-            <textarea id="field-desc" name="desc" rows="4" placeholder="Descrição rápida do local e do problema" aria-label="Descrição" required></textarea>
-          </div>
-
-          <div class="form-row">
-            <input id="field-location" name="location" placeholder="Endereço ou referência (ex: Rua X, nº Y)" aria-label="Localização">
-            <input id="field-photo" name="photo" placeholder="URL da foto (opcional)" aria-label="URL da foto">
-          </div>
-
-          <div class="form-row" style="justify-content:flex-end;">
-            <button type="button" class="btn secondary" id="modal-cancel">Cancelar</button>
-            <button type="submit" class="btn" id="modal-submit">Enviar simulado</button>
-          </div>
-        </form>
-
-        <div id="sim-result" style="display:none; margin-top:12px; padding:12px; border-radius:8px; background:#f7fff6; border:1px solid rgba(34,197,94,0.12); color:#065f46;">
-          <strong>Pronto!</strong> A denúncia foi simulada com sucesso — este é apenas um protótipo escolar.
-        </div>
-      </div>
-    </div>
-  </template>
 
   <script>
   (function(){
@@ -401,14 +360,14 @@
     var intro = document.getElementById('site-intro');
     if(intro){
       var prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if(prefersReduce){ intro.remove(); }
-      else { window.addEventListener('load', function(){ setTimeout(function(){ intro.remove(); }, 900); }); }
+      if(prefersReduce){ intro.parentNode.removeChild(intro); }
+      else { window.addEventListener('load', function(){ setTimeout(function(){ if(intro && intro.parentNode){ intro.parentNode.removeChild(intro); } }, 900); }); }
     }
 
     /* ===== mobile menu toggle (prevents overlap with header) ===== */
     var navToggle = document.getElementById('nav-toggle');
     var mobileMenu = document.getElementById('mobile-menu');
-    navToggle.addEventListener('click', function(){
+    navToggle && navToggle.addEventListener('click', function(){
       var expanded = this.getAttribute('aria-expanded') === 'true';
       this.setAttribute('aria-expanded', String(!expanded));
       if(!expanded){
@@ -431,7 +390,7 @@
       if(mobileMenu.style.display === 'flex' && !mobileMenu.contains(e.target) && e.target !== navToggle){
         mobileMenu.style.display = 'none';
         mobileMenu.setAttribute('aria-hidden','true');
-        navToggle.setAttribute('aria-expanded','false');
+        navToggle && navToggle.setAttribute('aria-expanded','false');
         document.documentElement.style.overflow = '';
         document.body.style.overflow = '';
       }
@@ -442,93 +401,11 @@
       if(window.innerWidth > 720 && mobileMenu){
         mobileMenu.style.display = 'none';
         mobileMenu.setAttribute('aria-hidden','true');
-        navToggle.setAttribute('aria-expanded','false');
+        navToggle && navToggle.setAttribute('aria-expanded','false');
         document.documentElement.style.overflow = '';
         document.body.style.overflow = '';
       }
     });
-
-    /* ===== modal: open, close, focus trap, simulate submit ===== */
-    var openBtn = document.getElementById('open-sim');
-    var template = document.getElementById('modal-template');
-    var lastFocused = null;
-    var backdrop = null;
-
-    function trapFocus(e){
-      if(!backdrop) return;
-      var focusable = backdrop.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])');
-      if(!focusable.length) return;
-      focusable = Array.prototype.slice.call(focusable);
-      var first = focusable[0], last = focusable[focusable.length-1];
-      if(e.key === 'Tab' || e.keyCode === 9){
-        if(e.shiftKey){
-          if(document.activeElement === first){ e.preventDefault(); last.focus(); }
-        } else {
-          if(document.activeElement === last){ e.preventDefault(); first.focus(); }
-        }
-      } else if(e.key === 'Escape' || e.keyCode === 27){
-        closeModal();
-      }
-    }
-
-    function openModal(){
-      if(backdrop) return;
-      lastFocused = document.activeElement;
-      var clone = template.content.cloneNode(true);
-      document.body.appendChild(clone);
-      backdrop = document.getElementById('modal-backdrop');
-
-      // prevent page scroll
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
-
-      // focus management
-      var firstInput = backdrop.querySelector('input, textarea, select, button');
-      if(firstInput) firstInput.focus();
-
-      // close handlers
-      backdrop.querySelectorAll('#modal-close, #modal-cancel').forEach(function(btn){ btn.addEventListener('click', closeModal); });
-
-      // submit simulation
-      var form = backdrop.querySelector('#sim-form');
-      var resultBox = backdrop.querySelector('#sim-result');
-      form.addEventListener('submit', function(ev){
-        ev.preventDefault();
-        var type = form.querySelector('#field-type').value;
-        var desc = form.querySelector('#field-desc').value.trim();
-        if(!type || !desc){ alert('Por favor, preencha o tipo e a descrição (simulação).'); return; }
-        var submitBtn = backdrop.querySelector('#modal-submit');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando...';
-        setTimeout(function(){
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Enviar simulado';
-          form.style.display = 'none';
-          resultBox.style.display = 'block';
-        }, 850);
-      });
-
-      // trap focus
-      backdrop.addEventListener('keydown', trapFocus);
-      // click outside closes
-      backdrop.addEventListener('click', function(e){ if(e.target === backdrop){ closeModal(); } });
-    }
-
-    function closeModal(){
-      if(!backdrop) return;
-      // restore scroll
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-      backdrop.remove();
-      backdrop = null;
-      if(lastFocused) try{ lastFocused.focus(); }catch(e){}
-    }
-
-    openBtn.addEventListener('click', openModal);
-    document.addEventListener('keydown', function(e){ if((e.key === 'Escape' || e.keyCode === 27) && backdrop) closeModal(); });
-
-    /* ===== small accessibility: make sure hero-note readable on dark backgrounds for all widths ===== */
-    // no JS required; handled by CSS background + contrast
 
   })();
   </script>
