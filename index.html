@@ -14,274 +14,141 @@
     --green-700:#14532d;
     --green-600:#15803d;
     --green-500:#22c55e;
-    --muted:#f3f4f6;
-    --text:#1f2937;
     --accent:#f59e0b;
-    --glass: rgba(255,255,255,0.80);
-    --max-content-width:1140px;
+    --glass: rgba(255,255,255,0.88);
+    --max-width:1180px;
     --safe-top: env(safe-area-inset-top, 0px);
-    --flag-height:44px; /* altura fixa para a faixa */
+    --flag-height:44px;
+    --base-font:16px;
   }
   *,*::before,*::after{box-sizing:border-box}
-  html,body{height:100%; margin:0; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+  html,body{height:100%; margin:0; font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; font-size:var(--base-font);}
   body{
-    font-family:"Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    color:var(--text);
+    color:#123;
     background:
       radial-gradient(1200px 600px at 10% 10%, rgba(34,197,94,0.03), transparent 6%),
-      radial-gradient(900px 400px at 90% 90%, rgba(20,83,45,0.02), transparent 6%),
-      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 24 24"><g fill="none" stroke="%230d1f13" stroke-opacity="0.03" stroke-width="1"><path d="M3 12c2-4 6-5 9-5s7 1 9 5"/><path d="M6 16c1-2 4-3 6-3s5 1 6 3"/></g></svg>') repeat;
-    overflow-x:hidden;
+      radial-gradient(900px 400px at 90% 90%, rgba(20,83,45,0.02), transparent 6%);
     -webkit-overflow-scrolling:touch;
     padding-top:0;
-    line-height:1.45;
+    line-height:1.5;
   }
 
-  .container{max-width:var(--max-content-width); margin:0 auto; padding:0 16px;}
+  .container{max-width:var(--max-width); margin:0 auto; padding:0 20px;}
 
-  /* ===== FAIXA FIXA (corrigida) ===== */
+  /* ===== TOP FLAG (fixed) ===== */
   .school-flag{
     position:fixed;
-    top:0;
-    left:0;
-    right:0;
+    top:0; left:0; right:0;
     height:var(--flag-height);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:6000;
+    display:flex; align-items:center; justify-content:center;
     background:linear-gradient(90deg,var(--accent),#f97316);
-    color:#081013;
-    font-weight:700;
-    font-size:13px;
-    padding:0 12px;
+    color:#081013; font-weight:700; font-size:13px;
+    z-index:7000;
     box-shadow:0 6px 18px rgba(0,0,0,0.06);
-    line-height:1;
-    text-align:center;
   }
 
-  /* ===== HEADER (posicionado abaixo da faixa) ===== */
+  /* ===== HEADER (below flag) ===== */
   header{
     position:sticky;
-    top:calc(var(--safe-top) + var(--flag-height)); /* garante que o header não fique em cima da faixa */
-    z-index:5000;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:12px 16px;
-    backdrop-filter: blur(6px);
-    background:linear-gradient(180deg, rgba(255,255,255,0.90), rgba(255,255,255,0.86));
+    top:calc(var(--safe-top) + var(--flag-height));
+    z-index:6000;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; padding:14px 20px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.90));
     border-bottom:1px solid rgba(16,24,32,0.04);
   }
-  .header-left{display:flex; align-items:center; gap:12px;}
-  .logo-text{
-    font-family:"Cinzel Decorative", serif;
-    font-size:26px;
-    letter-spacing:1px;
-    background:linear-gradient(90deg,var(--green-700),var(--green-500));
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-    text-shadow:0 6px 10px rgba(0,0,0,0.06);
-    white-space:nowrap;
-  }
-  .school-badge{
-    display:inline-block;
-    padding:6px 10px;
-    background:var(--glass);
-    border-radius:12px;
-    color:var(--green-700);
-    font-weight:700;
-    font-size:12px;
-    box-shadow:0 6px 18px rgba(20,83,45,0.06);
-    backdrop-filter: blur(4px);
-    white-space:nowrap;
-  }
+  .brand { display:flex; gap:12px; align-items:center; }
+  .logo-text { font-family:"Cinzel Decorative",serif; font-size:26px; background:linear-gradient(90deg,var(--green-700),var(--green-600)); -webkit-background-clip:text; color:transparent; }
+  .school-badge { padding:6px 10px; background:var(--glass); border-radius:12px; color:var(--green-700); font-weight:700; font-size:13px; box-shadow:0 6px 18px rgba(20,83,45,0.06); }
 
-  /* nav */
-  nav{ display:flex; gap:8px; align-items:center; }
-  .nav-link{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:8px 10px;
-    font-weight:600;
-    font-size:14px;
-    color:var(--text);
-    text-decoration:none;
-    border-radius:8px;
-  }
-  .nav-link:hover{ background:rgba(20,83,45,0.03); color:var(--green-600); }
+  nav { display:flex; gap:12px; align-items:center; }
+  nav a { text-decoration:none; color:var(--green-700); font-weight:700; padding:8px 10px; border-radius:8px; }
+  nav a:hover { background:rgba(20,83,45,0.04); }
 
-  .nav-toggle{
-    display:none; background:transparent; border:0; font-size:22px; cursor:pointer; color:var(--green-700);
-  }
+  /* mobile toggle */
+  .nav-toggle{ display:none; background:transparent; border:0; font-size:22px; cursor:pointer; color:var(--green-700); }
 
-  /* mobile menu (initially hidden) */
-  .mobile-menu{
-    position:fixed; top:calc(var(--safe-top) + var(--flag-height) + 16px); right:12px;
-    background:#fff; width:260px; border-radius:10px; box-shadow:0 24px 60px rgba(2,6,23,0.14);
-    display:flex; flex-direction:column; gap:6px; padding:10px; z-index:1400;
-  }
-  .mobile-menu a{ padding:10px; border-radius:8px; color:var(--text); text-decoration:none; font-weight:600; }
+  .mobile-menu{ position:fixed; top:calc(var(--safe-top) + var(--flag-height) + 12px); right:12px; background:#fff; width:280px; border-radius:10px; box-shadow:0 24px 60px rgba(2,6,23,0.14); display:flex; flex-direction:column; gap:6px; padding:10px; z-index:1400; }
 
-  /* ===== INTRO ===== */
-  .intro{
-    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(160deg, rgba(33,150,83,0.95), rgba(21,128,61,0.92));
-    z-index:4000; pointer-events:auto; animation:introFade .95s cubic-bezier(.22,.9,.28,1) forwards;
-  }
-  @keyframes introFade{
-    0%{opacity:1}
-    90%{opacity:1}
-    100%{opacity:0; visibility:hidden; pointer-events:none}
-  }
-  .intro-inner{ text-align:center; color:#fff; padding:18px; }
-  .intro-logo{ font-family:"Cinzel Decorative", serif; font-size:64px; letter-spacing:3px; margin:0; -webkit-background-clip:text; background-clip:text; color:transparent; background:linear-gradient(90deg,#fff,#f0f0f0);}
-  .intro-sub{ margin-top:8px; font-size:14px; font-weight:500; opacity:.95; }
-
-  /* ===== HERO ===== */
+  /* ===== HERO (overlay fade) ===== */
   .hero{
-    position:relative; padding:110px 0 64px; text-align:center; color:#fff; overflow:visible;
-    background-image:
-      linear-gradient(180deg, rgba(5,50,20,0.60), rgba(16,24,32,0.14)),
-      url('https://images.unsplash.com/photo-1558981403-c5f9898b2b18?auto=format&fit=crop&w=1600&q=80');
+    position:relative; padding:120px 12px 80px; text-align:center; color:#fff;
+    background-image: url('https://images.unsplash.com/photo-1599920400431-7c09116e7f43?auto=format&fit=crop&w=1500&q=60');
     background-size:cover; background-position:center;
   }
-
-  /* overlay ajustado: fade para transparente no final para evitar a faixa sólida */
-  .hero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background: linear-gradient(180deg,
-      rgba(6,40,18,0.48) 0%,
-      rgba(6,40,18,0.24) 55%,
-      rgba(6,40,18,0.08) 80%,
-      rgba(6,40,18,0.00) 100%);
-    pointer-events: none;
+  .hero::after{
+    content:""; position:absolute; inset:0; z-index:0;
+    background:linear-gradient(180deg, rgba(6,40,18,0.48) 0%, rgba(6,40,18,0.16) 60%, rgba(6,40,18,0.00) 100%);
+    pointer-events:none;
   }
-
   .hero .container{ position:relative; z-index:1; }
-  .hero h1{
-    font-family:"Cinzel Decorative", serif; font-size:48px; margin:0 0 8px; text-shadow:0 12px 30px rgba(0,0,0,0.5);
-    line-height:1.02; word-break:break-word;
-  }
-  .hero p{ max-width:760px; margin:6px auto 18px; font-size:17px; color:rgba(255,255,255,0.97); text-shadow:0 8px 22px rgba(0,0,0,0.36); }
+  .hero h1{ font-family:"Cinzel Decorative",serif; font-size:48px; margin:0 0 14px; text-shadow:0 12px 30px rgba(0,0,0,0.45); }
+  .hero p{ max-width:820px; margin:0 auto 28px; font-size:18px; color:rgba(255,255,255,0.95); text-shadow:0 6px 18px rgba(0,0,0,0.35); }
 
-  /* CTA */
-  .cta-wrapper{ display:flex; justify-content:center; gap:12px; align-items:center; z-index:2; position:relative; flex-wrap:wrap; margin-top:8px; }
-  .btn{
-    display:inline-flex; align-items:center; gap:10px; padding:14px 22px; background:linear-gradient(90deg,var(--green-600),var(--green-500));
-    color:#fff; border-radius:14px; font-weight:700; border:0; cursor:pointer; font-size:16px; box-shadow:0 10px 30px rgba(20,83,45,0.22);
-    min-height:48px;
-  }
-  .btn.secondary{ background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.12); padding:12px 16px; box-shadow:none; }
-  .hero-note{
-    display:inline-block; margin-top:12px; padding:8px 14px; border-radius:999px; background:rgba(0,0,0,0.48); color:#fff; font-weight:600; font-size:13px;
-  }
+  .cta-wrapper{ display:flex; gap:12px; justify-content:center; align-items:center; z-index:2; position:relative; flex-wrap:wrap; }
+  .cta { padding:14px 28px; border-radius:14px; background:linear-gradient(90deg,var(--green-600),var(--green-500)); color:#fff; font-weight:800; text-decoration:none; box-shadow:0 12px 36px rgba(20,83,45,0.12); }
+  .cta.secondary { background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.12); padding:12px 20px; font-weight:700; }
 
-  /* ensure wave is above overlay for clean cut */
-  .hero-wave{ position:relative; height:72px; margin-top:12px; z-index:3; }
-  .hero-wave svg{ display:block; width:100%; height:100%; }
+  .hero-note{ display:inline-block; margin-top:12px; padding:8px 14px; border-radius:999px; background:rgba(0,0,0,0.48); color:#fff; font-weight:700; }
 
-  /* section: explicit white background so wave overlays onto white */
-  section {
-    background: #ffffff;
-    position: relative;
-    z-index: 1;
-    padding:56px 0;
-  }
+  /* note: removed wave SVG to avoid the white strip artifact */
 
-  /* ===== SECTIONS ===== */
-  section h2{ text-align:center; font-size:30px; color:var(--green-700); margin-bottom:12px; font-weight:700; }
-  .section-desc{ max-width:720px; margin:0 auto 28px; text-align:center; color:#374151; }
+  /* ===== MAIN CONTENT ===== */
+  main.section { padding:56px 20px; }
 
-  /* CARDS */
-  .cards{ display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
-  .card{ background:linear-gradient(180deg,#fff,#fbfff9); border-radius:14px; padding:16px; border:1px solid rgba(34,197,94,0.08); text-align:center; }
-  .card span{ font-size:28px; display:block; margin-bottom:8px; }
+  .section { background:#fff; padding:56px 20px; }
+  .section h2{ font-size:34px; color:var(--green-700); margin:0 0 18px; font-family:"Cinzel Decorative",serif; text-align:center; }
 
-  /* NOTICE */
-  .notice{ background:linear-gradient(180deg,#f0fff4,#f7fffa); border-left:6px solid var(--green-500); padding:16px; border-radius:12px; max-width:900px; margin:0 auto; color:#065f46; }
+  .section-desc{ max-width:820px; margin:0 auto 28px; text-align:center; color:#374151; font-size:16px; }
 
-  /* FOOTER */
-  footer{ border-top:1px solid rgba(16,24,32,0.04); padding:20px 16px; background:linear-gradient(180deg, rgba(250,251,250,0.9), rgba(255,255,255,0.98)); display:flex; gap:18px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
-  footer small{ color:#6b7280; }
+  .cards { display:grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap:22px; margin-top:18px; }
 
-  /* small helpers */
-  .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+  .card { background:linear-gradient(180deg,#fff,#fbfff9); padding:20px; border-radius:16px; box-shadow:0 20px 40px rgba(2,6,23,0.04); border:1px solid rgba(34,197,94,0.06); text-align:left; }
 
-  /* ===== RESPONSIVE IMPROVEMENTS (MOBILE FOCUS) ===== */
+  /* footer simplified (removed links section) */
+  footer { background:#fff; padding:40px 20px; border-top:1px solid rgba(16,24,32,0.04); display:flex; justify-content:space-between; gap:16px; align-items:center; flex-wrap:wrap; }
+
+  footer .brand-footer { display:flex; gap:12px; align-items:center; }
+  footer small { color:#6b7280; }
+
+  /* RESPONSIVE */
   @media (max-width:900px){
     .hero h1{ font-size:40px; }
-    .container{ padding:0 14px; }
   }
-
   @media (max-width:720px){
     nav{ display:none; }
     .nav-toggle{ display:inline-flex; }
-
-    header{ padding:10px 12px; }
-    .logo-text{ font-size:22px; }
-
-    .mobile-menu{ right:8px; top:calc(var(--safe-top) + var(--flag-height) + 12px); width:84%; max-width:320px; }
-
-    .hero{ padding:82px 12px 48px; }
+    header{ padding:12px; }
+    .hero{ padding:96px 12px 60px; }
     .hero h1{ font-size:32px; }
-    .hero p{ font-size:15px; margin-bottom:14px; }
-
-    .cta-wrapper{ flex-direction:column; align-items:stretch; gap:10px; max-width:420px; margin:0 auto; padding:0 6px; }
-    .btn{ width:100%; justify-content:center; padding:14px 16px; font-size:16px; }
-    .btn.secondary{ padding:12px 14px; }
-
-    .hero-note{ display:block; margin:10px auto 0; }
-
-    footer{ flex-direction:column; align-items:flex-start; gap:12px; }
+    .cta-wrapper{ flex-direction:column; width:100%; max-width:420px; margin:0 auto; }
+    .cta{ width:100%; text-align:center; }
   }
-
-  /* ensure no element accidentally overlaps due to negative margins elsewhere */
-  *:not(html):not(body){ -webkit-tap-highlight-color: rgba(0,0,0,0); }
   </style>
 </head>
 <body>
 
-  <!-- VISUAL NOTE: projeto escolar (FAIXA FIXA NO TOPO) -->
+  <!-- fixed top flag -->
   <div class="school-flag" role="note" aria-live="polite">Projeto escolar — Este site é um protótipo estudantil e NÃO é um serviço oficial do governo</div>
 
-  <!-- INTRO (mantida; será removida pelo script após carregamento) -->
-  <div class="intro" id="site-intro" aria-hidden="true">
-    <div class="intro-inner">
-      <h1 class="intro-logo">Limpaê</h1>
-      <div class="intro-sub">Protótipo escolar — cidadania que transforma o espaço público</div>
-    </div>
-  </div>
-
-  <header>
-    <div class="header-left">
-      <div class="logo-text" aria-hidden="true">Limpaê</div>
-      <div class="school-badge" aria-hidden="true">Projeto Escolar</div>
+  <header class="container" role="banner">
+    <div class="brand">
+      <div class="logo-text">Limpaê</div>
+      <div class="school-badge">Projeto Escolar</div>
     </div>
 
-    <!-- desktop nav -->
-    <nav id="main-nav" aria-label="Menu principal">
-      <a class="nav-link" href="index.html">Início</a>
-      <a class="nav-link" href="#como">Como funciona</a>
-      <a class="nav-link" href="sobre.html">Sobre</a>
-
-      <!-- Denunciar agora é um link integrado junto aos outros (leva à mesma página denuncia.html) -->
-      <a class="nav-link" href="denuncia.html" aria-label="Denunciar">Denunciar</a>
+    <nav aria-label="Principal">
+      <a href="index.html">Início</a>
+      <a href="#como">Como funciona</a>
+      <a href="sobre.html">Sobre</a>
+      <!-- Denunciar integrated in nav -->
+      <a href="denuncia.html" style="background:linear-gradient(90deg,var(--green-600),var(--green-500)); color:#fff; padding:10px 12px; border-radius:10px; text-decoration:none; font-weight:800;">Denunciar</a>
     </nav>
 
-    <!-- mobile toggle -->
-    <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menu">
-      ☰
-    </button>
+    <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menu">☰</button>
   </header>
 
-  <!-- mobile menu (inserted/controlled by JS) -->
+  <!-- mobile menu -->
   <div id="mobile-menu" class="mobile-menu" role="menu" aria-hidden="true" style="display:none">
     <a href="index.html" role="menuitem">Início</a>
     <a href="#como" role="menuitem">Como funciona</a>
@@ -289,96 +156,59 @@
     <a href="denuncia.html" role="menuitem">Denunciar</a>
   </div>
 
-  <!-- HERO -->
-  <section class="hero" role="banner" aria-label="Chamada principal">
+  <section class="hero" role="banner" aria-label="Chamada">
     <div class="container">
       <h1>Uma cidade limpa começa com você</h1>
-      <p>O Limpaê aproxima cidadãos e poder público por meio de um protótipo colaborativo — ferramenta educacional e conceitual.</p>
+      <p>O Limpaê é um protótipo escolar que mostra como cidadãos podem reportar descarte irregular de forma clara e didática.</p>
 
-      <div class="cta-wrapper" aria-hidden="false">
-        <!-- Simular denúncia agora leva para a mesma página de denúncia -->
-        <a class="btn" href="denuncia.html" role="button">Simular denúncia</a>
-
-        <a class="btn secondary" href="#como" aria-label="Saber como funciona">Como funciona</a>
+      <div class="cta-wrapper">
+        <a class="cta" href="denuncia.html">Simular denúncia</a>
+        <a class="cta secondary" href="#como">Como funciona</a>
       </div>
 
-      <div class="hero-note" role="note">
-        Protótipo escolar — não substitui canais oficiais.
-      </div>
-    </div>
-
-    <div class="hero-wave" aria-hidden="true">
-      <svg viewBox="0 0 1440 72" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0,32 C200,80 400,0 720,30 C1040,60 1240,10 1440,36 L1440 72 L0 72 Z" fill="#fff"></path>
-      </svg>
+      <div class="hero-note">Protótipo escolar — não substitui canais oficiais.</div>
     </div>
   </section>
 
-  <!-- COMO FUNCIONA -->
-  <section id="como">
+  <section id="como" class="section" aria-labelledby="como-title">
     <div class="container">
-      <h2>Como funciona a proposta</h2>
-      <p class="section-desc">Este protótipo demonstra como a tecnologia pode aproximar cidadãos e o poder público no combate ao descarte irregular. Simples, transparente e colaborativo.</p>
+      <h2 id="como-title">Como funciona a proposta</h2>
+      <p class="section-desc">Este protótipo demonstra um fluxo de denúncia com etapas, mapa interativo e visualizações. Tudo para fins educacionais.</p>
 
       <div class="cards">
-        <div class="card"><span>📍</span><strong>Identificação</strong><p>O cidadão registra o ponto com foto e localização.</p></div>
-        <div class="card"><span>📝</span><strong>Envio</strong><p>As informações são centralizadas e padronizadas para órgãos.</p></div>
-        <div class="card"><span>📨</span><strong>Encaminhamento</strong><p>O modelo sugere o órgão responsável para ação.</p></div>
-        <div class="card"><span>🌱</span><strong>Impacto</strong><p>Mais eficiência e conscientização para redução do problema.</p></div>
+        <div class="card"><strong style="font-size:18px">Identificação</strong><p style="margin-top:8px">Registre o ponto com foto e localização — interface simples.</p></div>
+        <div class="card"><strong style="font-size:18px">Envio</strong><p style="margin-top:8px">Os dados são padronizados. No protótipo, salvamos localmente e enviamos um e‑mail de demonstração.</p></div>
+        <div class="card"><strong style="font-size:18px">Revisão</strong><p style="margin-top:8px">Reveja e escolha enviar anonimamente, se desejar.</p></div>
+        <div class="card"><strong style="font-size:18px">Apresentação</strong><p style="margin-top:8px">As denúncias são exibidas somente localmente para demonstração (pode ser protegido por senha se quiser).</p></div>
       </div>
     </div>
   </section>
 
-  <!-- PARA QUEM -->
-  <section>
-    <div class="container">
-      <h2>Para quem é o Limpaê</h2>
-      <div class="cards">
-        <div class="card"><span>👥</span><p>Cidadãos que desejam participar ativamente.</p></div>
-        <div class="card"><span>🏘️</span><p>Comunidades e associações locais.</p></div>
-        <div class="card"><span>🏛️</span><p>Gestores públicos como inspiração de solução.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- IMPORTANTE -->
-  <section>
-    <div class="container">
-      <h2>Importante saber</h2>
-      <div class="notice">
-        <strong>Projeto conceitual e educacional:</strong><br>
-        O Limpaê é um projeto escolar e protótipo de interface. NÃO é um serviço oficial do governo e não substitui canais institucionais. Use apenas para fins demonstrativos e educacionais.
-      </div>
-    </div>
-  </section>
-
-  <!-- RODAPÉ -->
-  <footer>
-    <div style="display:flex;gap:14px;align-items:center;">
-      <img src="assets/logo.png" alt="Logo Limpaê" style="height:40px;display:block;">
+  <footer class="container" role="contentinfo">
+    <div class="brand-footer">
+      <img src="assets/logo.png" alt="Logo Limpaê" style="height:44px;">
       <div>
         <div style="font-weight:700">Limpaê</div>
-        <small>Protótipo escolar — não é serviço oficial</small>
+        <small style="color:#6b7280">Protótipo escolar — não é serviço oficial</small>
       </div>
     </div>
 
+    <!-- removed the links section as requested -->
     <div>
-      <strong>Links</strong><br>
-      <a href="denuncia.html">Denunciar</a> — <a href="sobre.html">Sobre</a>
+      <small style="color:#6b7280">Apresentação e protótipo — uso educacional</small>
     </div>
   </footer>
 
   <script>
   (function(){
-    /* ===== remove intro after short delay; respect reduced motion ===== */
+    // remove intro if present (keeps compatibility with previous versions)
     var intro = document.getElementById('site-intro');
     if(intro){
       var prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if(prefersReduce){ intro.parentNode.removeChild(intro); }
-      else { window.addEventListener('load', function(){ setTimeout(function(){ if(intro && intro.parentNode){ intro.parentNode.removeChild(intro); } }, 900); }); }
+      if(prefersReduce){ intro.remove(); } else { window.addEventListener('load', function(){ setTimeout(function(){ if(intro && intro.parentNode){ intro.parentNode.removeChild(intro); } }, 900); }); }
     }
 
-    /* ===== mobile menu toggle (prevents overlap with header) ===== */
+    // mobile menu toggle
     var navToggle = document.getElementById('nav-toggle');
     var mobileMenu = document.getElementById('mobile-menu');
     navToggle && navToggle.addEventListener('click', function(){
@@ -387,7 +217,6 @@
       if(!expanded){
         mobileMenu.style.display = 'flex';
         mobileMenu.setAttribute('aria-hidden','false');
-        // prevent page scroll behind menu
         document.documentElement.style.overflow = 'hidden';
         document.body.style.overflow = 'hidden';
       } else {
@@ -398,7 +227,7 @@
       }
     });
 
-    // close mobile menu when clicking outside or selecting item
+    // close mobile menu when clicking outside
     document.addEventListener('click', function(e){
       if(!mobileMenu) return;
       if(mobileMenu.style.display === 'flex' && !mobileMenu.contains(e.target) && e.target !== navToggle){
@@ -410,7 +239,7 @@
       }
     });
 
-    // close mobile menu on resize to desktop size
+    // hide mobile menu on resize to desktop
     window.addEventListener('resize', function(){
       if(window.innerWidth > 720 && mobileMenu){
         mobileMenu.style.display = 'none';
@@ -420,7 +249,6 @@
         document.body.style.overflow = '';
       }
     });
-
   })();
   </script>
 </body>
