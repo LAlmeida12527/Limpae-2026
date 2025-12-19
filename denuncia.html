@@ -3,336 +3,233 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Limpaê — Simular Denúncia (Protótipo Escolar)</title>
+  <title>Limpaê — Denunciar (Protótipo Escolar)</title>
 
   <!-- Fontes -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <!-- Leaflet (mapa) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-sA+o1x9kXwIYv2h6K2z5vNUnz8WQYp4Q+W3M0bY1wAM=" crossorigin=""/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-o9N1j8p8u7yU3rT2aQf1+1tYq3s3nYb2n3fUQk0sQBM=" crossorigin=""></script>
+  <!-- Leaflet CSS/JS (no integrity to avoid blocking) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
     :root{
       --green-700:#14532d;
       --green-600:#15803d;
       --green-500:#22c55e;
-      --muted:#f3f4f6;
-      --text:#1f2937;
-      --accent:#f59e0b;
-      --glass: rgba(255,255,255,0.85);
-      --max-width:1100px;
       --safe-top: env(safe-area-inset-top, 0px);
+      --glass: rgba(255,255,255,0.9);
+      --max-width:1100px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%; margin:0; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
-    body{
-      font-family:"Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(34,197,94,0.03), transparent 6%),
-        radial-gradient(900px 400px at 90% 90%, rgba(20,83,45,0.02), transparent 6%);
-      padding-top:var(--safe-top);
-      line-height:1.45;
-    }
+    html,body{height:100%; margin:0; font-family:"Poppins",system-ui, -apple-system, "Segoe UI", Roboto, Arial;}
+    body{ padding-top:var(--safe-top); background:linear-gradient(180deg,#f7fff9,#ffffff); color:#1f2937; -webkit-font-smoothing:antialiased; }
+    .container{max-width:var(--max-width); margin:0 auto; padding:16px;}
 
-    .container{max-width:var(--max-width); margin:0 auto; padding:0 16px;}
-
-    /* header */
-    header {
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      padding:12px 16px; position:sticky; top:var(--safe-top); background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8));
-      border-bottom:1px solid rgba(16,24,32,0.04); z-index:1200;
-    }
-    .brand { display:flex; gap:12px; align-items:center; }
-    .logo { font-family:"Cinzel Decorative", serif; background:linear-gradient(90deg,var(--green-700),var(--green-500)); -webkit-background-clip:text; background-clip:text; color:transparent; font-size:24px; }
+    header{ display:flex; align-items:center; justify-content:space-between; padding:12px 0; }
+    .logo { font-family:"Cinzel Decorative", serif; background:linear-gradient(90deg,var(--green-700),var(--green-500)); -webkit-background-clip:text; color:transparent; font-size:24px; }
     .badge { font-size:12px; padding:6px 10px; border-radius:10px; background:var(--glass); color:var(--green-700); font-weight:700; }
 
-    /* top info */
-    .note {
-      margin:14px 0 4px;
-      text-align:center;
-      color:#334155;
-      font-weight:600;
-      font-size:14px;
-    }
-    .note small{ display:block; font-weight:500; color:#475569; font-size:13px; margin-top:6px; }
+    .note { text-align:center; margin:12px 0; font-weight:600; color:#334155; }
+    .note small{ display:block; font-weight:500; color:#475569; margin-top:6px; }
 
-    /* layout */
-    .grid{ display:grid; grid-template-columns: 1fr 360px; gap:28px; align-items:start; margin-top:18px; }
-    @media (max-width:980px){ .grid{ grid-template-columns:1fr; } }
+    .grid{ display:grid; grid-template-columns:1fr 360px; gap:22px; align-items:start; }
+    @media(max-width:980px){ .grid{ grid-template-columns:1fr; } }
 
-    /* card */
-    .card{ background:#fff; border-radius:12px; padding:18px; box-shadow:0 10px 30px rgba(16,24,32,0.06); border:1px solid rgba(2,6,23,0.04); }
+    .card{ background:#fff; border-radius:12px; padding:16px; border:1px solid rgba(2,6,23,0.04); box-shadow:0 18px 40px rgba(2,6,23,0.04); }
 
-    /* steps header */
-    .steps {
-      display:flex; gap:8px; align-items:center; margin-bottom:8px; flex-wrap:wrap;
-    }
-    .step {
-      padding:8px 12px; border-radius:999px; background:rgba(20,83,45,0.06); color:var(--green-700); font-weight:700; font-size:13px;
-    }
-    .progress {
-      display:flex; align-items:center; gap:8px; margin-top:10px;
-    }
-    .progress .dot{ width:10px; height:10px; border-radius:50%; background:#e6f4ea; }
-    .progress .dot.active{ background:var(--green-600); box-shadow:0 6px 18px rgba(20,83,45,0.18); }
-
-    /* form */
-    form .row{ margin-bottom:12px; display:flex; gap:10px; flex-wrap:wrap; }
-    label{ display:block; font-size:13px; margin-bottom:6px; font-weight:600; color:#263238; }
-    input[type="text"], input[type="url"], select, textarea {
-      width:100%; padding:12px 14px; border-radius:8px; border:1px solid #e6e8eb; font-size:15px;
-      background:#fff; color:var(--text);
-    }
+    label{ display:block; font-weight:700; margin-bottom:6px; color:#263238; font-size:13px; }
+    input, select, textarea { width:100%; padding:12px; border-radius:8px; border:1px solid #e6e8eb; font-size:15px; }
     textarea{ min-height:110px; resize:vertical; }
 
-    .controls{ display:flex; gap:10px; justify-content:flex-end; margin-top:8px; flex-wrap:wrap; }
-    .btn{
-      background:linear-gradient(90deg,var(--green-600),var(--green-500));
-      color:#fff; padding:12px 18px; border-radius:12px; border:0; font-weight:700; cursor:pointer;
-      box-shadow:0 10px 30px rgba(20,83,45,0.18); font-size:15px;
+    .controls{ display:flex; gap:10px; margin-top:12px; justify-content:flex-end; flex-wrap:wrap; }
+    .btn{ background:linear-gradient(90deg,var(--green-600),var(--green-500)); color:#fff; padding:12px 16px; border-radius:10px; border:0; cursor:pointer; font-weight:700; }
+    .btn.ghost{ background:transparent; color:var(--green-700); border:1px solid rgba(20,83,45,0.08); }
+
+    #map{ width:100%; height:260px; border-radius:10px; border:1px solid rgba(2,6,23,0.06); margin-top:8px; }
+
+    .photos{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    .photo-thumb{ width:88px; height:88px; object-fit:cover; border-radius:8px; border:1px solid rgba(2,6,23,0.06); }
+
+    .report-card{ padding:10px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfff9); border:1px solid rgba(34,197,94,0.06); }
+
+    .saved-list{ margin-top:12px; display:flex; flex-direction:column; gap:8px; max-height:320px; overflow:auto; }
+
+    /* Mobile bottom actions */
+    .step-actions{
+      display:none;
+      position:fixed;
+      left:0; right:0; bottom:0;
+      padding:10px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(255,255,255,0.96));
+      box-shadow:0 -10px 30px rgba(2,6,23,0.06);
+      z-index:3000;
+      gap:10px;
+      justify-content:space-between;
     }
-    .btn.ghost{ background:transparent; color:var(--green-700); border:1px solid rgba(20,83,45,0.08); box-shadow:none; }
-    .btn.full{ width:100%; }
-
-    /* file preview */
-    .photos { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
-    .photo-thumb{ width:88px; height:88px; border-radius:10px; object-fit:cover; border:1px solid rgba(2,6,23,0.06); }
-
-    /* map */
-    #map { width:100%; height:260px; border-radius:10px; border:1px solid rgba(2,6,23,0.06); }
-    .map-actions{ display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
-
-    /* preview card on right column */
-    .preview {
-      display:flex; flex-direction:column; gap:12px;
-    }
-    .report-card {
-      display:flex; flex-direction:column; gap:8px;
-      border-radius:12px; padding:12px; background:linear-gradient(180deg,#fff,#fbfff9);
-      border:1px solid rgba(34,197,94,0.06);
-    }
-    .meta { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
-    .small { font-size:13px; color:#475569; }
-
-    /* saved reports list */
-    .saved-list{ margin-top:14px; display:flex; flex-direction:column; gap:8px; max-height:380px; overflow:auto; padding-right:6px; }
-    .saved-item{ display:flex; gap:10px; align-items:center; justify-content:space-between; padding:10px; border-radius:10px; background:#fff; border:1px solid rgba(2,6,23,0.04); }
-    .saved-item button{ background:transparent; border:0; color:#ef4444; cursor:pointer; font-weight:700; }
-
-    /* helper text / errors */
-    .hint{ font-size:13px; color:#6b7280; }
-    .error{ color:#b91c1c; font-size:13px; font-weight:700; }
-
-    /* finalize / thanks */
-    .thanks { text-align:center; padding:24px; }
-
-    /* responsiveness */
-    @media (max-width:980px){
-      .grid{ grid-template-columns:1fr; }
-      .preview{ order:2; }
-      .card{ padding:14px; }
-      #map{ height:220px; }
-    }
-    @media (max-width:420px){
-      .btn{ font-size:15px; padding:12px; }
-      .photo-thumb{ width:72px; height:72px; }
+    @media(max-width:720px){
+      .step-actions{ display:flex; }
+      body{ padding-bottom:84px; }
+      .btn{ font-size:15px; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="brand">
+  <header class="container">
+    <div style="display:flex;gap:12px;align-items:center">
       <div class="logo">Limpaê</div>
       <div class="badge">Projeto Escolar</div>
     </div>
-    <nav aria-label="Topo">
-      <a href="index.html" class="hint" style="text-decoration:none;color:#334155;font-weight:700">Início</a>
-    </nav>
+    <nav><a href="index.html" style="text-decoration:none;color:#334155;font-weight:700">Início</a></nav>
   </header>
 
   <main class="container" role="main">
-    <div class="note">
-      Formulário de denúncia (simulada) — uso educacional. <small>Não envia dados a órgãos reais.</small>
-    </div>
+    <div class="note">Formulário de denúncia (simulada) — uso educacional. <small>Não envia dados a órgãos reais. Também envia um e‑mail de demonstração via FormSubmit quando confirmado.</small></div>
 
     <div class="grid" role="region" aria-label="Formulário de denúncia">
-      <!-- left: form steps -->
-      <div class="card" aria-labelledby="titulo-denuncia">
-        <h2 id="titulo-denuncia" style="margin:0 0 6px; font-family:'Cinzel Decorative', serif; color:var(--green-700)">Denunciar ponto de descarte</h2>
+      <div class="card" id="left-card">
+        <h2 style="margin:0 0 8px; font-family:'Cinzel Decorative', serif; color:var(--green-700)">Denunciar ponto de descarte</h2>
 
-        <div class="steps" aria-hidden="false">
-          <div class="step">1. Categoria</div>
-          <div class="step">2. Local</div>
-          <div class="step">3. Fotos</div>
-          <div class="step">4. Revisar</div>
-        </div>
+        <!-- The HTML form will POST to FormSubmit endpoint and also be handled locally by JS -->
+        <form id="report-form" method="POST" action="https://formsubmit.co/el/kazoho" enctype="multipart/form-data" novalidate>
+          <!-- Hidden fields for FormSubmit -->
+          <input type="hidden" name="_subject" value="Nova denúncia simulada — Limpaê" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_next" value="https://formsubmit.co/thankyou" />
+          <!-- include an identifier so you can filter simulated emails -->
+          <input type="hidden" name="source" value="limpae-prototipo-escolar" />
 
-        <div id="form-area">
           <!-- Step 1 -->
-          <form id="report-form" novalidate>
-            <fieldset data-step="1" style="border:0;padding:0;margin:0">
-              <div class="row">
-                <label for="category">Categoria</label>
-                <select id="category" required aria-required="true">
-                  <option value="">Escolha a categoria...</option>
-                  <option value="residencial">Descarte residencial</option>
-                  <option value="comercial">Descarte comercial</option>
-                  <option value="entulho">Entulho / Construção</option>
-                  <option value="eletronico">Resíduo eletrônico</option>
-                  <option value="verde">Restos de poda / vegetação</option>
-                  <option value="outro">Outro</option>
-                </select>
-              </div>
+          <fieldset data-step="1">
+            <label for="category">Categoria *</label>
+            <select id="category" name="category" required>
+              <option value="">Escolha a categoria...</option>
+              <option value="residencial">Descarte residencial</option>
+              <option value="comercial">Descarte comercial</option>
+              <option value="entulho">Entulho / Construção</option>
+              <option value="eletronico">Resíduo eletrônico</option>
+              <option value="verde">Restos de poda / vegetação</option>
+              <option value="outro">Outro</option>
+            </select>
 
-              <div class="row">
-                <label for="severity">Gravidade</label>
-                <select id="severity" required>
-                  <option value="">Selecione</option>
-                  <option value="baixo">Baixo — lixo solto</option>
-                  <option value="medio">Médio — acúmulo pequeno</option>
-                  <option value="alto">Alto — grande acúmulo/entulho</option>
-                  <option value="critico">Crítico — risco à saúde</option>
-                </select>
-              </div>
+            <label for="severity" style="margin-top:10px">Gravidade *</label>
+            <select id="severity" name="severity" required>
+              <option value="">Selecione</option>
+              <option value="baixo">Baixo — lixo solto</option>
+              <option value="medio">Médio — acúmulo pequeno</option>
+              <option value="alto">Alto — grande acúmulo/entulho</option>
+              <option value="critico">Crítico — risco à saúde</option>
+            </select>
 
-              <div class="row">
-                <label for="description">Descrição</label>
-                <textarea id="description" placeholder="Descreva o local, quantidade, e qualquer observação (ex.: cheiro, animais, risco)" required></textarea>
-              </div>
+            <label for="description" style="margin-top:10px">Descrição *</label>
+            <textarea id="description" name="description" placeholder="Descreva o local e observações" required></textarea>
 
-              <div class="row">
-                <label for="datetime">Data / hora (observada)</label>
-                <input id="datetime" type="text" placeholder="ex.: 2025-03-04 10:30 (opcional)">
-              </div>
+            <label for="datetime" style="margin-top:10px">Data / hora (observada)</label>
+            <input id="datetime" name="datetime" type="text" placeholder="ex.: 2025-03-04 10:30 (opcional)">
 
-              <div class="controls" style="justify-content:flex-start;">
-                <button type="button" class="btn ghost" id="to-step-2">Próximo: Local</button>
-                <div class="hint" style="align-self:center">Campos com * são obrigatórios</div>
-              </div>
-            </fieldset>
+            <div class="controls" style="justify-content:flex-start">
+              <button type="button" class="btn" id="next-1">Próximo: Local</button>
+            </div>
+          </fieldset>
 
-            <!-- Step 2: Location -->
-            <fieldset data-step="2" style="border:0;padding:0;margin:0;display:none">
-              <div class="row">
-                <label>Localização</label>
-                <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                  <button type="button" class="btn ghost" id="detect-location">Detectar minha posição</button>
-                  <button type="button" class="btn ghost" id="manual-pos-btn">Inserir manualmente</button>
-                </div>
-                <div class="hint" style="margin-top:8px">Você pode arrastar o marcador no mapa para ajustar a posição.</div>
-              </div>
+          <!-- Step 2 -->
+          <fieldset data-step="2" style="display:none">
+            <label>Localização</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button type="button" class="btn ghost" id="detect-location">Detectar minha posição</button>
+              <button type="button" class="btn ghost" id="manual-pos-btn">Inserir manualmente</button>
+            </div>
 
-              <div id="map" role="application" aria-label="Mapa para escolher localização"></div>
+            <div id="map" aria-label="Mapa para escolher localização"></div>
 
-              <div class="row" style="margin-top:8px;">
-                <label for="address">Endereço / referência</label>
-                <input id="address" type="text" placeholder="Ex.: Rua ABC, próximo ao número X">
-              </div>
+            <label for="address" style="margin-top:10px">Endereço / referência</label>
+            <input id="address" name="address" type="text" placeholder="Ex.: Rua ABC, próximo ao número X">
 
-              <div class="map-actions">
-                <div class="hint small">Lat: <span id="lat">—</span> &nbsp; Lng: <span id="lng">—</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+              <div class="hint">Lat: <span id="lat">—</span> &nbsp; Lng: <span id="lng">—</span></div>
+              <div class="controls" style="justify-content:flex-end">
+                <button type="button" class="btn ghost" id="back-2">Voltar</button>
+                <button type="button" class="btn" id="next-2">Próximo: Fotos</button>
               </div>
+            </div>
+          </fieldset>
 
-              <div class="controls">
-                <button type="button" class="btn ghost" id="back-to-1">Voltar</button>
-                <button type="button" class="btn" id="to-step-3">Próximo: Fotos</button>
-              </div>
-            </fieldset>
+          <!-- Step 3 -->
+          <fieldset data-step="3" style="display:none">
+            <label for="photos">Fotos (até 6)</label>
+            <input id="photos" type="file" accept="image/*" multiple>
+            <div class="photos" id="photos-preview" aria-live="polite"></div>
 
-            <!-- Step 3: Photos -->
-            <fieldset data-step="3" style="border:0;padding:0;margin:0;display:none">
-              <div class="row">
-                <label for="photos">Fotos (até 6)</label>
-                <input id="photos" type="file" accept="image/*" multiple>
-                <div class="hint">Arraste ou selecione fotos. Serão salvas apenas localmente para a simulação.</div>
-                <div class="photos" id="photos-preview" aria-live="polite"></div>
-              </div>
+            <div class="controls">
+              <button type="button" class="btn ghost" id="back-3">Voltar</button>
+              <button type="button" class="btn" id="next-3">Próximo: Revisar</button>
+            </div>
+          </fieldset>
 
-              <div class="controls">
-                <button type="button" class="btn ghost" id="back-to-2">Voltar</button>
-                <button type="button" class="btn" id="to-step-4">Próximo: Revisar</button>
-              </div>
-            </fieldset>
+          <!-- Step 4 -->
+          <fieldset data-step="4" style="display:none">
+            <label>Revisar denúncia</label>
+            <div id="review-area" class="report-card" aria-live="polite"></div>
 
-            <!-- Step 4: Review -->
-            <fieldset data-step="4" style="border:0;padding:0;margin:0;display:none">
-              <div style="margin-bottom:12px;">
-                <label>Revisar denúncia</label>
-                <div id="review-area" class="report-card"></div>
-              </div>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:10px">
+              <input id="anonymous" name="anonymous" type="checkbox"> <label for="anonymous" style="margin:0;font-weight:700">Enviar anonimamente (simulação)</label>
+            </div>
 
-              <div style="display:flex; gap:10px; align-items:center; margin-bottom:6px;">
-                <input id="anonymous" type="checkbox" />
-                <label for="anonymous" style="margin:0;font-weight:600">Enviar anonimamente (simulação)</label>
-              </div>
+            <!-- Photos will be also appended to a hidden input as JSON to send via FormSubmit -->
+            <input type="hidden" name="photos_data" id="photos-data">
 
-              <div class="controls">
-                <button type="button" class="btn ghost" id="back-to-3">Voltar</button>
-                <button type="submit" class="btn" id="submit-report">Enviar simulado</button>
-              </div>
-            </fieldset>
-          </form>
-        </div>
+            <div class="controls" style="justify-content:flex-start;margin-top:12px">
+              <button type="button" class="btn ghost" id="back-4">Voltar</button>
+              <button type="submit" class="btn" id="submit-report">Enviar simulada (salva local + envia por e‑mail)</button>
+            </div>
+          </fieldset>
+        </form>
       </div>
 
-      <!-- right: preview, saved -->
-      <aside class="preview">
+      <!-- RIGHT COLUMN: preview and saved -->
+      <aside>
         <div class="card">
-          <h3 style="margin:0 0 6px;">Visualização rápida</h3>
-          <div id="live-preview" class="report-card">
-            <div class="meta">
+          <h3 style="margin:0 0 8px">Visualização rápida</h3>
+          <div class="report-card">
+            <div style="display:flex;justify-content:space-between">
               <div><strong>Categoria:</strong> <span id="pv-category">—</span></div>
-              <div class="small" id="pv-severity">—</div>
+              <div id="pv-severity" style="color:#475569">—</div>
             </div>
-            <div id="pv-desc" class="small">—</div>
-            <div style="display:flex; gap:8px; margin-top:8px;" id="pv-photos"></div>
+            <div id="pv-desc" style="margin-top:8px;color:#475569">—</div>
+            <div id="pv-photos" style="display:flex;gap:8px;margin-top:8px"></div>
           </div>
-
-          <div style="margin-top:12px;">
-            <button class="btn full" id="open-same-modal">Salvar / Enviar simulado</button>
+          <div style="margin-top:12px">
+            <button class="btn" id="open-review">Salvar / Enviar simulado</button>
           </div>
         </div>
 
-        <div class="card" aria-live="polite">
-          <h3 style="margin:0 0 6px;">Denúncias simuladas</h3>
-          <div class="saved-list" id="saved-list">
-            <!-- preenchido por JS -->
-          </div>
-          <div style="margin-top:8px;">
-            <button class="btn ghost" id="clear-storage">Limpar todas (apenas local)</button>
+        <div class="card" style="margin-top:12px">
+          <h3 style="margin:0 0 8px">Denúncias simuladas</h3>
+          <div id="saved-list" class="saved-list" aria-live="polite"></div>
+          <div style="margin-top:8px">
+            <button class="btn ghost" id="clear-storage">Limpar todas (local)</button>
           </div>
         </div>
       </aside>
     </div>
   </main>
 
-  <!-- modal / success (reused template) -->
-  <template id="toast-tmpl">
-    <div class="card thanks">
-      <h3>Denúncia simulada enviada</h3>
-      <p>Obrigado — sua denúncia foi salva localmente como exemplo para apresentação.</p>
-      <div style="margin-top:10px;"><button class="btn" id="done-ok">Fechar</button></div>
+  <!-- bottom mobile step actions -->
+  <div class="step-actions" id="mobile-actions" aria-hidden="true">
+    <div id="mobile-step-label" style="font-weight:700;color:#334155">Passo</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn ghost" id="mobile-back" aria-hidden="true">Voltar</button>
+      <button class="btn" id="mobile-next" aria-hidden="true">Próximo</button>
     </div>
-  </template>
+  </div>
 
   <script>
-    // ===== Helpers & state =====
-    const state = {
-      step: 1,
-      lat: null,
-      lng: null,
-      photos: [], // dataURL
-      map: null,
-      marker: null
-    };
+    /* ===== State ===== */
+    const state = { step: 1, lat: null, lng: null, photos: [], map: null, marker: null };
 
-    // elements
+    /* ===== Elements ===== */
     const form = document.getElementById('report-form');
-    const fieldsets = form.querySelectorAll('fieldset[data-step]');
+    const fieldsets = Array.from(form.querySelectorAll('fieldset[data-step]'));
     const pvCategory = document.getElementById('pv-category');
     const pvSeverity = document.getElementById('pv-severity');
     const pvDesc = document.getElementById('pv-desc');
@@ -341,17 +238,18 @@
     const photosPreview = document.getElementById('photos-preview');
     const savedList = document.getElementById('saved-list');
     const reviewArea = document.getElementById('review-area');
-    const openSameBtn = document.getElementById('open-same-modal');
-    const openSimBtn = document.getElementById('open-same-modal'); // alias
-    const clearStorageBtn = document.getElementById('clear-storage');
+    const photosDataInput = document.getElementById('photos-data');
 
     // navigation buttons
-    const toStep2 = document.getElementById('to-step-2');
-    const toStep3 = document.getElementById('to-step-3');
-    const toStep4 = document.getElementById('to-step-4');
-    const backTo1 = document.getElementById('back-to-1');
-    const backTo2 = document.getElementById('back-to-2');
-    const backTo3 = document.getElementById('back-to-3');
+    const next1 = document.getElementById('next-1');
+    const next2 = document.getElementById('next-2');
+    const next3 = document.getElementById('next-3');
+    const back2 = document.getElementById('back-2');
+    const back3 = document.getElementById('back-3');
+    const back4 = document.getElementById('back-4');
+
+    const openReviewBtn = document.getElementById('open-review');
+    const clearStorageBtn = document.getElementById('clear-storage');
 
     // map controls
     const detectBtn = document.getElementById('detect-location');
@@ -360,111 +258,67 @@
     const lngEl = document.getElementById('lng');
     const addressEl = document.getElementById('address');
 
-    // modal template
-    const toastTmpl = document.getElementById('toast-tmpl');
+    // mobile actions
+    const mobileActions = document.getElementById('mobile-actions');
+    const mobileBack = document.getElementById('mobile-back');
+    const mobileNext = document.getElementById('mobile-next');
+    const mobileLabel = document.getElementById('mobile-step-label');
 
-    // Step switching function
+    /* ===== Helpers ===== */
     function showStep(n){
       state.step = n;
-      fieldsets.forEach(fs => {
-        fs.style.display = (Number(fs.dataset.step) === n) ? '' : 'none';
-      });
-      // lazy init map when step 2 shown
-      if(n === 2) initMapOnce();
+      fieldsets.forEach(fs => fs.style.display = Number(fs.dataset.step) === n ? '' : 'none');
       updatePreview();
-      window.scrollTo({top:0, behavior:'smooth'});
+      updateMobileActions();
+      // ensure map sizing when visible
+      if(n === 2 && state.map) setTimeout(()=>state.map.invalidateSize(), 120);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Basic validation for step1
-    function validateStep1(){
-      const category = document.getElementById('category').value;
-      const severity = document.getElementById('severity').value;
-      const desc = document.getElementById('description').value.trim();
-      if(!category || !severity || !desc){
-        alert('Preencha categoria, gravidade e descrição.');
-        return false;
-      }
-      return true;
-    }
-
-    // Update live preview
     function updatePreview(){
       const cat = document.getElementById('category').value || '—';
       const sev = document.getElementById('severity').value || '—';
       const desc = document.getElementById('description').value || '—';
-      pvCategory.textContent = cat !== '—' ? cat : '—';
+      pvCategory.textContent = cat;
       pvSeverity.textContent = sev;
       pvDesc.textContent = desc;
-      // photos
       pvPhotos.innerHTML = '';
-      state.photos.slice(0,4).forEach(dataUrl => {
-        const img = document.createElement('img');
-        img.src = dataUrl;
-        img.className = 'photo-thumb';
-        img.alt = 'Pré-visualização da foto';
+      state.photos.slice(0,4).forEach(u => {
+        const img = document.createElement('img'); img.src = u; img.className = 'photo-thumb'; img.alt = 'foto';
         pvPhotos.appendChild(img);
       });
     }
 
-    // File -> preview
-    photosInput.addEventListener('change', function(){
-      const files = Array.from(this.files).slice(0,6);
-      state.photos = [];
-      photosPreview.innerHTML = '';
-      if(!files.length) return;
-      files.forEach((file, i) => {
-        const reader = new FileReader();
-        reader.onload = function(e){
-          const url = e.target.result;
-          state.photos.push(url);
-          const img = document.createElement('img');
-          img.src = url;
-          img.className = 'photo-thumb';
-          img.alt = file.name;
-          photosPreview.appendChild(img);
-          updatePreview();
-        };
-        reader.readAsDataURL(file);
-      });
-    });
+    function validateStep1(){
+      const cat = document.getElementById('category').value;
+      const sev = document.getElementById('severity').value;
+      const desc = document.getElementById('description').value.trim();
+      if(!cat || !sev || !desc){ alert('Preencha categoria, gravidade e descrição.'); return false; }
+      return true;
+    }
 
-    // Step buttons
-    toStep2.addEventListener('click', () => { if(validateStep1()) showStep(2); });
-    backTo1.addEventListener('click', () => showStep(1));
-    toStep3.addEventListener('click', () => showStep(3));
-    backTo2.addEventListener('click', () => showStep(2));
-    toStep4.addEventListener('click', () => {
-      // when going to review, compose review card
-      populateReview();
-      showStep(4);
-    });
-    backTo3.addEventListener('click', () => showStep(3));
-
-    // map init (Leaflet)
+    /* ===== Map (Leaflet) ===== */
     function initMapOnce(){
       if(state.map) return;
       const mapEl = document.getElementById('map');
-      state.map = L.map(mapEl, { scrollWheelZoom:false }).setView([ -23.55052, -46.633308 ], 12); // default São Paulo
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-      }).addTo(state.map);
-
-      state.marker = L.marker([ -23.55052, -46.633308 ], { draggable:true }).addTo(state.map);
+      state.map = L.map(mapEl, { scrollWheelZoom: false }).setView([-23.55052, -46.633308], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(state.map);
+      state.marker = L.marker([-23.55052, -46.633308], { draggable: true }).addTo(state.map);
       state.marker.on('dragend', function(e){
-        const p = e.target.getLatLng();
-        state.lat = p.lat; state.lng = p.lng;
-        latEl.textContent = state.lat.toFixed(6);
-        lngEl.textContent = state.lng.toFixed(6);
+        const p = e.target.getLatLng(); state.lat = p.lat; state.lng = p.lng;
+        latEl.textContent = state.lat.toFixed(6); lngEl.textContent = state.lng.toFixed(6);
       });
     }
 
-    // detect geolocation
     detectBtn.addEventListener('click', function(){
       if(!navigator.geolocation){ alert('Geolocalização não suportada neste navegador.'); return; }
+      if(location.protocol !== 'https:' && location.hostname !== 'localhost'){ /* warn HTTPS requirement */
+        if(!confirm('A detecção de localização funciona melhor em HTTPS. Deseja tentar mesmo assim?')) return;
+      }
       detectBtn.textContent = 'Detectando…';
       navigator.geolocation.getCurrentPosition(function(pos){
         detectBtn.textContent = 'Detectar minha posição';
-        const lat = pos.coords.latitude; const lng = pos.coords.longitude;
+        const lat = pos.coords.latitude, lng = pos.coords.longitude;
         state.lat = lat; state.lng = lng;
         latEl.textContent = lat.toFixed(6); lngEl.textContent = lng.toFixed(6);
         if(!state.map) initMapOnce();
@@ -477,39 +331,134 @@
       }, { enableHighAccuracy:true, timeout:10000, maximumAge:60000 });
     });
 
-    // manual position focus (scroll to address input)
     manualPosBtn.addEventListener('click', function(){ addressEl.focus(); });
 
-    // update preview when typing
-    ['category','severity','description','address','datetime'].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.addEventListener('input', updatePreview);
+    /* ===== Photos handling ===== */
+    photosInput.addEventListener('change', function(){
+      const files = Array.from(this.files).slice(0,6);
+      state.photos = [];
+      photosPreview.innerHTML = '';
+      if(!files.length) return;
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e){
+          const url = e.target.result;
+          state.photos.push(url);
+          const img = document.createElement('img'); img.src = url; img.className = 'photo-thumb'; img.alt = file.name;
+          photosPreview.appendChild(img);
+          updatePreview();
+        };
+        reader.readAsDataURL(file);
+      });
     });
 
-    // populate review area
+    /* ===== Steps navigation ===== */
+    next1.addEventListener('click', function(){ if(validateStep1()){ initMapOnce(); showStep(2); }});
+    back2.addEventListener('click', () => showStep(1));
+    next2.addEventListener('click', () => showStep(3));
+    back3.addEventListener('click', () => showStep(2));
+    next3.addEventListener('click', function(){ populateReview(); showStep(4); });
+
+    back4.addEventListener('click', () => showStep(3));
+
+    // mobile action handlers
+    function updateMobileActions(){
+      if(window.innerWidth <= 720){
+        mobileActions.setAttribute('aria-hidden','false');
+        mobileActions.style.display = 'flex';
+        mobileLabel.textContent = `Passo ${state.step} de 4`;
+        // show appropriate action mapping
+        mobileBack.hidden = state.step === 1;
+        mobileNext.hidden = state.step === 4;
+        mobileBack.removeAttribute('aria-hidden'); mobileNext.removeAttribute('aria-hidden');
+      } else {
+        mobileActions.style.display = 'none';
+        mobileActions.setAttribute('aria-hidden','true');
+      }
+    }
+
+    mobileBack.addEventListener('click', function(){
+      if(state.step > 1) showStep(state.step - 1);
+    });
+    mobileNext.addEventListener('click', function(){
+      if(state.step === 1){ if(validateStep1()) showStep(2); }
+      else if(state.step === 2) showStep(3);
+      else if(state.step === 3) { populateReview(); showStep(4); }
+    });
+
+    window.addEventListener('resize', updateMobileActions);
+
+    /* ===== Review and storage ===== */
     function populateReview(){
       const cat = document.getElementById('category').value || '—';
       const sev = document.getElementById('severity').value || '—';
       const desc = document.getElementById('description').value || '—';
       const addr = document.getElementById('address').value || '—';
       const dt = document.getElementById('datetime').value || '—';
-      const photosHtml = state.photos.map(url => `<img src="${url}" style="width:100px;height:100px;object-fit:cover;border-radius:8px">`).join(' ');
+      const photosHtml = state.photos.map(u => `<img src="${u}" style="width:96px;height:96px;object-fit:cover;border-radius:8px">`).join(' ');
       reviewArea.innerHTML = `
-        <div><strong>Categoria:</strong> ${cat}</div>
-        <div><strong>Gravidade:</strong> ${sev}</div>
+        <div><strong>Categoria:</strong> ${escapeHtml(cat)}</div>
+        <div><strong>Gravidade:</strong> ${escapeHtml(sev)}</div>
         <div style="margin-top:8px;"><strong>Descrição:</strong><div style="margin-top:6px">${escapeHtml(desc)}</div></div>
         <div style="margin-top:8px;"><strong>Local:</strong> ${escapeHtml(addr)} <small style="display:block;color:#6b7280">Lat: ${state.lat||'—'} Lng: ${state.lng||'—'}</small></div>
         <div style="margin-top:8px;"><strong>Data/Hora observada:</strong> ${escapeHtml(dt)}</div>
-        <div style="margin-top:12px;"><strong>Fotos:</strong><div style="display:flex;gap:8px;margin-top:8px">${photosHtml || '<span class="small">Sem fotos</span>'}</div></div>
+        <div style="margin-top:12px;"><strong>Fotos:</strong><div style="display:flex;gap:8px;margin-top:8px">${photosHtml || '<span style="color:#6b7280">Sem fotos</span>'}</div></div>
       `;
+      // prepare photos JSON to send to FormSubmit (note: large payloads can be heavy)
+      photosDataInput.value = JSON.stringify(state.photos);
     }
 
-    // submit simulation
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      // simple validation
-      if(!validateStep1()){ showStep(1); return; }
-      // compose report
+    function escapeHtml(s){ if(!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+    // localStorage helpers
+    function getReports(){ try{ return JSON.parse(localStorage.getItem('limpae_reports')||'[]'); }catch(e){ return []; } }
+    function saveReport(r){ const arr = getReports(); arr.unshift(r); localStorage.setItem('limpae_reports', JSON.stringify(arr.slice(0,200))); }
+    function populateSavedList(){
+      const arr = getReports();
+      savedList.innerHTML = '';
+      if(!arr.length){ savedList.innerHTML = '<div style="color:#6b7280">Nenhuma denúncia simulada ainda.</div>'; return; }
+      arr.forEach(item => {
+        const el = document.createElement('div'); el.style.display='flex'; el.style.justifyContent='space-between'; el.style.alignItems='center';
+        el.style.padding='8px'; el.style.borderRadius='8px'; el.style.border='1px solid rgba(2,6,23,0.04)'; el.style.background='#fff';
+        el.innerHTML = `<div style="display:flex;gap:10px;align-items:center;min-width:0">
+          <div style="width:56px;height:56px;border-radius:8px;overflow:hidden;background:#f3f4f6;display:flex;align-items:center;justify-content:center">${item.photos && item.photos[0] ? `<img src="${item.photos[0]}" style="width:56px;height:56px;object-fit:cover">` : '🗑️'}</div>
+          <div style="min-width:0">
+            <div style="font-weight:700;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:160px">${escapeHtml(item.category)} · ${escapeHtml(item.severity)}</div>
+            <div style="color:#6b7280;font-size:13px;max-width:220px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden">${escapeHtml(item.description)}</div>
+            <div style="color:#6b7280;font-size:12px;margin-top:4px">${new Date(item.createdAt).toLocaleString()}</div>
+          </div>
+        </div>
+        <div><button data-id="${item.id}" class="remove-btn" style="background:transparent;border:0;color:#ef4444;font-weight:700;cursor:pointer">Remover</button></div>`;
+        savedList.appendChild(el);
+      });
+      // attach remove handlers
+      Array.from(savedList.querySelectorAll('.remove-btn')).forEach(btn => {
+        btn.addEventListener('click', function(){
+          const id = this.dataset.id;
+          const arr = getReports().filter(x => x.id !== id);
+          localStorage.setItem('limpae_reports', JSON.stringify(arr));
+          populateSavedList();
+        });
+      });
+    }
+
+    clearStorageBtn.addEventListener('click', function(){
+      if(confirm('Limpar todas as denúncias simuladas armazenadas localmente?')){ localStorage.removeItem('limpae_reports'); populateSavedList(); }
+    });
+
+    /* ===== Form submit handling =====
+       - The form has action to FormSubmit (your endpoint). When user submits, the browser will POST to FormSubmit
+       - We also intercept submit to save a local copy and attach photos_data (base64) into a hidden field
+       - Note: sending large base64 images via email may increase size; prefer small images in demo
+    */
+    form.addEventListener('submit', function(ev){
+      // first validate step 1 required fields before allowing submit
+      if(!validateStep1()){ ev.preventDefault(); showStep(1); return; }
+
+      // populate photos_data already handled in populateReview. Ensure it's up-to-date:
+      populateReview();
+
+      // Save local copy (simulate)
       const report = {
         id: 'r' + Date.now(),
         category: document.getElementById('category').value,
@@ -524,107 +473,98 @@
         createdAt: new Date().toISOString()
       };
       saveReport(report);
-      showThanks();
       populateSavedList();
+
+      // Allow form to submit to FormSubmit — open in new tab for nicer UX
+      // To open result in new tab while still POSTing, create a temporary form and submit it with target="_blank"
+      ev.preventDefault(); // prevent default so we can do custom submit
+      const tmp = document.createElement('form');
+      tmp.method = 'POST';
+      tmp.action = 'https://formsubmit.co/el/kazoho';
+      tmp.target = '_blank';
+      tmp.style.display = 'none';
+
+      // copy relevant fields (text) to tmp form
+      const fields = {
+        _subject: 'Nova denúncia simulada — Limpaê',
+        _captcha: 'false',
+        source: 'limpae-prototipo-escolar',
+        category: report.category,
+        severity: report.severity,
+        description: report.description,
+        datetime: report.datetime,
+        address: report.address,
+        lat: report.lat,
+        lng: report.lng,
+        anonymous: report.anonymous ? 'Sim' : 'Não',
+        photos_data: JSON.stringify(report.photos)
+      };
+      for(const k in fields){
+        const inp = document.createElement('input');
+        inp.type = 'hidden';
+        inp.name = k;
+        inp.value = fields[k] == null ? '' : fields[k];
+        tmp.appendChild(inp);
+      }
+      document.body.appendChild(tmp);
+      tmp.submit();
+      setTimeout(()=>{ tmp.remove(); }, 600);
+
+      // show a small thanks overlay locally
+      showThanksLocal();
+      // reset form and go to step 1
       form.reset();
-      // reset photos and state
-      state.photos = []; photosPreview.innerHTML=''; pvPhotos.innerHTML=''; updatePreview();
-      // reset to step 1
+      state.photos = []; photosPreview.innerHTML = ''; updatePreview();
+      state.lat = null; state.lng = null; latEl.textContent = '—'; lngEl.textContent = '—';
       showStep(1);
     });
 
-    // storage helpers
-    function getReports(){ try{ return JSON.parse(localStorage.getItem('limpae_reports')||'[]'); }catch(e){ return []; } }
-    function saveReport(r){
-      const arr = getReports(); arr.unshift(r); localStorage.setItem('limpae_reports', JSON.stringify(arr.slice(0,200)));
-    }
-    function clearReports(){ localStorage.removeItem('limpae_reports'); populateSavedList(); }
-
-    // populate saved list
-    function populateSavedList(){
-      const arr = getReports();
-      savedList.innerHTML = '';
-      if(!arr.length){ savedList.innerHTML = '<div class="small">Nenhuma denúncia simulada ainda.</div>'; return; }
-      arr.forEach(item => {
-        const div = document.createElement('div'); div.className = 'saved-item';
-        div.innerHTML = `
-          <div style="display:flex;gap:10px;align-items:center">
-            <div style="width:56px;height:56px;border-radius:8px;overflow:hidden;background:#f3f4f6;border:1px solid rgba(2,6,23,0.04);display:flex;align-items:center;justify-content:center">${item.photos && item.photos[0] ? `<img src="${item.photos[0]}" style="width:56px;height:56px;object-fit:cover">` : '🗑️'}</div>
-            <div style="min-width:0">
-              <div style="font-weight:700;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:180px">${escapeHtml(item.category)} · ${escapeHtml(item.severity)}</div>
-              <div class="small" style="max-width:220px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden">${escapeHtml(item.description)}</div>
-              <div class="small" style="margin-top:4px">${new Date(item.createdAt).toLocaleString()}</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <button title="Remover" data-id="${item.id}" class="remove-btn">Remover</button>
-          </div>
-        `;
-        savedList.appendChild(div);
-      });
-      // attach remove handlers
-      Array.from(savedList.querySelectorAll('.remove-btn')).forEach(btn=>{
-        btn.addEventListener('click', function(){
-          const id = this.dataset.id;
-          const arr = getReports().filter(x=>x.id !== id);
-          localStorage.setItem('limpae_reports', JSON.stringify(arr));
-          populateSavedList();
-        });
-      });
-    }
-
-    clearStorageBtn.addEventListener('click', function(){
-      if(confirm('Limpar todas as denúncias simuladas armazenadas localmente?')){ clearReports(); }
-    });
-
-    // show thanks modal (simple)
-    function showThanks(){
-      const clone = toastTmpl.content.cloneNode(true);
-      const node = clone.querySelector('.card');
-      document.body.appendChild(node);
+    function showThanksLocal(){
+      const box = document.createElement('div');
+      box.style.position = 'fixed'; box.style.left = '50%'; box.style.top = '50%';
+      box.style.transform = 'translate(-50%,-50%)'; box.style.zIndex = 6000;
+      box.style.background = '#fff'; box.style.padding = '20px'; box.style.borderRadius = '12px';
+      box.style.boxShadow = '0 18px 40px rgba(2,6,23,0.2)';
+      box.innerHTML = `<h3 style="margin:0 0 8px;color:${'#14532d'}">Denúncia simulada enviada</h3>
+        <p style="margin:0 0 12px;color:#374151">A denúncia foi salva localmente e uma solicitação de demonstração foi aberta em nova aba.</p>
+        <div style="text-align:right"><button id="close-thanks" style="background:linear-gradient(90deg,var(--green-600),var(--green-500));color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer">Fechar</button></div>`;
+      document.body.appendChild(box);
       document.body.style.overflow = 'hidden';
-      node.querySelector('#done-ok').addEventListener('click', function(){
-        document.body.removeChild(node); document.body.style.overflow = '';
+      document.getElementById('close-thanks').addEventListener('click', function(){
+        document.body.style.overflow = '';
+        box.remove();
       });
     }
 
-    // escape helper
-    function escapeHtml(s){ if(!s) return ''; return s.replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('&','&amp;'); }
-
-    // initial render
-    showStep(1);
-    populateSavedList();
-    updatePreview();
-
-    // quick keyboard accessibility: enter moves to next in single-line fields
-    ['category','severity','datetime'].forEach(id=>{
+    /* ===== UI wiring ===== */
+    // preview update on input
+    ['category','severity','description','address','datetime'].forEach(id => {
       const el = document.getElementById(id);
-      if(!el) return;
-      el.addEventListener('keydown', function(e){
-        if(e.key === 'Enter'){ e.preventDefault(); if(state.step===1) toStep2.click(); }
-      });
+      if(el) el.addEventListener('input', updatePreview);
     });
 
-    // allow preview "Salvar / Enviar simulado" to open review and submit
-    openSameBtn.addEventListener('click', function(){
-      // quick validation: ensure category/severity/desc present
+    // open review from preview
+    openReviewBtn.addEventListener('click', function(){
       if(!validateStep1()){ showStep(1); return; }
       populateReview();
       showStep(4);
-      // scroll to review area
-      setTimeout(()=>{ window.scrollTo({ top: 0, behavior:'smooth' }); }, 50);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // ensure map shows correctly if user navigates to step 2 later (Leaflet needs invalidateSize)
-    window.addEventListener('resize', function(){
-      if(state.map) state.map.invalidateSize();
-    });
-
-    // keep map stable when visibility changes (toggle)
+    // initial map lazy init when user clicks to step 2
+    // we already call initMapOnce when entering step 2 via next1 handler
+    // but guard in case user jumps directly to step 2 (e.g., using url)
+    // ensure map resizes on visibility change
     const observer = new MutationObserver(function(){
       if(state.map) state.map.invalidateSize();
     });
-    observer.observe(document.getElementById('form-area'), { attributes:true, childList:true, subtree:true });
+    observer.observe(document.getElementById('left-card'), { attributes:true, childList:true, subtree:true });
+
+    // initial state
+    showStep(1);
+    populateSavedList();
+    updatePreview();
+    updateMobileActions();
   </script>
 </body>
 </html>
