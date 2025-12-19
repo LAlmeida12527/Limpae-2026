@@ -8,7 +8,7 @@
   <!-- Fontes -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <!-- Leaflet CSS/JS (no integrity to avoid blocking) -->
+  <!-- Leaflet (mapa) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -16,94 +16,111 @@
     :root{
       --green-700:#14532d;
       --green-600:#15803d;
-      --green-500:#22c55e;
-      --safe-top: env(safe-area-inset-top, 0px);
-      --glass: rgba(255,255,255,0.9);
+      --accent:#f59e0b;
+      --bg:#f7fff9;
+      --card:#ffffff;
       --max-width:1100px;
+      --safe-top: env(safe-area-inset-top, 0px);
     }
     *{box-sizing:border-box}
-    html,body{height:100%; margin:0; font-family:"Poppins",system-ui, -apple-system, "Segoe UI", Roboto, Arial;}
-    body{ padding-top:var(--safe-top); background:linear-gradient(180deg,#f7fff9,#ffffff); color:#1f2937; -webkit-font-smoothing:antialiased; }
-    .container{max-width:var(--max-width); margin:0 auto; padding:16px;}
+    html,body{height:100%;margin:0;font-family:"Poppins",system-ui, -apple-system, "Segoe UI", Roboto, Arial;-webkit-font-smoothing:antialiased;}
+    body{ background:var(--bg); color:#123; padding-top:var(--safe-top); }
 
-    header{ display:flex; align-items:center; justify-content:space-between; padding:12px 0; }
-    .logo { font-family:"Cinzel Decorative", serif; background:linear-gradient(90deg,var(--green-700),var(--green-500)); -webkit-background-clip:text; color:transparent; font-size:24px; }
-    .badge { font-size:12px; padding:6px 10px; border-radius:10px; background:var(--glass); color:var(--green-700); font-weight:700; }
+    .container{max-width:var(--max-width);margin:0 auto;padding:18px;}
 
-    .note { text-align:center; margin:12px 0; font-weight:600; color:#334155; }
-    .note small{ display:block; font-weight:500; color:#475569; margin-top:6px; }
+    header{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; }
+    .brand{ display:flex; gap:12px; align-items:center; }
+    .logo{ font-family:"Cinzel Decorative",serif; background:linear-gradient(90deg,var(--green-700),var(--green-600)); -webkit-background-clip:text; color:transparent; font-size:22px; }
+    .badge{ font-size:12px; padding:6px 10px; border-radius:10px; background:#fff; box-shadow:0 6px 20px rgba(0,0,0,0.04); color:var(--green-700); font-weight:700; }
 
-    .grid{ display:grid; grid-template-columns:1fr 360px; gap:22px; align-items:start; }
-    @media(max-width:980px){ .grid{ grid-template-columns:1fr; } }
+    .note{ text-align:center; margin:10px 0 6px; color:#334155; font-weight:600; }
+    .note small{ display:block; color:#475569; font-weight:500; margin-top:6px; }
 
-    .card{ background:#fff; border-radius:12px; padding:16px; border:1px solid rgba(2,6,23,0.04); box-shadow:0 18px 40px rgba(2,6,23,0.04); }
+    .grid{ display:grid; grid-template-columns: 1fr 380px; gap:22px; margin-top:18px; align-items:start; }
+    @media (max-width:980px){ .grid{ grid-template-columns:1fr; } }
 
-    label{ display:block; font-weight:700; margin-bottom:6px; color:#263238; font-size:13px; }
-    input, select, textarea { width:100%; padding:12px; border-radius:8px; border:1px solid #e6e8eb; font-size:15px; }
-    textarea{ min-height:110px; resize:vertical; }
+    .card{ background:var(--card); border-radius:14px; padding:18px; box-shadow:0 18px 40px rgba(16,24,32,0.06); border:1px solid rgba(2,6,23,0.04); }
 
-    .controls{ display:flex; gap:10px; margin-top:12px; justify-content:flex-end; flex-wrap:wrap; }
-    .btn{ background:linear-gradient(90deg,var(--green-600),var(--green-500)); color:#fff; padding:12px 16px; border-radius:10px; border:0; cursor:pointer; font-weight:700; }
-    .btn.ghost{ background:transparent; color:var(--green-700); border:1px solid rgba(20,83,45,0.08); }
+    h2{ margin:0 0 6px; color:var(--green-700); font-family:"Cinzel Decorative",serif; }
 
+    label{ display:block; font-weight:700; font-size:13px; margin-bottom:6px; color:#263238; }
+    input[type="text"], select, textarea { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #e6e8eb; font-size:15px; background:#fff; color:#123; }
+    textarea{ min-height:120px; resize:vertical; border-radius:10px; }
+
+    .controls{ display:flex; gap:10px; justify-content:flex-end; margin-top:12px; }
+    .controls .btn{ min-width:140px; }
+
+    .btn{
+      background:linear-gradient(90deg,var(--green-600),var(--green-700));
+      color:#fff; padding:12px 16px; border-radius:10px; border:0; font-weight:800; cursor:pointer; box-shadow:0 12px 30px rgba(20,83,45,0.12);
+    }
+    .btn.secondary{ background:transparent; color:var(--green-700); border:1px solid rgba(20,83,45,0.08); box-shadow:none; font-weight:700; }
+
+    /* Right aligned action area inside each step */
+    .step-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
+
+    /* map */
     #map{ width:100%; height:260px; border-radius:10px; border:1px solid rgba(2,6,23,0.06); margin-top:8px; }
 
+    /* photos */
     .photos{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
-    .photo-thumb{ width:88px; height:88px; object-fit:cover; border-radius:8px; border:1px solid rgba(2,6,23,0.06); }
+    .photo-thumb{ width:90px; height:90px; object-fit:cover; border-radius:8px; border:1px solid rgba(2,6,23,0.06); }
 
-    .report-card{ padding:10px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfff9); border:1px solid rgba(34,197,94,0.06); }
+    /* preview pane */
+    .preview { display:flex; flex-direction:column; gap:12px; }
+    .report-card{ padding:12px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfff9); border:1px solid rgba(34,197,94,0.06); }
+    .small { font-size:13px; color:#475569; }
 
-    .saved-list{ margin-top:12px; display:flex; flex-direction:column; gap:8px; max-height:320px; overflow:auto; }
+    /* saved list */
+    .saved-list{ display:flex; flex-direction:column; gap:8px; max-height:360px; overflow:auto; margin-top:8px; padding-right:6px; }
 
-    /* Mobile bottom actions */
-    .step-actions{
+    /* mobile bottom bar for navigation (keeps Next on right visually) */
+    .mobile-bottom{
       display:none;
-      position:fixed;
-      left:0; right:0; bottom:0;
-      padding:10px;
-      background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(255,255,255,0.96));
-      box-shadow:0 -10px 30px rgba(2,6,23,0.06);
-      z-index:3000;
-      gap:10px;
-      justify-content:space-between;
+      position:fixed; left:0; right:0; bottom:0; padding:12px; background:#fff; box-shadow:0 -8px 30px rgba(2,6,23,0.08); z-index:9999;
+      justify-content:space-between; align-items:center; gap:10px;
     }
-    @media(max-width:720px){
-      .step-actions{ display:flex; }
+    @media (max-width:720px){
+      .mobile-bottom{ display:flex; }
       body{ padding-bottom:84px; }
-      .btn{ font-size:15px; }
     }
+
+    /* improved buttons look */
+    .btn.ghost{ background:transparent; color:#475569; border:1px solid rgba(20,83,45,0.06); box-shadow:none; font-weight:700; }
+
+    /* final thank you */
+    .thanks{ text-align:center; padding:18px; }
   </style>
 </head>
 <body>
   <header class="container">
-    <div style="display:flex;gap:12px;align-items:center">
+    <div class="brand">
       <div class="logo">Limpaê</div>
       <div class="badge">Projeto Escolar</div>
     </div>
-    <nav><a href="index.html" style="text-decoration:none;color:#334155;font-weight:700">Início</a></nav>
+    <nav aria-label="Topo"><a href="index.html" style="text-decoration:none;color:#334155;font-weight:700">Início</a></nav>
   </header>
 
   <main class="container" role="main">
-    <div class="note">Formulário de denúncia (simulada) — uso educacional. <small>Não envia dados a órgãos reais. Também envia um e‑mail de demonstração via FormSubmit quando confirmado.</small></div>
+    <div class="note">Formulário de denúncia (simulada) — uso educacional. <small>As denúncias são salvas localmente para demonstração.</small></div>
 
     <div class="grid" role="region" aria-label="Formulário de denúncia">
-      <div class="card" id="left-card">
-        <h2 style="margin:0 0 8px; font-family:'Cinzel Decorative', serif; color:var(--green-700)">Denunciar ponto de descarte</h2>
+      <!-- LEFT: form -->
+      <div class="card" id="form-card">
+        <h2>Denunciar ponto de descarte</h2>
 
-        <!-- The HTML form will POST to FormSubmit endpoint and also be handled locally by JS -->
-        <form id="report-form" method="POST" action="https://formsubmit.co/el/kazoho" enctype="multipart/form-data" novalidate>
-          <!-- Hidden fields for FormSubmit -->
-          <input type="hidden" name="_subject" value="Nova denúncia simulada — Limpaê" />
+        <form id="report-form" method="POST" action="https://formsubmit.co/limpaemanut@gmail.com" enctype="multipart/form-data" autocomplete="off" novalidate>
+          <!-- hidden fields for FormSubmit -->
+          <input type="hidden" name="_subject" value="Denúncia simulada — Limpaê" />
           <input type="hidden" name="_captcha" value="false" />
-          <input type="hidden" name="_next" value="https://formsubmit.co/thankyou" />
-          <!-- include an identifier so you can filter simulated emails -->
           <input type="hidden" name="source" value="limpae-prototipo-escolar" />
+          <input type="hidden" name="photos_data" id="photos-data" />
 
-          <!-- Step 1 -->
+          <!-- STEP 1 -->
           <fieldset data-step="1">
             <label for="category">Categoria *</label>
             <select id="category" name="category" required>
-              <option value="">Escolha a categoria...</option>
+              <option value="">Escolha...</option>
               <option value="residencial">Descarte residencial</option>
               <option value="comercial">Descarte comercial</option>
               <option value="entulho">Entulho / Construção</option>
@@ -112,61 +129,59 @@
               <option value="outro">Outro</option>
             </select>
 
-            <label for="severity" style="margin-top:10px">Gravidade *</label>
+            <label for="severity" style="margin-top:12px">Gravidade *</label>
             <select id="severity" name="severity" required>
               <option value="">Selecione</option>
-              <option value="baixo">Baixo — lixo solto</option>
-              <option value="medio">Médio — acúmulo pequeno</option>
-              <option value="alto">Alto — grande acúmulo/entulho</option>
-              <option value="critico">Crítico — risco à saúde</option>
+              <option value="baixo">Baixo</option>
+              <option value="medio">Médio</option>
+              <option value="alto">Alto</option>
+              <option value="critico">Crítico</option>
             </select>
 
-            <label for="description" style="margin-top:10px">Descrição *</label>
-            <textarea id="description" name="description" placeholder="Descreva o local e observações" required></textarea>
+            <label for="description" style="margin-top:12px">Descrição *</label>
+            <textarea id="description" name="description" required placeholder="Descreva o local, quantidade e observações"></textarea>
 
-            <label for="datetime" style="margin-top:10px">Data / hora (observada)</label>
-            <input id="datetime" name="datetime" type="text" placeholder="ex.: 2025-03-04 10:30 (opcional)">
-
-            <div class="controls" style="justify-content:flex-start">
-              <button type="button" class="btn" id="next-1">Próximo: Local</button>
+            <div class="step-actions">
+              <!-- Next on the right -->
+              <button type="button" class="btn" id="next-1">Próximo</button>
             </div>
           </fieldset>
 
-          <!-- Step 2 -->
+          <!-- STEP 2 -->
           <fieldset data-step="2" style="display:none">
             <label>Localização</label>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
               <button type="button" class="btn ghost" id="detect-location">Detectar minha posição</button>
               <button type="button" class="btn ghost" id="manual-pos-btn">Inserir manualmente</button>
             </div>
 
-            <div id="map" aria-label="Mapa para escolher localização"></div>
+            <div id="map" aria-label="Mapa"></div>
 
-            <label for="address" style="margin-top:10px">Endereço / referência</label>
-            <input id="address" name="address" type="text" placeholder="Ex.: Rua ABC, próximo ao número X">
+            <label for="address" style="margin-top:12px">Endereço / referência</label>
+            <input id="address" name="address" type="text" placeholder="Ex.: Rua X, próximo ao número Y">
 
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-              <div class="hint">Lat: <span id="lat">—</span> &nbsp; Lng: <span id="lng">—</span></div>
-              <div class="controls" style="justify-content:flex-end">
+              <div class="small">Lat: <span id="lat">—</span> &nbsp; Lng: <span id="lng">—</span></div>
+              <div class="step-actions">
                 <button type="button" class="btn ghost" id="back-2">Voltar</button>
-                <button type="button" class="btn" id="next-2">Próximo: Fotos</button>
+                <button type="button" class="btn" id="next-2">Próximo</button>
               </div>
             </div>
           </fieldset>
 
-          <!-- Step 3 -->
+          <!-- STEP 3 -->
           <fieldset data-step="3" style="display:none">
             <label for="photos">Fotos (até 6)</label>
             <input id="photos" type="file" accept="image/*" multiple>
             <div class="photos" id="photos-preview" aria-live="polite"></div>
 
-            <div class="controls">
+            <div class="step-actions">
               <button type="button" class="btn ghost" id="back-3">Voltar</button>
-              <button type="button" class="btn" id="next-3">Próximo: Revisar</button>
+              <button type="button" class="btn" id="next-3">Próximo</button>
             </div>
           </fieldset>
 
-          <!-- Step 4 -->
+          <!-- STEP 4 (REVIEW) -->
           <fieldset data-step="4" style="display:none">
             <label>Revisar denúncia</label>
             <div id="review-area" class="report-card" aria-live="polite"></div>
@@ -175,103 +190,97 @@
               <input id="anonymous" name="anonymous" type="checkbox"> <label for="anonymous" style="margin:0;font-weight:700">Enviar anonimamente (simulação)</label>
             </div>
 
-            <!-- Photos will be also appended to a hidden input as JSON to send via FormSubmit -->
-            <input type="hidden" name="photos_data" id="photos-data">
-
-            <div class="controls" style="justify-content:flex-start;margin-top:12px">
+            <div class="step-actions">
               <button type="button" class="btn ghost" id="back-4">Voltar</button>
-              <button type="submit" class="btn" id="submit-report">Enviar simulada (salva local + envia por e‑mail)</button>
+              <!-- final submit -->
+              <button type="submit" class="btn" id="submit-report">Enviar denúncia</button>
             </div>
           </fieldset>
         </form>
       </div>
 
-      <!-- RIGHT COLUMN: preview and saved -->
+      <!-- RIGHT: preview + saved -->
       <aside>
-        <div class="card">
-          <h3 style="margin:0 0 8px">Visualização rápida</h3>
+        <div class="card preview">
+          <h3 style="margin:0 0 6px">Visualização rápida</h3>
           <div class="report-card">
             <div style="display:flex;justify-content:space-between">
               <div><strong>Categoria:</strong> <span id="pv-category">—</span></div>
-              <div id="pv-severity" style="color:#475569">—</div>
+              <div id="pv-severity" class="small">—</div>
             </div>
-            <div id="pv-desc" style="margin-top:8px;color:#475569">—</div>
+            <div id="pv-desc" class="small" style="margin-top:8px">—</div>
             <div id="pv-photos" style="display:flex;gap:8px;margin-top:8px"></div>
           </div>
-          <div style="margin-top:12px">
-            <button class="btn" id="open-review">Salvar / Enviar simulado</button>
+
+          <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
+            <button class="btn" id="open-review">Ir para revisão</button>
           </div>
         </div>
 
         <div class="card" style="margin-top:12px">
-          <h3 style="margin:0 0 8px">Denúncias simuladas</h3>
-          <div id="saved-list" class="saved-list" aria-live="polite"></div>
-          <div style="margin-top:8px">
-            <button class="btn ghost" id="clear-storage">Limpar todas (local)</button>
+          <h3 style="margin:0 0 6px">Denúncias simuladas</h3>
+          <div class="saved-list" id="saved-list"></div>
+          <div style="margin-top:8px; display:flex; justify-content:flex-end;">
+            <button class="btn ghost" id="clear-storage">Limpar todas</button>
           </div>
         </div>
       </aside>
     </div>
   </main>
 
-  <!-- bottom mobile step actions -->
-  <div class="step-actions" id="mobile-actions" aria-hidden="true">
-    <div id="mobile-step-label" style="font-weight:700;color:#334155">Passo</div>
-    <div style="display:flex;gap:8px">
-      <button class="btn ghost" id="mobile-back" aria-hidden="true">Voltar</button>
-      <button class="btn" id="mobile-next" aria-hidden="true">Próximo</button>
+  <!-- mobile bottom nav (Next/Back, keeps primary action on right) -->
+  <div class="mobile-bottom" id="mobile-bottom" aria-hidden="true">
+    <div id="mobile-step" style="font-weight:700;color:#334155"></div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn ghost" id="mb-back">Voltar</button>
+      <button class="btn" id="mb-next">Próximo</button>
     </div>
   </div>
 
   <script>
-    /* ===== State ===== */
-    const state = { step: 1, lat: null, lng: null, photos: [], map: null, marker: null };
+    // State
+    const state = { step:1, lat:null, lng:null, photos: [], map:null, marker:null };
 
-    /* ===== Elements ===== */
+    // Elements
     const form = document.getElementById('report-form');
     const fieldsets = Array.from(form.querySelectorAll('fieldset[data-step]'));
-    const pvCategory = document.getElementById('pv-category');
-    const pvSeverity = document.getElementById('pv-severity');
-    const pvDesc = document.getElementById('pv-desc');
-    const pvPhotos = document.getElementById('pv-photos');
-    const photosInput = document.getElementById('photos');
-    const photosPreview = document.getElementById('photos-preview');
-    const savedList = document.getElementById('saved-list');
-    const reviewArea = document.getElementById('review-area');
-    const photosDataInput = document.getElementById('photos-data');
-
-    // navigation buttons
     const next1 = document.getElementById('next-1');
     const next2 = document.getElementById('next-2');
     const next3 = document.getElementById('next-3');
     const back2 = document.getElementById('back-2');
     const back3 = document.getElementById('back-3');
     const back4 = document.getElementById('back-4');
-
-    const openReviewBtn = document.getElementById('open-review');
+    const openReview = document.getElementById('open-review');
+    const savedList = document.getElementById('saved-list');
+    const photosInput = document.getElementById('photos');
+    const photosPreview = document.getElementById('photos-preview');
+    const pvCategory = document.getElementById('pv-category');
+    const pvSeverity = document.getElementById('pv-severity');
+    const pvDesc = document.getElementById('pv-desc');
+    const pvPhotos = document.getElementById('pv-photos');
+    const reviewArea = document.getElementById('review-area');
+    const photosDataInput = document.getElementById('photos-data');
     const clearStorageBtn = document.getElementById('clear-storage');
 
-    // map controls
     const detectBtn = document.getElementById('detect-location');
     const manualPosBtn = document.getElementById('manual-pos-btn');
     const latEl = document.getElementById('lat');
     const lngEl = document.getElementById('lng');
     const addressEl = document.getElementById('address');
 
-    // mobile actions
-    const mobileActions = document.getElementById('mobile-actions');
-    const mobileBack = document.getElementById('mobile-back');
-    const mobileNext = document.getElementById('mobile-next');
-    const mobileLabel = document.getElementById('mobile-step-label');
+    const mobileBottom = document.getElementById('mobile-bottom');
+    const mbBack = document.getElementById('mb-back');
+    const mbNext = document.getElementById('mb-next');
+    const mobileStepLabel = document.getElementById('mobile-step');
 
-    /* ===== Helpers ===== */
+    // helpers
     function showStep(n){
       state.step = n;
       fieldsets.forEach(fs => fs.style.display = Number(fs.dataset.step) === n ? '' : 'none');
       updatePreview();
-      updateMobileActions();
-      // ensure map sizing when visible
-      if(n === 2 && state.map) setTimeout(()=>state.map.invalidateSize(), 120);
+      updateMobileBar();
+      if(n === 2) initMapOnce();
+      if(state.map) setTimeout(()=>state.map.invalidateSize(), 150);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -284,7 +293,7 @@
       pvDesc.textContent = desc;
       pvPhotos.innerHTML = '';
       state.photos.slice(0,4).forEach(u => {
-        const img = document.createElement('img'); img.src = u; img.className = 'photo-thumb'; img.alt = 'foto';
+        const img = document.createElement('img'); img.src = u; img.className = 'photo-thumb'; img.alt='foto';
         pvPhotos.appendChild(img);
       });
     }
@@ -297,47 +306,40 @@
       return true;
     }
 
-    /* ===== Map (Leaflet) ===== */
+    // Map
     function initMapOnce(){
       if(state.map) return;
       const mapEl = document.getElementById('map');
-      state.map = L.map(mapEl, { scrollWheelZoom: false }).setView([-23.55052, -46.633308], 12);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(state.map);
-      state.marker = L.marker([-23.55052, -46.633308], { draggable: true }).addTo(state.map);
+      state.map = L.map(mapEl, { scrollWheelZoom:false }).setView([-23.55052, -46.633308], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap contributors' }).addTo(state.map);
+      state.marker = L.marker([-23.55052, -46.633308], { draggable:true }).addTo(state.map);
       state.marker.on('dragend', function(e){
         const p = e.target.getLatLng(); state.lat = p.lat; state.lng = p.lng;
         latEl.textContent = state.lat.toFixed(6); lngEl.textContent = state.lng.toFixed(6);
       });
     }
 
-    detectBtn.addEventListener('click', function(){
+    detectBtn && detectBtn.addEventListener('click', function(){
       if(!navigator.geolocation){ alert('Geolocalização não suportada neste navegador.'); return; }
-      if(location.protocol !== 'https:' && location.hostname !== 'localhost'){ /* warn HTTPS requirement */
-        if(!confirm('A detecção de localização funciona melhor em HTTPS. Deseja tentar mesmo assim?')) return;
-      }
+      if(location.protocol !== 'https:' && location.hostname !== 'localhost'){ if(!confirm('Geolocalização funciona melhor em HTTPS. Tentar mesmo assim?')) return; }
       detectBtn.textContent = 'Detectando…';
       navigator.geolocation.getCurrentPosition(function(pos){
         detectBtn.textContent = 'Detectar minha posição';
-        const lat = pos.coords.latitude, lng = pos.coords.longitude;
-        state.lat = lat; state.lng = lng;
+        const lat = pos.coords.latitude, lng = pos.coords.longitude; state.lat = lat; state.lng = lng;
         latEl.textContent = lat.toFixed(6); lngEl.textContent = lng.toFixed(6);
         if(!state.map) initMapOnce();
         state.map.setView([lat,lng], 16);
         state.marker.setLatLng([lat,lng]);
         addressEl.value = '';
-      }, function(err){
-        detectBtn.textContent = 'Detectar minha posição';
-        alert('Não foi possível obter a localização: ' + (err.message || 'erro'));
-      }, { enableHighAccuracy:true, timeout:10000, maximumAge:60000 });
+      }, function(err){ detectBtn.textContent = 'Detectar minha posição'; alert('Erro ao obter localização: ' + (err.message||'')); }, { enableHighAccuracy:true, timeout:10000, maximumAge:60000 });
     });
 
-    manualPosBtn.addEventListener('click', function(){ addressEl.focus(); });
+    manualPosBtn && manualPosBtn.addEventListener('click', ()=> addressEl.focus());
 
-    /* ===== Photos handling ===== */
+    // Photos
     photosInput.addEventListener('change', function(){
       const files = Array.from(this.files).slice(0,6);
-      state.photos = [];
-      photosPreview.innerHTML = '';
+      state.photos = []; photosPreview.innerHTML = '';
       if(!files.length) return;
       files.forEach(file => {
         const reader = new FileReader();
@@ -352,72 +354,119 @@
       });
     });
 
-    /* ===== Steps navigation ===== */
-    next1.addEventListener('click', function(){ if(validateStep1()){ initMapOnce(); showStep(2); }});
-    back2.addEventListener('click', () => showStep(1));
-    next2.addEventListener('click', () => showStep(3));
-    back3.addEventListener('click', () => showStep(2));
-    next3.addEventListener('click', function(){ populateReview(); showStep(4); });
+    // Steps navigation
+    next1.addEventListener('click', ()=> { if(validateStep1()){ showStep(2); }});
+    back2.addEventListener('click', ()=> showStep(1));
+    next2.addEventListener('click', ()=> showStep(3));
+    back3.addEventListener('click', ()=> showStep(2));
+    next3.addEventListener('click', ()=> { populateReview(); showStep(4); });
+    back4.addEventListener('click', ()=> showStep(3));
 
-    back4.addEventListener('click', () => showStep(3));
+    openReview.addEventListener('click', ()=> { if(!validateStep1()){ showStep(1); return; } populateReview(); showStep(4); });
 
-    // mobile action handlers
-    function updateMobileActions(){
-      if(window.innerWidth <= 720){
-        mobileActions.setAttribute('aria-hidden','false');
-        mobileActions.style.display = 'flex';
-        mobileLabel.textContent = `Passo ${state.step} de 4`;
-        // show appropriate action mapping
-        mobileBack.hidden = state.step === 1;
-        mobileNext.hidden = state.step === 4;
-        mobileBack.removeAttribute('aria-hidden'); mobileNext.removeAttribute('aria-hidden');
-      } else {
-        mobileActions.style.display = 'none';
-        mobileActions.setAttribute('aria-hidden','true');
-      }
-    }
-
-    mobileBack.addEventListener('click', function(){
-      if(state.step > 1) showStep(state.step - 1);
-    });
-    mobileNext.addEventListener('click', function(){
-      if(state.step === 1){ if(validateStep1()) showStep(2); }
-      else if(state.step === 2) showStep(3);
-      else if(state.step === 3) { populateReview(); showStep(4); }
-    });
-
-    window.addEventListener('resize', updateMobileActions);
-
-    /* ===== Review and storage ===== */
     function populateReview(){
       const cat = document.getElementById('category').value || '—';
       const sev = document.getElementById('severity').value || '—';
       const desc = document.getElementById('description').value || '—';
       const addr = document.getElementById('address').value || '—';
-      const dt = document.getElementById('datetime').value || '—';
+      const dt = document.getElementById('datetime') ? document.getElementById('datetime').value : '';
       const photosHtml = state.photos.map(u => `<img src="${u}" style="width:96px;height:96px;object-fit:cover;border-radius:8px">`).join(' ');
       reviewArea.innerHTML = `
         <div><strong>Categoria:</strong> ${escapeHtml(cat)}</div>
         <div><strong>Gravidade:</strong> ${escapeHtml(sev)}</div>
         <div style="margin-top:8px;"><strong>Descrição:</strong><div style="margin-top:6px">${escapeHtml(desc)}</div></div>
         <div style="margin-top:8px;"><strong>Local:</strong> ${escapeHtml(addr)} <small style="display:block;color:#6b7280">Lat: ${state.lat||'—'} Lng: ${state.lng||'—'}</small></div>
-        <div style="margin-top:8px;"><strong>Data/Hora observada:</strong> ${escapeHtml(dt)}</div>
+        <div style="margin-top:8px;"><strong>Data/Hora:</strong> ${escapeHtml(dt)}</div>
         <div style="margin-top:12px;"><strong>Fotos:</strong><div style="display:flex;gap:8px;margin-top:8px">${photosHtml || '<span style="color:#6b7280">Sem fotos</span>'}</div></div>
       `;
-      // prepare photos JSON to send to FormSubmit (note: large payloads can be heavy)
       photosDataInput.value = JSON.stringify(state.photos);
     }
 
     function escapeHtml(s){ if(!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
 
+    // Form submit: save local + submit to FormSubmit in new tab
+    form.addEventListener('submit', function(ev){
+      // ensure step1 valid
+      if(!validateStep1()){ ev.preventDefault(); showStep(1); return; }
+
+      // build report object and save locally
+      const report = {
+        id: 'r' + Date.now(),
+        category: document.getElementById('category').value,
+        severity: document.getElementById('severity').value,
+        description: document.getElementById('description').value,
+        datetime: document.getElementById('datetime') ? document.getElementById('datetime').value : '',
+        address: document.getElementById('address').value,
+        lat: state.lat,
+        lng: state.lng,
+        photos: state.photos.slice(),
+        anonymous: document.getElementById('anonymous').checked,
+        createdAt: new Date().toISOString()
+      };
+      saveReport(report);
+      populateSavedList();
+
+      // update hidden photos_data
+      photosDataInput.value = JSON.stringify(report.photos || []);
+
+      // submit to FormSubmit in new tab (open temporary form)
+      ev.preventDefault();
+      const tmp = document.createElement('form');
+      tmp.method = 'POST';
+      tmp.action = form.action;
+      tmp.target = '_blank';
+      tmp.style.display = 'none';
+      const data = {
+        _subject: 'Denúncia simulada — Limpaê',
+        _captcha: 'false',
+        source: 'limpae-prototipo-escolar',
+        category: report.category,
+        severity: report.severity,
+        description: report.description,
+        datetime: report.datetime,
+        address: report.address,
+        lat: report.lat,
+        lng: report.lng,
+        anonymous: report.anonymous ? 'Sim' : 'Não',
+        photos_data: JSON.stringify(report.photos || [])
+      };
+      for(const k in data){
+        const i = document.createElement('input');
+        i.type = 'hidden'; i.name = k; i.value = data[k] == null ? '' : data[k];
+        tmp.appendChild(i);
+      }
+      document.body.appendChild(tmp);
+      tmp.submit();
+      setTimeout(()=> tmp.remove(), 800);
+
+      // show thanks locally
+      showThanksLocal();
+      // reset
+      form.reset();
+      state.photos = []; photosPreview.innerHTML=''; updatePreview();
+      state.lat = null; state.lng = null; if(latEl) latEl.textContent='—'; if(lngEl) lngEl.textContent='—';
+      showStep(1);
+    });
+
+    function showThanksLocal(){
+      const box = document.createElement('div');
+      box.style.position='fixed'; box.style.left='50%'; box.style.top='50%'; box.style.transform='translate(-50%,-50%)';
+      box.style.zIndex=99999; box.style.background='#fff'; box.style.padding='18px'; box.style.borderRadius='12px';
+      box.style.boxShadow='0 18px 40px rgba(2,6,23,0.2)';
+      box.innerHTML = `<h3 style="margin:0 0 8px;color:${'#14532d'}">Denúncia simulada enviada</h3>
+        <p style="margin:0 0 12px;color:#374151">A denúncia foi salva localmente e a submissão foi aberta em nova aba.</p>
+        <div style="text-align:right"><button id="close-thanks" style="background:linear-gradient(90deg,var(--green-600),var(--green-700));color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer">Fechar</button></div>`;
+      document.body.appendChild(box); document.body.style.overflow='hidden';
+      document.getElementById('close-thanks').addEventListener('click', ()=>{ box.remove(); document.body.style.overflow=''; });
+    }
+
     // localStorage helpers
     function getReports(){ try{ return JSON.parse(localStorage.getItem('limpae_reports')||'[]'); }catch(e){ return []; } }
     function saveReport(r){ const arr = getReports(); arr.unshift(r); localStorage.setItem('limpae_reports', JSON.stringify(arr.slice(0,200))); }
     function populateSavedList(){
-      const arr = getReports();
-      savedList.innerHTML = '';
+      const arr = getReports(); savedList.innerHTML = '';
       if(!arr.length){ savedList.innerHTML = '<div style="color:#6b7280">Nenhuma denúncia simulada ainda.</div>'; return; }
-      arr.forEach(item => {
+      arr.forEach(item=>{
         const el = document.createElement('div'); el.style.display='flex'; el.style.justifyContent='space-between'; el.style.alignItems='center';
         el.style.padding='8px'; el.style.borderRadius='8px'; el.style.border='1px solid rgba(2,6,23,0.04)'; el.style.background='#fff';
         el.innerHTML = `<div style="display:flex;gap:10px;align-items:center;min-width:0">
@@ -431,140 +480,54 @@
         <div><button data-id="${item.id}" class="remove-btn" style="background:transparent;border:0;color:#ef4444;font-weight:700;cursor:pointer">Remover</button></div>`;
         savedList.appendChild(el);
       });
-      // attach remove handlers
-      Array.from(savedList.querySelectorAll('.remove-btn')).forEach(btn => {
-        btn.addEventListener('click', function(){
-          const id = this.dataset.id;
-          const arr = getReports().filter(x => x.id !== id);
-          localStorage.setItem('limpae_reports', JSON.stringify(arr));
-          populateSavedList();
-        });
-      });
+      Array.from(savedList.querySelectorAll('.remove-btn')).forEach(btn=> btn.addEventListener('click', function(){
+        const id = this.dataset.id; const arr = getReports().filter(x=>x.id !== id); localStorage.setItem('limpae_reports', JSON.stringify(arr)); populateSavedList();
+      }));
     }
 
-    clearStorageBtn.addEventListener('click', function(){
-      if(confirm('Limpar todas as denúncias simuladas armazenadas localmente?')){ localStorage.removeItem('limpae_reports'); populateSavedList(); }
-    });
+    clearStorageBtn.addEventListener('click', ()=>{ if(confirm('Limpar todas as denúncias simuladas armazenadas localmente?')){ localStorage.removeItem('limpae_reports'); populateSavedList(); }});
 
-    /* ===== Form submit handling =====
-       - The form has action to FormSubmit (your endpoint). When user submits, the browser will POST to FormSubmit
-       - We also intercept submit to save a local copy and attach photos_data (base64) into a hidden field
-       - Note: sending large base64 images via email may increase size; prefer small images in demo
-    */
-    form.addEventListener('submit', function(ev){
-      // first validate step 1 required fields before allowing submit
-      if(!validateStep1()){ ev.preventDefault(); showStep(1); return; }
-
-      // populate photos_data already handled in populateReview. Ensure it's up-to-date:
-      populateReview();
-
-      // Save local copy (simulate)
-      const report = {
-        id: 'r' + Date.now(),
-        category: document.getElementById('category').value,
-        severity: document.getElementById('severity').value,
-        description: document.getElementById('description').value,
-        datetime: document.getElementById('datetime').value,
-        address: document.getElementById('address').value,
-        lat: state.lat,
-        lng: state.lng,
-        photos: state.photos.slice(),
-        anonymous: document.getElementById('anonymous').checked,
-        createdAt: new Date().toISOString()
-      };
-      saveReport(report);
-      populateSavedList();
-
-      // Allow form to submit to FormSubmit — open in new tab for nicer UX
-      // To open result in new tab while still POSTing, create a temporary form and submit it with target="_blank"
-      ev.preventDefault(); // prevent default so we can do custom submit
-      const tmp = document.createElement('form');
-      tmp.method = 'POST';
-      tmp.action = 'https://formsubmit.co/el/kazoho';
-      tmp.target = '_blank';
-      tmp.style.display = 'none';
-
-      // copy relevant fields (text) to tmp form
-      const fields = {
-        _subject: 'Nova denúncia simulada — Limpaê',
-        _captcha: 'false',
-        source: 'limpae-prototipo-escolar',
-        category: report.category,
-        severity: report.severity,
-        description: report.description,
-        datetime: report.datetime,
-        address: report.address,
-        lat: report.lat,
-        lng: report.lng,
-        anonymous: report.anonymous ? 'Sim' : 'Não',
-        photos_data: JSON.stringify(report.photos)
-      };
-      for(const k in fields){
-        const inp = document.createElement('input');
-        inp.type = 'hidden';
-        inp.name = k;
-        inp.value = fields[k] == null ? '' : fields[k];
-        tmp.appendChild(inp);
+    // keyboard: prevent Enter submitting; Enter moves to next step (except in textarea)
+    form.addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){
+        const active = document.activeElement;
+        if(active && active.tagName && active.tagName.toLowerCase() === 'textarea') return; // allow newlines in textarea
+        // prevent default submit
+        e.preventDefault();
+        // route to next step
+        if(state.step === 1) { if(validateStep1()) showStep(2); }
+        else if(state.step === 2) showStep(3);
+        else if(state.step === 3) { populateReview(); showStep(4); }
+        else if(state.step === 4) {
+          // do nothing — require explicit submit click to send
+        }
       }
-      document.body.appendChild(tmp);
-      tmp.submit();
-      setTimeout(()=>{ tmp.remove(); }, 600);
-
-      // show a small thanks overlay locally
-      showThanksLocal();
-      // reset form and go to step 1
-      form.reset();
-      state.photos = []; photosPreview.innerHTML = ''; updatePreview();
-      state.lat = null; state.lng = null; latEl.textContent = '—'; lngEl.textContent = '—';
-      showStep(1);
     });
 
-    function showThanksLocal(){
-      const box = document.createElement('div');
-      box.style.position = 'fixed'; box.style.left = '50%'; box.style.top = '50%';
-      box.style.transform = 'translate(-50%,-50%)'; box.style.zIndex = 6000;
-      box.style.background = '#fff'; box.style.padding = '20px'; box.style.borderRadius = '12px';
-      box.style.boxShadow = '0 18px 40px rgba(2,6,23,0.2)';
-      box.innerHTML = `<h3 style="margin:0 0 8px;color:${'#14532d'}">Denúncia simulada enviada</h3>
-        <p style="margin:0 0 12px;color:#374151">A denúncia foi salva localmente e uma solicitação de demonstração foi aberta em nova aba.</p>
-        <div style="text-align:right"><button id="close-thanks" style="background:linear-gradient(90deg,var(--green-600),var(--green-500));color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer">Fechar</button></div>`;
-      document.body.appendChild(box);
-      document.body.style.overflow = 'hidden';
-      document.getElementById('close-thanks').addEventListener('click', function(){
-        document.body.style.overflow = '';
-        box.remove();
-      });
+    // Mobile bottom controls mirror current step
+    function updateMobileBar(){
+      if(window.innerWidth > 720){ mobileBottom.style.display = 'none'; mobileBottom.setAttribute('aria-hidden','true'); return; }
+      mobileBottom.style.display = 'flex'; mobileBottom.setAttribute('aria-hidden','false');
+      mobileStepLabel.textContent = `Passo ${state.step} de 4`;
+      mbBack.style.display = state.step === 1 ? 'none' : 'inline-flex';
+      mbNext.style.display = state.step === 4 ? 'none' : 'inline-flex';
     }
-
-    /* ===== UI wiring ===== */
-    // preview update on input
-    ['category','severity','description','address','datetime'].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.addEventListener('input', updatePreview);
+    mbBack.addEventListener('click', ()=> { if(state.step>1) showStep(state.step-1); });
+    mbNext.addEventListener('click', ()=> {
+      if(state.step === 1){ if(validateStep1()) showStep(2); }
+      else if(state.step === 2) showStep(3);
+      else if(state.step === 3){ populateReview(); showStep(4); }
     });
 
-    // open review from preview
-    openReviewBtn.addEventListener('click', function(){
-      if(!validateStep1()){ showStep(1); return; }
-      populateReview();
-      showStep(4);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    window.addEventListener('resize', updateMobileBar);
 
-    // initial map lazy init when user clicks to step 2
-    // we already call initMapOnce when entering step 2 via next1 handler
-    // but guard in case user jumps directly to step 2 (e.g., using url)
-    // ensure map resizes on visibility change
-    const observer = new MutationObserver(function(){
-      if(state.map) state.map.invalidateSize();
-    });
-    observer.observe(document.getElementById('left-card'), { attributes:true, childList:true, subtree:true });
+    // init
+    showStep(1); populateSavedList(); updatePreview(); updateMobileBar();
 
-    // initial state
-    showStep(1);
-    populateSavedList();
-    updatePreview();
-    updateMobileActions();
+    // ensure map resizes if created
+    const observer = new MutationObserver(()=> { if(state.map) state.map.invalidateSize(); });
+    observer.observe(document.getElementById('form-card'), { attributes:true, childList:true, subtree:true });
+
   </script>
 </body>
 </html>
