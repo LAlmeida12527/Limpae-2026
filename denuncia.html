@@ -12,101 +12,66 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+  <!-- html2canvas for map snapshot -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNa5mQq4b6Jqv6QmPT8r2P5QfK5Gq0K5t8UTRzJ6mNz1Lm8d9tq1Y6cT2jv6qfJ3q8z4h6+ZgkYw3wQxZ+J3PQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
   <style>
     :root{
       --bg:#f6fff9;
       --card:#ffffff;
       --accent:#14532d;
       --muted:#6b7280;
-      --radius:14px;
+      --radius:12px;
       --shadow:0 18px 40px rgba(2,6,23,0.06);
       --max-width:1100px;
     }
-
     *{box-sizing:border-box}
     body{
-      margin:0;
-      font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial;
-      background:linear-gradient(180deg,#f1fff7,#f6fff9);
-      color:#102;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      line-height:1.45;
-      padding:20px;
+      margin:0; font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+      background:linear-gradient(180deg,#f1fff7,#f6fff9); color:#102;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; line-height:1.45; padding:20px;
     }
-
     .wrap{ max-width:var(--max-width); margin:0 auto; display:flex; gap:24px; align-items:flex-start; }
-
     header{ margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
     .brand{ display:flex; gap:12px; align-items:center; }
     .logo{ font-family:"Cinzel Decorative",serif; color:var(--accent); font-size:22px; }
     .badge{ background:#fff; padding:6px 10px; border-radius:10px; color:var(--accent); font-weight:700; box-shadow:var(--shadow); }
-
     main{ display:flex; gap:24px; width:100%; }
     .left{ flex:1 1 640px; min-width:0; }
     .right{ width:360px; flex:0 0 360px; }
-
     .card{ background:var(--card); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); border:1px solid rgba(2,6,23,0.04); }
-
     h1{ margin:0 0 6px; font-family:"Cinzel Decorative",serif; color:var(--accent); font-size:20px; }
     .lead{ color:var(--muted); margin-bottom:12px; }
-
-    /* Stepper */
     .steps{ display:flex; gap:8px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
     .step-pill{ padding:8px 12px; border-radius:999px; background:#f3faf3; color:var(--accent); font-weight:700; font-size:13px; }
     .progress{ height:8px; background:#edf7ee; border-radius:999px; overflow:hidden; margin-bottom:12px; }
     .progress > i{ display:block; height:100%; background:linear-gradient(90deg,var(--accent),#0b8a3a); width:0%; transition:width .28s ease; }
-
     label{ display:block; font-weight:700; margin-bottom:6px; color:#234; font-size:14px; }
-    input[type="text"], input[type="datetime-local"], select, textarea {
-      width:100%; padding:12px 14px; border-radius:10px; border:1px solid #e6eee6; font-size:15px; background:#fff;
-    }
+    input[type="text"], input[type="datetime-local"], select, textarea { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #e6eee6; font-size:15px; background:#fff; }
     textarea{ min-height:120px; resize:vertical; }
-
     .row{ display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap; }
     .col{ flex:1 1 200px; min-width:0; }
-
-    /* Map & search */
-    .geo{ position:relative; margin-top:8px; }
-    .geo input{ width:100%; padding:12px 14px; border-radius:10px; border:1px solid #e6eee6; }
-    .geo-btn{ margin-left:8px; padding:10px 12px; border-radius:10px; background:#fff; border:1px solid rgba(2,6,23,0.06); cursor:pointer; }
+    .geo{ position:relative; margin-top:8px; display:flex; gap:8px; align-items:center; }
+    .geo input{ flex:1; padding:12px 14px; border-radius:10px; border:1px solid #e6eee6; }
+    .geo-btn{ padding:10px 12px; border-radius:10px; background:#fff; border:1px solid rgba(2,6,23,0.06); cursor:pointer; }
     .geo-list{ position:absolute; left:0; right:0; top:calc(100% + 8px); background:#fff; border-radius:10px; box-shadow:0 16px 40px rgba(2,6,23,0.08); max-height:260px; overflow:auto; z-index:2000; border:1px solid rgba(2,6,23,0.04); }
     .geo-item{ padding:10px 12px; cursor:pointer; border-bottom:1px solid rgba(2,6,23,0.03); }
     .geo-item:hover{ background:#f3fbf5; }
-
     #map{ width:100%; height:360px; margin-top:12px; border-radius:10px; border:1px solid rgba(2,6,23,0.06); }
-
-    /* photos */
     .photos{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
     .photo-thumb{ width:120px; height:90px; object-fit:cover; border-radius:8px; border:1px solid rgba(2,6,23,0.06); box-shadow:0 8px 18px rgba(2,6,23,0.04); }
-
-    /* actions */
     .actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:14px; }
     .btn{ padding:12px 16px; border-radius:10px; border:0; background:linear-gradient(90deg,var(--accent),#0b8a3a); color:#fff; font-weight:800; cursor:pointer; box-shadow:0 12px 30px rgba(11,138,58,0.12); }
     .btn.ghost{ background:transparent; color:#475569; border:1px solid rgba(2,6,23,0.06); box-shadow:none; font-weight:700; }
-
-    /* preview right */
-    .preview .meta{ display:flex; justify-content:space-between; gap:8px; align-items:center; flex-wrap:wrap; }
     .report-card{ padding:12px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfff9); border:1px solid rgba(34,197,94,0.06); }
-
     .saved-list{ margin-top:12px; max-height:360px; overflow:auto; display:flex; flex-direction:column; gap:8px; padding-right:6px; }
-
     .muted{ color:var(--muted); font-size:13px; }
-
     footer{ margin-top:18px; color:var(--muted); font-size:13px; text-align:center; }
-
-    /* mobile */
-    @media (max-width:980px){
-      .wrap{ padding:12px; }
-    }
-    @media (max-width:860px){
-      .wrap{ flex-direction:column; }
-      .right{ width:100%; }
-    }
+    @media (max-width:980px){ .wrap{ padding:12px; } }
+    @media (max-width:860px){ .wrap{ flex-direction:column; } .right{ width:100%; } }
   </style>
 </head>
 <body>
-
   <div class="wrap" style="max-width:var(--max-width); margin:0 auto;">
     <div style="width:100%">
       <header style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
@@ -149,7 +114,6 @@
                       <option value="outro">Outro</option>
                     </select>
                   </div>
-
                   <div class="col">
                     <label for="severity">Gravidade *</label>
                     <select id="severity" name="severity" required>
@@ -186,9 +150,11 @@
               <!-- STEP 2 -->
               <fieldset data-step="2" style="display:none">
                 <label for="geo-input">Pesquisar local (Brasil)</label>
-                <div class="geo" style="display:flex;gap:8px;align-items:center">
-                  <input id="geo-input" placeholder="Ex.: Avenida Paulista, São Paulo">
+                <div class="geo">
+                  <input id="geo-input" placeholder="Ex.: Avenida Paulista, São Paulo" aria-label="Pesquisar local (Brasil)">
                   <button type="button" id="geo-clear" class="geo-btn" title="Limpar">✕</button>
+                  <!-- New: button to capture current map view as image -->
+                  <button type="button" id="capture-map" class="geo-btn" title="Adicionar imagem do mapa">📷 Mapa</button>
                 </div>
                 <div id="geo-list" class="geo-list" style="display:none"></div>
 
@@ -274,118 +240,84 @@
     </div>
   </div>
 
-  <!-- Mobile bottom (keeps Next/Back) -->
-  <div style="display:none" id="mobile-bottom" aria-hidden="true"></div>
-
   <script>
-  /* ====== State & Elements ====== */
+  /* ========= State & elements ========= */
   const state = { step:1, lat:null, lng:null, photos: [], map:null, marker:null };
-
   const form = document.getElementById('report-form');
   const fieldsets = Array.from(form.querySelectorAll('fieldset[data-step]'));
   const progressBar = document.getElementById('progress-bar');
-
   const next1 = document.getElementById('next-1'), next2 = document.getElementById('next-2'), next3 = document.getElementById('next-3');
   const back2 = document.getElementById('back-2'), back3 = document.getElementById('back-3'), back4 = document.getElementById('back-4');
   const openReview = document.getElementById('open-review');
-
   const pvCategory = document.getElementById('pv-category'), pvSeverity = document.getElementById('pv-severity'), pvDesc = document.getElementById('pv-desc'), pvPhotos = document.getElementById('pv-photos');
   const reviewArea = document.getElementById('review-area');
   const photosInput = document.getElementById('photos'), photosPreview = document.getElementById('photos-preview');
   const photosDataInput = document.getElementById('photos-data');
-
   const geoInput = document.getElementById('geo-input'), geoList = document.getElementById('geo-list'), geoClear = document.getElementById('geo-clear');
   const addressEl = document.getElementById('address'), latEl = document.getElementById('lat'), lngEl = document.getElementById('lng');
-
+  const captureMapBtn = document.getElementById('capture-map');
   const savedList = document.getElementById('saved-list'), clearStorageBtn = document.getElementById('clear-storage');
 
-  /* ====== Helpers ====== */
+  /* ========= Helpers & UI ========= */
   function showStep(n){
     state.step = n;
     fieldsets.forEach(fs => fs.style.display = Number(fs.dataset.step) === n ? '' : 'none');
-    updateProgress();
-    updatePreview();
-    if(n === 2) initMapOnce();
-    if(state.map) setTimeout(()=>state.map.invalidateSize(), 150);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateProgress(); updatePreview();
+    if(n===2) initMapOnce();
+    if(state.map) setTimeout(()=> state.map.invalidateSize(), 150);
+    window.scrollTo({ top:0, behavior:'smooth' });
   }
-  function updateProgress(){
-    const percent = ((state.step-1) / (fieldsets.length-1)) * 100;
-    progressBar.style.width = percent + '%';
-  }
-  function updatePreview(){
-    const cat = document.getElementById('category').value || '—';
-    const sev = document.getElementById('severity').value || '—';
-    const desc = document.getElementById('description').value || '—';
-    pvCategory.textContent = cat; pvSeverity.textContent = sev; pvDesc.textContent = desc;
-    pvPhotos.innerHTML = '';
-    state.photos.slice(0,4).forEach(u => { const img = document.createElement('img'); img.src = u; img.className = 'photo-thumb'; pvPhotos.appendChild(img); });
-  }
-  function validateStep1(){
-    const cat = document.getElementById('category').value;
-    const sev = document.getElementById('severity').value;
-    const desc = document.getElementById('description').value.trim();
-    if(!cat || !sev || !desc){ alert('Preencha categoria, gravidade e descrição.'); return false; }
-    return true;
-  }
+  function updateProgress(){ const percent = ((state.step-1)/(fieldsets.length-1))*100; progressBar.style.width = percent + '%'; }
+  function updatePreview(){ const cat=document.getElementById('category').value||'—', sev=document.getElementById('severity').value||'—', desc=document.getElementById('description').value||'—'; pvCategory.textContent=cat; pvSeverity.textContent=sev; pvDesc.textContent=desc; pvPhotos.innerHTML=''; state.photos.slice(0,4).forEach(u=>{ const img=document.createElement('img'); img.src=u; img.className='photo-thumb'; pvPhotos.appendChild(img); }); }
+  function validateStep1(){ const cat=document.getElementById('category').value, sev=document.getElementById('severity').value, desc=document.getElementById('description').value.trim(); if(!cat||!sev||!desc){ alert('Preencha categoria, gravidade e descrição.'); return false;} return true; }
 
-  /* ====== Map and geosearch (Brazil only) ====== */
+  /* ========= Map, layers, controls ========= */
   function initMapOnce(){
     if(state.map) return;
     const mapEl = document.getElementById('map');
-    state.map = L.map(mapEl, { scrollWheelZoom:false }).setView([-15.7801, -47.9292], 4);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(state.map);
+    state.map = L.map(mapEl, { scrollWheelZoom:false }).setView([-15.7801,-47.9292],4);
 
+    // base layers
+    const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:'© OpenStreetMap' });
+    const carto = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', { maxZoom:19, attribution:'© Carto / OSM' });
+    osm.addTo(state.map);
+    L.control.layers({ 'OSM': osm, 'Carto Light': carto }, {}, { collapsed:true }).addTo(state.map);
+    L.control.scale({ imperial:false }).addTo(state.map);
+
+    // marker
     state.marker = L.marker([-15.7801,-47.9292], { draggable:true }).addTo(state.map);
-    state.marker.on('dragend', function(e){
-      const p = e.target.getLatLng(); state.lat = p.lat; state.lng = p.lng;
-      latEl.textContent = state.lat.toFixed(6); lngEl.textContent = state.lng.toFixed(6);
-    });
+    state.marker.on('dragend', function(e){ const p = e.target.getLatLng(); updateLatLng(p.lat,p.lng); reverseGeocode(p.lat,p.lng); });
 
-    // click map to move marker
-    state.map.on('click', function(e){
-      const lat = e.latlng.lat, lon = e.latlng.lng;
-      state.marker.setLatLng([lat,lon]);
-      state.lat = lat; state.lng = lon;
-      latEl.textContent = lat.toFixed(6); lngEl.textContent = lon.toFixed(6);
-      addressEl.value = ''; // user can fill manual address or use search
-    });
+    // click to set marker and reverse geocode
+    state.map.on('click', function(e){ const lat=e.latlng.lat, lon=e.latlng.lng; state.marker.setLatLng([lat,lon]); updateLatLng(lat,lon); reverseGeocode(lat,lon); });
   }
 
-  document.getElementById('detect-location')?.addEventListener('click', function(){
-    if(!navigator.geolocation){ alert('Geolocalização não suportada'); return; }
-    if(location.protocol !== 'https:' && location.hostname !== 'localhost'){ if(!confirm('Geolocalização funciona melhor em HTTPS. Tentar mesmo assim?')) return; }
-    this.textContent = 'Detectando…';
-    navigator.geolocation.getCurrentPosition(pos => {
-      this.textContent = 'Detectar minha posição';
-      const lat = pos.coords.latitude, lng = pos.coords.longitude;
-      state.lat = lat; state.lng = lng; latEl.textContent = lat.toFixed(6); lngEl.textContent = lng.toFixed(6);
-      if(!state.map) initMapOnce();
-      state.map.setView([lat,lng], 16); state.marker.setLatLng([lat,lng]);
-      addressEl.value = '';
-    }, err => {
-      this.textContent = 'Detectar minha posição';
-      alert('Não foi possível obter a localização: ' + (err.message || 'erro'));
-    }, { enableHighAccuracy:true, timeout:10000, maximumAge:60000 });
-  });
+  function updateLatLng(lat,lng){ state.lat=lat; state.lng=lng; latEl.textContent = lat.toFixed(6); lngEl.textContent = lng.toFixed(6); }
 
+  // Reverse geocode using Nominatim (Brazil)
+  async function reverseGeocode(lat,lng){
+    try{
+      const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&accept-language=pt-BR`;
+      const res = await fetch(url);
+      const json = await res.json();
+      if(json && json.display_name){ addressEl.value = json.display_name; }
+    }catch(e){ /* fail silently */ }
+  }
+
+  /* ========= Geosearch (Brazil only) ========= */
   let geoTimer = null;
   geoInput.addEventListener('input', function(){
-    const q = this.value.trim();
-    geoList.style.display = 'none'; geoList.innerHTML = '';
-    if(geoTimer) clearTimeout(geoTimer);
-    if(!q) return;
+    const q = this.value.trim(); geoList.style.display='none'; geoList.innerHTML='';
+    if(geoTimer) clearTimeout(geoTimer); if(!q) return;
     geoTimer = setTimeout(()=> nominatimSearch(q), 300);
   });
   geoClear.addEventListener('click', ()=> { geoInput.value=''; geoList.style.display='none'; geoList.innerHTML=''; });
 
   async function nominatimSearch(query){
-    geoList.style.display = 'block';
-    geoList.innerHTML = '<div style="padding:10px;color:#6b7280">Buscando...</div>';
+    geoList.style.display='block'; geoList.innerHTML = '<div style="padding:10px;color:#6b7280">Buscando...</div>';
     try{
-      // limit to Brazil
       const url = 'https://nominatim.openstreetmap.org/search?format=json&countrycodes=br&limit=8&q=' + encodeURIComponent(query);
-      const res = await fetch(url, { headers: { 'Accept-Language':'pt-BR' } });
+      const res = await fetch(url, { headers: { 'Accept-Language':'pt-BR' }});
       const data = await res.json();
       if(!data || !data.length){ geoList.innerHTML = '<div style="padding:10px;color:#6b7280">Nenhum resultado</div>'; return; }
       geoList.innerHTML = '';
@@ -396,63 +328,76 @@
           const lat = parseFloat(item.lat), lon = parseFloat(item.lon);
           state.map.setView([lat,lon], 16);
           state.marker.setLatLng([lat,lon]);
-          state.lat = lat; state.lng = lon;
-          latEl.textContent = lat.toFixed(6); lngEl.textContent = lon.toFixed(6);
-          addressEl.value = item.display_name; geoInput.value = item.display_name;
+          updateLatLng(lat,lon);
+          addressEl.value = item.display_name;
+          geoInput.value = item.display_name;
           geoList.style.display = 'none';
         });
         geoList.appendChild(div);
       });
-    }catch(e){
-      geoList.innerHTML = '<div style="padding:10px;color:#b91c1c">Erro na busca</div>';
-    }
+    }catch(e){ geoList.innerHTML = '<div style="padding:10px;color:#b91c1c">Erro na busca</div>'; }
   }
 
-  /* ====== Image compression client-side ====== */
+  /* ========= Map snapshot (html2canvas) =========
+     Notes:
+     - html2canvas will try to capture the #map element.
+     - Tile servers that disallow crossOrigin may taint the canvas and prevent toDataURL.
+     - OSM and Carto usually work but behavior can vary by browser/headers.
+  */
+  captureMapBtn.addEventListener('click', async function(){
+    if(!state.map){ alert('Abra o mapa primeiro (vá para a etapa "Local").'); return; }
+    // show subtle UI feedback
+    const btn = this; btn.textContent = 'Capturando…';
+    try{
+      // html2canvas options: useCORS true to attempt cross-origin retrieval
+      const canvas = await html2canvas(document.getElementById('map'), { useCORS:true, backgroundColor:null, logging:false, scale:1.2 });
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      // add to photos
+      state.photos.unshift(dataUrl);
+      // update photos preview and hidden field
+      const img = document.createElement('img'); img.src = dataUrl; img.className='photo-thumb';
+      photosPreview.insertBefore(img, photosPreview.firstChild);
+      updatePreview();
+      photosDataInput.value = JSON.stringify(state.photos);
+    }catch(err){
+      console.error('snapshot error', err);
+      alert('Não foi possível capturar a imagem do mapa. Isso pode ocorrer por restrições CORS nos tiles do mapa. Tente tirar foto manualmente ou usar outro navegador.');
+    } finally { btn.textContent = '📷 Mapa'; }
+  });
+
+  /* ========= Image compression ========= */
   photosInput.addEventListener('change', async function(){
     const files = Array.from(this.files).slice(0,6);
-    photosPreview.innerHTML = ''; state.photos = [];
+    photosPreview.innerHTML=''; state.photos = [];
     if(!files.length) return;
     for(const f of files){
       try{
-        const dataUrl = await compressImage(f, 1200, 0.75);
+        const dataUrl = await compressImage(f, 1200, 0.78);
         state.photos.push(dataUrl);
-        const img = document.createElement('img'); img.src = dataUrl; img.className = 'photo-thumb'; photosPreview.appendChild(img);
+        const img = document.createElement('img'); img.src = dataUrl; img.className='photo-thumb'; photosPreview.appendChild(img);
         updatePreview();
-      }catch(e){
-        console.error('compress', e);
-      }
+      }catch(e){ console.error(e); }
     }
   });
-
-  function compressImage(file, maxWidth=1200, quality=0.75){
-    return new Promise((resolve, reject)=>{
+  function compressImage(file, maxWidth=1200, quality=0.78){
+    return new Promise((resolve,reject)=>{
       const reader = new FileReader();
       reader.onload = e => {
         const img = new Image();
         img.onload = function(){
           const scale = Math.min(1, maxWidth / img.width);
-          const w = Math.round(img.width * scale);
-          const h = Math.round(img.height * scale);
-          const canvas = document.createElement('canvas');
-          canvas.width = w; canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img,0,0,w,h);
-          // toDataURL
-          try{
-            const dataUrl = canvas.toDataURL('image/jpeg', quality);
-            resolve(dataUrl);
-          }catch(err){ reject(err); }
+          const w = Math.round(img.width * scale), h = Math.round(img.height * scale);
+          const canvas = document.createElement('canvas'); canvas.width=w; canvas.height=h;
+          const ctx = canvas.getContext('2d'); ctx.drawImage(img,0,0,w,h);
+          try{ const dataUrl = canvas.toDataURL('image/jpeg', quality); resolve(dataUrl); }catch(err){ reject(err); }
         };
-        img.onerror = reject;
-        img.src = e.target.result;
+        img.onerror = reject; img.src = e.target.result;
       };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
+      reader.onerror = reject; reader.readAsDataURL(file);
     });
   }
 
-  /* ====== Steps navigation & preview ====== */
+  /* ========= Steps navigation & preview ========= */
   next1.addEventListener('click', ()=> { if(validateStep1()) showStep(2); });
   back2.addEventListener('click', ()=> showStep(1));
   next2.addEventListener('click', ()=> showStep(3));
@@ -468,136 +413,44 @@
     const addr = addressEl.value || '—';
     const dt = document.getElementById('datetime')?.value || '';
     const photosHtml = state.photos.map(u => `<img src="${u}" style="width:140px;height:110px;object-fit:cover;border-radius:8px;margin-right:8px">`).join('');
-    reviewArea.innerHTML = `
-      <div><strong>Categoria:</strong> ${escapeHtml(cat)}</div>
-      <div><strong>Gravidade:</strong> ${escapeHtml(sev)}</div>
-      <div style="margin-top:8px;"><strong>Descrição:</strong><div style="margin-top:6px">${escapeHtml(desc)}</div></div>
-      <div style="margin-top:8px;"><strong>Local:</strong> ${escapeHtml(addr)} <small style="display:block;color:#6b7280">Lat: ${state.lat||'—'} Lng: ${state.lng||'—'}</small></div>
-      <div style="margin-top:8px;"><strong>Data/Hora:</strong> ${escapeHtml(dt)}</div>
-      <div style="margin-top:12px;"><strong>Fotos:</strong><div style="display:flex;gap:8px;margin-top:8px">${photosHtml || '<span style="color:#6b7280">Sem fotos</span>'}</div></div>
-    `;
+    reviewArea.innerHTML = `<div><strong>Categoria:</strong> ${escapeHtml(cat)}</div><div><strong>Gravidade:</strong> ${escapeHtml(sev)}</div><div style="margin-top:8px;"><strong>Descrição:</strong><div style="margin-top:6px">${escapeHtml(desc)}</div></div><div style="margin-top:8px;"><strong>Local:</strong> ${escapeHtml(addr)} <small style="display:block;color:#6b7280">Lat: ${state.lat||'—'} Lng: ${state.lng||'—'}</small></div><div style="margin-top:8px;"><strong>Data/Hora:</strong> ${escapeHtml(dt)}</div><div style="margin-top:12px;"><strong>Fotos:</strong><div style="display:flex;gap:8px;margin-top:8px">${photosHtml || '<span style="color:#6b7280">Sem fotos</span>'}</div></div>`;
     photosDataInput.value = JSON.stringify(state.photos);
   }
 
-  function updatePreview(){
-    const cat = document.getElementById('category').value || '—', sev = document.getElementById('severity').value || '—', desc = document.getElementById('description').value || '—';
-    pvCategory.textContent = cat; pvSeverity.textContent = sev; pvDesc.textContent = desc;
-    pvPhotos.innerHTML = ''; state.photos.slice(0,4).forEach(u => { const img=document.createElement('img'); img.src=u; img.className='photo-thumb'; pvPhotos.appendChild(img); });
-  }
-
-  // Submit handler: save local + FormSubmit in new tab
+  // Submit handler (save locally + forward to FormSubmit)
   form.addEventListener('submit', function(ev){
     if(!validateStep1()){ ev.preventDefault(); showStep(1); return; }
-    const report = {
-      id:'r'+Date.now(),
-      category: document.getElementById('category').value,
-      severity: document.getElementById('severity').value,
-      description: document.getElementById('description').value,
-      datetime: document.getElementById('datetime')?.value || '',
-      reported_by: document.getElementById('reported-by')?.value || '',
-      contact: document.getElementById('contact')?.value || '',
-      address: addressEl.value || '',
-      lat: state.lat, lng: state.lng,
-      photos: state.photos.slice(),
-      anonymous: document.getElementById('anonymous')?.checked || false,
-      createdAt: new Date().toISOString()
-    };
-    saveReport(report);
-    populateSavedList();
-    photosDataInput.value = JSON.stringify(report.photos || []);
-
-    // submit to FormSubmit in new tab (temporary form)
+    const report = { id:'r'+Date.now(), category:document.getElementById('category').value, severity:document.getElementById('severity').value, description:document.getElementById('description').value, datetime:document.getElementById('datetime')?.value||'', reported_by:document.getElementById('reported-by')?.value||'', contact:document.getElementById('contact')?.value||'', address:addressEl.value||'', lat:state.lat, lng:state.lng, photos:state.photos.slice(), anonymous:document.getElementById('anonymous')?.checked||false, createdAt:new Date().toISOString() };
+    saveReport(report); populateSavedList(); photosDataInput.value = JSON.stringify(report.photos || []);
     ev.preventDefault();
     const tmp = document.createElement('form'); tmp.method='POST'; tmp.action=form.action; tmp.target='_blank'; tmp.style.display='none';
-    const payload = {
-      _subject:'Denúncia simulada — Limpaê', _captcha:'false', source:'limpae-prototipo-escolar',
-      category:report.category, severity:report.severity, description:report.description, datetime:report.datetime,
-      reported_by:report.reported_by, contact:report.contact, address:report.address, lat:report.lat, lng:report.lng,
-      anonymous: report.anonymous ? 'Sim' : 'Não', photos_data: JSON.stringify(report.photos || [])
-    };
+    const payload = { _subject:'Denúncia simulada — Limpaê', _captcha:'false', source:'limpae-prototipo-escolar', category:report.category, severity:report.severity, description:report.description, datetime:report.datetime, reported_by:report.reported_by, contact:report.contact, address:report.address, lat:report.lat, lng:report.lng, anonymous: report.anonymous ? 'Sim':'Não', photos_data: JSON.stringify(report.photos || []) };
     for(const k in payload){ const i=document.createElement('input'); i.type='hidden'; i.name=k; i.value = payload[k] || ''; tmp.appendChild(i); }
     document.body.appendChild(tmp); tmp.submit(); setTimeout(()=>tmp.remove(),800);
-
-    showThanksLocal();
-    form.reset(); state.photos=[]; photosPreview.innerHTML=''; updatePreview();
-    state.lat=null; state.lng=null; latEl.textContent='—'; lngEl.textContent='—';
-    showStep(1);
+    showThanksLocal(); form.reset(); state.photos=[]; photosPreview.innerHTML=''; updatePreview(); state.lat=null; state.lng=null; latEl.textContent='—'; lngEl.textContent='—'; showStep(1);
   });
 
-  /* ======= local storage ======= */
+  /* ========= Local storage: saved reports ========= */
   function getReports(){ try{ return JSON.parse(localStorage.getItem('limpae_reports')||'[]'); }catch(e){ return []; } }
   function saveReport(r){ const arr=getReports(); arr.unshift(r); localStorage.setItem('limpae_reports', JSON.stringify(arr.slice(0,200))); }
-  function populateSavedList(){
-    const arr = getReports(); savedList.innerHTML = '';
-    if(!arr.length){ savedList.innerHTML = '<div style="color:#6b7280">Nenhuma denúncia simulada ainda.</div>'; return; }
-    arr.forEach(item=>{
-      const el = document.createElement('div'); el.style.display='flex'; el.style.justifyContent='space-between'; el.style.alignItems='center'; el.style.padding='8px'; el.style.borderRadius='8px'; el.style.border='1px solid rgba(2,6,23,0.04)'; el.style.background='#fff';
-      el.innerHTML = `<div style="display:flex;gap:10px;align-items:center;min-width:0">
-        <div style="width:56px;height:56px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#f3f4f6">${item.photos && item.photos[0] ? `<img src="${item.photos[0]}" style="width:56px;height:56px;object-fit:cover">` : '🗑️'}</div>
-        <div style="min-width:0">
-          <div style="font-weight:700;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:180px">${escapeHtml(item.category)} · ${escapeHtml(item.severity)}</div>
-          <div style="color:#6b7280;font-size:13px;max-width:220px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden">${escapeHtml(item.description)}</div>
-          <div style="color:#6b7280;font-size:12px;margin-top:4px">${new Date(item.createdAt).toLocaleString()}</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button data-id="${item.id}" class="btn ghost view-btn">Ver</button>
-        <button data-id="${item.id}" class="btn ghost download-btn">Baixar</button>
-        <button data-id="${item.id}" class="remove-btn" style="background:transparent;border:0;color:#ef4444;font-weight:700;cursor:pointer">Remover</button>
-      </div>`;
-      savedList.appendChild(el);
-    });
-
-    // handlers
-    Array.from(savedList.querySelectorAll('.remove-btn')).forEach(btn=> btn.addEventListener('click', function(){
-      const id = this.dataset.id; const arr = getReports().filter(x=>x.id !== id); localStorage.setItem('limpae_reports', JSON.stringify(arr)); populateSavedList();
-    }));
-    Array.from(savedList.querySelectorAll('.view-btn')).forEach(btn=> btn.addEventListener('click', function(){
-      const id = this.dataset.id; const item = getReports().find(x=>x.id===id); if(!item) return;
-      // basic viewer (prototype)
-      const w = window.open('about:blank','_blank');
-      w.document.write('<pre>'+JSON.stringify(item,null,2)+'</pre>');
-    }));
-    Array.from(savedList.querySelectorAll('.download-btn')).forEach(btn=> btn.addEventListener('click', function(){
-      const id = this.dataset.id; const item = getReports().find(x=>x.id===id); if(!item) return;
-      const blob = new Blob([JSON.stringify(item,null,2)], { type:'application/json' });
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = id + '.json'; document.body.appendChild(a); a.click(); a.remove();
-    }));
-  }
-
+  function populateSavedList(){ const arr=getReports(); savedList.innerHTML=''; if(!arr.length){ savedList.innerHTML='<div style="color:#6b7280">Nenhuma denúncia simulada ainda.</div>'; return; } arr.forEach(item=>{ const el=document.createElement('div'); el.style.display='flex'; el.style.justifyContent='space-between'; el.style.alignItems='center'; el.style.padding='8px'; el.style.borderRadius='8px'; el.style.border='1px solid rgba(2,6,23,0.04)'; el.style.background='#fff'; el.innerHTML = `<div style="display:flex;gap:10px;align-items:center;min-width:0"><div style="width:56px;height:56px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#f3f4f6">${item.photos && item.photos[0] ? `<img src="${item.photos[0]}" style="width:56px;height:56px;object-fit:cover">` : '🗑️'}</div><div style="min-width:0"><div style="font-weight:700;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:180px">${escapeHtml(item.category)} · ${escapeHtml(item.severity)}</div><div style="color:#6b7280;font-size:13px;max-width:220px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden">${escapeHtml(item.description)}</div><div style="color:#6b7280;font-size:12px;margin-top:4px">${new Date(item.createdAt).toLocaleString()}</div></div></div><div style="display:flex;gap:8px;align-items:center"><button data-id="${item.id}" class="btn ghost view-btn">Ver</button><button data-id="${item.id}" class="btn ghost download-btn">Baixar</button><button data-id="${item.id}" class="remove-btn" style="background:transparent;border:0;color:#ef4444;font-weight:700;cursor:pointer">Remover</button></div>`; savedList.appendChild(el); }); Array.from(savedList.querySelectorAll('.remove-btn')).forEach(btn=> btn.addEventListener('click', function(){ const id=this.dataset.id; const arr=getReports().filter(x=>x.id!==id); localStorage.setItem('limpae_reports', JSON.stringify(arr)); populateSavedList(); })); Array.from(savedList.querySelectorAll('.view-btn')).forEach(btn=> btn.addEventListener('click', function(){ const id=this.dataset.id; const item=getReports().find(x=>x.id===id); if(!item) return; const w=window.open('about:blank','_blank'); w.document.write('<pre>'+JSON.stringify(item,null,2)+'</pre>'); })); Array.from(savedList.querySelectorAll('.download-btn')).forEach(btn=> btn.addEventListener('click', function(){ const id=this.dataset.id; const item=getReports().find(x=>x.id===id); if(!item) return; const blob=new Blob([JSON.stringify(item,null,2)], { type:'application/json' }); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=id+'.json'; document.body.appendChild(a); a.click(); a.remove(); }));
   clearStorageBtn.addEventListener('click', ()=> { if(confirm('Limpar todas as denúncias simuladas armazenadas localmente?')){ localStorage.removeItem('limpae_reports'); populateSavedList(); } });
 
-  // Enter key behavior: advance step (not submit), except textarea
-  form.addEventListener('keydown', function(e){
-    if(e.key === 'Enter'){
-      const active = document.activeElement;
-      if(active && active.tagName && active.tagName.toLowerCase() === 'textarea') return;
-      e.preventDefault();
-      if(state.step === 1){ if(validateStep1()) showStep(2); }
-      else if(state.step === 2) showStep(3);
-      else if(state.step === 3) { populateReview(); showStep(4); }
-    }
-  });
+  // keyboard: Enter advances (not submit), except textarea
+  form.addEventListener('keydown', function(e){ if(e.key==='Enter'){ const active=document.activeElement; if(active && active.tagName && active.tagName.toLowerCase()==='textarea') return; e.preventDefault(); if(state.step===1){ if(validateStep1()) showStep(2);} else if(state.step===2) showStep(3); else if(state.step===3){ populateReview(); showStep(4); } } });
 
-  // small helpers
+  // helpers
   function escapeHtml(s){ if(!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
-
-  // small feedback modal
-  function showThanksLocal(){ const el = document.createElement('div'); el.style.position='fixed'; el.style.left='50%'; el.style.top='50%'; el.style.transform='translate(-50%,-50%)'; el.style.zIndex=99999; el.style.background='#fff'; el.style.padding='18px'; el.style.borderRadius='12px'; el.style.boxShadow='0 18px 40px rgba(2,6,23,0.2)'; el.innerHTML = `<h3 style="margin:0 0 8px;color:#14532d">Denúncia simulada enviada</h3><p style="margin:0 0 12px;color:#374151">A denúncia foi salva localmente e uma simulação de envio foi realizada.</p><div style="text-align:right"><button id="close-thanks" style="background:linear-gradient(90deg,#15803d,#14532d);color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer">Fechar</button></div>`; document.body.appendChild(el); document.body.style.overflow='hidden'; document.getElementById('close-thanks').addEventListener('click', ()=>{ el.remove(); document.body.style.overflow=''; }); }
+  function showThanksLocal(){ const el=document.createElement('div'); el.style.position='fixed'; el.style.left='50%'; el.style.top='50%'; el.style.transform='translate(-50%,-50%)'; el.style.zIndex=99999; el.style.background='#fff'; el.style.padding='18px'; el.style.borderRadius='12px'; el.style.boxShadow='0 18px 40px rgba(2,6,23,0.2)'; el.innerHTML = `<h3 style="margin:0 0 8px;color:#14532d">Denúncia simulada enviada</h3><p style="margin:0 0 12px;color:#374151">A denúncia foi salva localmente e uma simulação de envio foi realizada.</p><div style="text-align:right"><button id="close-thanks" style="background:linear-gradient(90deg,#15803d,#14532d);color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer">Fechar</button></div>`; document.body.appendChild(el); document.body.style.overflow='hidden'; document.getElementById('close-thanks').addEventListener('click', ()=>{ el.remove(); document.body.style.overflow=''; }); }
 
   // init
   updateProgress = () => { const percent = ((state.step-1)/(fieldsets.length-1))*100; progressBar.style.width = percent + '%'; };
-  updateProgress();
-  showStep(1);
-  populateSavedList();
-  updatePreview();
+  updateProgress(); showStep(1); populateSavedList(); updatePreview();
 
-  // Resize observer to fix Leaflet when map becomes visible
+  // ensure map resizes when visible
   const obs = new MutationObserver(()=>{ if(state.map) state.map.invalidateSize(); });
   obs.observe(document.getElementById('form-panel'), { childList:true, subtree:true });
 
-  // Debounce utility for resize/search improvements
-  function debounce(fn, wait=200){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), wait); }; }
   </script>
 </body>
 </html>
