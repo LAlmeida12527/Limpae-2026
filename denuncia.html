@@ -5,385 +5,322 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Limpaê — Denunciar (Protótipo Escolar)</title>
 
-  <!-- Fontes -->
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Leaflet (mapa) -->
+  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
     :root{
-      --green-700:#14532d;
-      --green-600:#15803d;
-      --accent:#f59e0b;
-      --bg:#f6fffa;
+      --bg:#f6fff9;
       --card:#ffffff;
+      --accent:#14532d;
       --muted:#6b7280;
-      --max-width:1180px;
-      --safe-top: env(safe-area-inset-top, 0px);
       --radius:14px;
-      --shadow: 0 20px 40px rgba(2,6,23,0.06);
+      --shadow:0 18px 40px rgba(2,6,23,0.06);
+      --max-width:1100px;
     }
+
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial; -webkit-font-smoothing:antialiased;}
-    body{ background:linear-gradient(180deg,#f1fff7,#f6fffa); color:#102; padding-top:var(--safe-top); line-height:1.45; }
+    body{
+      margin:0;
+      font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+      background:linear-gradient(180deg,#f1fff7,#f6fff9);
+      color:#102;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      padding:20px;
+    }
 
-    .container{max-width:var(--max-width); margin:0 auto; padding:18px;}
+    .wrap{ max-width:var(--max-width); margin:0 auto; display:flex; gap:24px; align-items:flex-start; }
 
-    header{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 0; }
-    .brand{ display:flex; align-items:center; gap:12px; }
-    .logo { font-family:"Cinzel Decorative", serif; font-size:22px; color:var(--green-700); -webkit-background-clip:text; }
-    .badge{ background:#fff; padding:6px 10px; border-radius:10px; box-shadow:0 8px 24px rgba(2,6,23,0.04); color:var(--green-700); font-weight:700; }
+    header{ margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .brand{ display:flex; gap:12px; align-items:center; }
+    .logo{ font-family:"Cinzel Decorative",serif; color:var(--accent); font-size:22px; }
+    .badge{ background:#fff; padding:6px 10px; border-radius:10px; color:var(--accent); font-weight:700; box-shadow:var(--shadow); }
 
-    h1.page-title{ margin:6px 0 2px; font-size:20px; color:var(--green-700); font-family:"Cinzel Decorative",serif; }
-    .note{ color:var(--muted); margin-bottom:10px; }
-
-    .grid{ display:grid; grid-template-columns: 1fr 420px; gap:22px; align-items:start; margin-top:12px; }
-    @media (max-width:980px){ .grid{ grid-template-columns:1fr; } }
+    main{ display:flex; gap:24px; width:100%; }
+    .left{ flex:1 1 640px; min-width:0; }
+    .right{ width:360px; flex:0 0 360px; }
 
     .card{ background:var(--card); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); border:1px solid rgba(2,6,23,0.04); }
 
+    h1{ margin:0 0 6px; font-family:"Cinzel Decorative",serif; color:var(--accent); font-size:20px; }
+    .lead{ color:var(--muted); margin-bottom:12px; }
+
     /* Stepper */
-    .steps{ display:flex; gap:10px; align-items:center; margin-bottom:12px; }
-    .step{ background:rgba(20,83,45,0.06); color:var(--green-700); padding:8px 12px; border-radius:999px; font-weight:700; font-size:13px; }
-    .progress{ height:8px; background:#eef7ef; border-radius:999px; overflow:hidden; margin-top:10px; }
-    .progress > i{ display:block; height:100%; background:linear-gradient(90deg,var(--green-600),var(--green-700)); width:0%; transition:width .28s ease; }
+    .steps{ display:flex; gap:8px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
+    .step-pill{ padding:8px 12px; border-radius:999px; background:#f3faf3; color:var(--accent); font-weight:700; font-size:13px; }
+    .progress{ height:8px; background:#edf7ee; border-radius:999px; overflow:hidden; margin-bottom:12px; }
+    .progress > i{ display:block; height:100%; background:linear-gradient(90deg,var(--accent),#0b8a3a); width:0%; transition:width .28s ease; }
 
     label{ display:block; font-weight:700; margin-bottom:6px; color:#234; font-size:14px; }
-    input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+    input[type="text"], input[type="datetime-local"], select, textarea {
       width:100%; padding:12px 14px; border-radius:10px; border:1px solid #e6eee6; font-size:15px; background:#fff;
     }
-    textarea{ min-height:130px; resize:vertical; }
+    textarea{ min-height:120px; resize:vertical; }
 
     .row{ display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap; }
     .col{ flex:1 1 200px; min-width:0; }
 
-    .muted{ color:var(--muted); font-size:13px; }
-
-    /* Map & geosearch */
-    .geo-search{ display:flex; gap:8px; align-items:center; margin-top:6px; }
-    .geo-search input{ flex:1; padding:12px 14px; border-radius:10px; border:1px solid #e6eee6; }
-    .geo-list{ position: absolute; left:0; right:0; margin-top:8px; background:#fff; border-radius:8px; box-shadow:0 12px 32px rgba(2,6,23,0.08); max-height:240px; overflow:auto; z-index:1200; border:1px solid rgba(2,6,23,0.04); }
+    /* Map & search */
+    .geo{ position:relative; margin-top:8px; }
+    .geo input{ width:100%; padding:12px 14px; border-radius:10px; border:1px solid #e6eee6; }
+    .geo-btn{ margin-left:8px; padding:10px 12px; border-radius:10px; background:#fff; border:1px solid rgba(2,6,23,0.06); cursor:pointer; }
+    .geo-list{ position:absolute; left:0; right:0; top:calc(100% + 8px); background:#fff; border-radius:10px; box-shadow:0 16px 40px rgba(2,6,23,0.08); max-height:260px; overflow:auto; z-index:2000; border:1px solid rgba(2,6,23,0.04); }
     .geo-item{ padding:10px 12px; cursor:pointer; border-bottom:1px solid rgba(2,6,23,0.03); }
-    .geo-item:hover{ background:#f3faf4; }
+    .geo-item:hover{ background:#f3fbf5; }
 
-    #map{ width:100%; height:360px; border-radius:12px; border:1px solid rgba(2,6,23,0.06); margin-top:10px; }
+    #map{ width:100%; height:360px; margin-top:12px; border-radius:10px; border:1px solid rgba(2,6,23,0.06); }
 
-    /* Photos */
-    .photos{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
-    .photo-thumb{ width:120px; height:96px; object-fit:cover; border-radius:8px; border:1px solid rgba(2,6,23,0.06); box-shadow:0 8px 18px rgba(2,6,23,0.04); }
+    /* photos */
+    .photos{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .photo-thumb{ width:120px; height:90px; object-fit:cover; border-radius:8px; border:1px solid rgba(2,6,23,0.06); box-shadow:0 8px 18px rgba(2,6,23,0.04); }
 
     /* actions */
-    .step-actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:14px; }
-    .btn{ background:linear-gradient(90deg,var(--green-600),var(--green-700)); color:#fff; padding:12px 16px; border-radius:10px; border:0; font-weight:800; cursor:pointer; box-shadow:0 12px 30px rgba(20,83,45,0.12); }
-    .btn.ghost{ background:transparent; color:#475569; border:1px solid rgba(20,83,45,0.06); box-shadow:none; font-weight:700; }
+    .actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:14px; }
+    .btn{ padding:12px 16px; border-radius:10px; border:0; background:linear-gradient(90deg,var(--accent),#0b8a3a); color:#fff; font-weight:800; cursor:pointer; box-shadow:0 12px 30px rgba(11,138,58,0.12); }
+    .btn.ghost{ background:transparent; color:#475569; border:1px solid rgba(2,6,23,0.06); box-shadow:none; font-weight:700; }
 
-    /* preview side */
-    .preview .meta{ display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap; }
+    /* preview right */
+    .preview .meta{ display:flex; justify-content:space-between; gap:8px; align-items:center; flex-wrap:wrap; }
     .report-card{ padding:12px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfff9); border:1px solid rgba(34,197,94,0.06); }
 
-    .saved-list{ display:flex; flex-direction:column; gap:8px; max-height:420px; overflow:auto; margin-top:10px; padding-right:6px; }
+    .saved-list{ margin-top:12px; max-height:360px; overflow:auto; display:flex; flex-direction:column; gap:8px; padding-right:6px; }
 
-    footer{ margin-top:22px; text-align:center; color:var(--muted); font-size:13px; }
+    .muted{ color:var(--muted); font-size:13px; }
 
-    /* mobile bar for next/back */
-    .mobile-bottom{ display:none; position:fixed; left:0; right:0; bottom:0; padding:12px; background:#fff; box-shadow:0 -8px 30px rgba(2,6,23,0.08); z-index:9999; gap:10px; justify-content:space-between; align-items:center; }
-    @media (max-width:720px){ .mobile-bottom{ display:flex; } body{ padding-bottom:90px; } }
+    footer{ margin-top:18px; color:var(--muted); font-size:13px; text-align:center; }
+
+    /* mobile */
+    @media (max-width:980px){
+      .wrap{ padding:12px; }
+    }
+    @media (max-width:860px){
+      .wrap{ flex-direction:column; }
+      .right{ width:100%; }
+    }
   </style>
 </head>
 <body>
-  <header class="container">
-    <div class="brand">
-      <div class="logo">Limpaê</div>
-      <div class="badge">Projeto Escolar</div>
-    </div>
-    <nav><a href="index.html" style="text-decoration:none;color:#234;font-weight:700">Início</a></nav>
-  </header>
 
-  <main class="container">
-    <h1 class="page-title">Formulário de denúncia (simulação)</h1>
-    <div class="note">Use apenas para fins educacionais. Os envios são simulados — localmente armazenados e encaminhados para demonstração.</div>
+  <div class="wrap" style="max-width:var(--max-width); margin:0 auto;">
+    <div style="width:100%">
+      <header style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div class="brand"><div class="logo">Limpaê</div><div class="badge">Projeto Escolar</div></div>
+        <nav aria-label="Topo"><a href="index.html" style="text-decoration:none;color:#234;font-weight:700">Início</a></nav>
+      </header>
 
-    <div class="grid" role="region" aria-label="Formulário de denúncia">
-      <!-- LEFT: Form -->
-      <div class="card" id="form-panel">
-        <div class="steps" aria-hidden="false">
-          <div class="step">1. Categoria</div>
-          <div class="step">2. Local</div>
-          <div class="step">3. Fotos</div>
-          <div class="step">4. Revisar</div>
-        </div>
-        <div class="progress" aria-hidden="true"><i id="progress-bar" style="width:0%"></i></div>
+      <main style="display:flex;gap:24px;">
+        <div class="left" style="min-width:0;">
+          <div class="card" id="form-panel">
+            <h1>Denunciar ponto de descarte</h1>
+            <div class="lead muted">Formulário de simulação — não envia para órgãos oficiais. Use em demonstrações e testes.</div>
 
-        <form id="report-form" action="https://formsubmit.co/limpaemanut@gmail.com" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate>
-          <input type="hidden" name="_subject" value="Denúncia simulada — Limpaê">
-          <input type="hidden" name="_captcha" value="false">
-          <input type="hidden" name="source" value="limpae-prototipo-escolar">
-          <input type="hidden" name="photos_data" id="photos-data">
-
-          <!-- STEP 1 -->
-          <fieldset data-step="1">
-            <div class="row">
-              <div class="col">
-                <label for="category">Categoria *</label>
-                <select id="category" name="category" required>
-                  <option value="">Escolha...</option>
-                  <option value="residencial">Descarte residencial</option>
-                  <option value="comercial">Descarte comercial</option>
-                  <option value="entulho">Entulho / Construção</option>
-                  <option value="eletronico">Resíduo eletrônico</option>
-                  <option value="verde">Restos de poda / vegetação</option>
-                  <option value="outro">Outro</option>
-                </select>
-              </div>
-
-              <div class="col">
-                <label for="severity">Gravidade *</label>
-                <select id="severity" name="severity" required>
-                  <option value="">Selecione</option>
-                  <option value="baixo">Baixo — lixo solto</option>
-                  <option value="medio">Médio — acúmulo</option>
-                  <option value="alto">Alto — grande acúmulo/entulho</option>
-                  <option value="critico">Crítico — risco à saúde</option>
-                </select>
-              </div>
+            <div class="steps" aria-hidden="false">
+              <div class="step-pill">1 Categoria</div>
+              <div class="step-pill">2 Local</div>
+              <div class="step-pill">3 Fotos</div>
+              <div class="step-pill">4 Revisar</div>
             </div>
+            <div class="progress"><i id="progress-bar" style="width:0%"></i></div>
 
-            <div style="margin-top:12px">
-              <label for="description">Descrição detalhada *</label>
-              <textarea id="description" name="description" placeholder="Descreva o local, quantidade, características (ex.: presença de vidro, produtos químicos), riscos"></textarea>
-              <div class="muted" style="margin-top:6px">Dica: informe pontos de referência (quadra, esquina, número) e qualquer risco imediato.</div>
-            </div>
+            <form id="report-form" action="https://formsubmit.co/limpaemanut@gmail.com" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate>
+              <input type="hidden" name="_subject" value="Denúncia simulada — Limpaê">
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="source" value="limpae-prototipo-escolar">
+              <input type="hidden" name="photos_data" id="photos-data">
 
-            <div style="margin-top:12px" class="row">
-              <div class="col">
-                <label for="datetime">Data / hora observada</label>
-                <input id="datetime" name="datetime" type="datetime-local">
-              </div>
-              <div class="col">
-                <label for="reported-by">Seu nome (opcional)</label>
-                <input id="reported-by" name="reported_by" type="text" placeholder="Nome (opcional)">
-              </div>
-            </div>
+              <!-- STEP 1 -->
+              <fieldset data-step="1">
+                <div class="row">
+                  <div class="col">
+                    <label for="category">Categoria *</label>
+                    <select id="category" name="category" required>
+                      <option value="">Escolha...</option>
+                      <option value="residencial">Descarte residencial</option>
+                      <option value="comercial">Descarte comercial</option>
+                      <option value="entulho">Entulho / Construção</option>
+                      <option value="eletronico">Resíduo eletrônico</option>
+                      <option value="verde">Restos de poda / vegetação</option>
+                      <option value="outro">Outro</option>
+                    </select>
+                  </div>
 
-            <div style="margin-top:10px" class="row">
-              <div class="col">
-                <label for="contact">Contato (opcional)</label>
-                <input id="contact" name="contact" type="text" placeholder="Telefone ou e‑mail (opcional)">
-              </div>
-              <div class="col">
-                <label for="est-volume">Estimativa de volume</label>
-                <select id="est-volume" name="est_volume">
-                  <option value="">---</option>
-                  <option value="pouco">Pouco (sacola / pequeno)</option>
-                  <option value="medio">Médio (múltiplas sacolas)</option>
-                  <option value="muito">Muito (carga, entulho grande)</option>
-                </select>
-              </div>
-            </div>
-
-            <div style="margin-top:12px">
-              <label>Riscos / Observações rápidas</label>
-              <div style="display:flex;gap:10px;flex-wrap:wrap">
-                <label style="font-weight:600"><input type="checkbox" id="risk-animals"> Animais</label>
-                <label style="font-weight:600"><input type="checkbox" id="risk-fire"> Risco de fogo</label>
-                <label style="font-weight:600"><input type="checkbox" id="risk-chemical"> Produtos químicos</label>
-                <label style="font-weight:600"><input type="checkbox" id="risk-health"> Risco à saúde</label>
-              </div>
-            </div>
-
-            <div class="step-actions">
-              <button type="button" class="btn" id="next-1">Próximo</button>
-            </div>
-          </fieldset>
-
-          <!-- STEP 2: location with Brazil-only geosearch -->
-          <fieldset data-step="2" style="display:none">
-            <label class="">Localização</label>
-
-            <div class="geo-search" style="position:relative;">
-              <input id="geo-input" placeholder="Pesquisar endereço (apenas Brasil) — ex.: Avenida Paulista, São Paulo" aria-label="Pesquisar local">
-              <button type="button" id="geo-clear" class="btn ghost" style="padding:10px 12px">✕</button>
-              <div id="geo-list" class="geo-list" style="display:none"></div>
-            </div>
-
-            <div id="map" aria-label="Mapa"></div>
-
-            <div style="margin-top:12px" class="row">
-              <div class="col">
-                <label for="address">Endereço / referência</label>
-                <input id="address" name="address" type="text" placeholder="Ex.: Rua X, próximo ao número Y">
-              </div>
-              <div style="min-width:150px">
-                <label>Coordenadas</label>
-                <div class="muted" style="padding:10px 12px; background:#fbfff9; border-radius:8px; border:1px solid rgba(34,197,94,0.06)">
-                  Lat: <span id="lat">—</span><br>Lng: <span id="lng">—</span>
+                  <div class="col">
+                    <label for="severity">Gravidade *</label>
+                    <select id="severity" name="severity" required>
+                      <option value="">Selecione</option>
+                      <option value="baixo">Baixo</option>
+                      <option value="medio">Médio</option>
+                      <option value="alto">Alto</option>
+                      <option value="critico">Crítico</option>
+                    </select>
+                  </div>
                 </div>
+
+                <div style="margin-top:12px">
+                  <label for="description">Descrição detalhada *</label>
+                  <textarea id="description" name="description" placeholder="Descreva o local, quantidade, riscos etc." required></textarea>
+                </div>
+
+                <div style="margin-top:12px" class="row">
+                  <div class="col">
+                    <label for="reported-by">Seu nome (opcional)</label>
+                    <input id="reported-by" name="reported_by" type="text" placeholder="Seu nome (opcional)">
+                  </div>
+                  <div class="col">
+                    <label for="contact">Contato (opcional)</label>
+                    <input id="contact" name="contact" type="text" placeholder="Telefone ou e-mail (opcional)">
+                  </div>
+                </div>
+
+                <div class="actions">
+                  <button type="button" class="btn" id="next-1">Próximo</button>
+                </div>
+              </fieldset>
+
+              <!-- STEP 2 -->
+              <fieldset data-step="2" style="display:none">
+                <label for="geo-input">Pesquisar local (Brasil)</label>
+                <div class="geo" style="display:flex;gap:8px;align-items:center">
+                  <input id="geo-input" placeholder="Ex.: Avenida Paulista, São Paulo">
+                  <button type="button" id="geo-clear" class="geo-btn" title="Limpar">✕</button>
+                </div>
+                <div id="geo-list" class="geo-list" style="display:none"></div>
+
+                <div id="map"></div>
+
+                <div style="margin-top:12px" class="row">
+                  <div class="col">
+                    <label for="address">Endereço / referência</label>
+                    <input id="address" name="address" type="text" placeholder="Ex.: Rua X, próximo ao número Y">
+                  </div>
+                  <div style="min-width:150px">
+                    <label>Coordenadas</label>
+                    <div style="padding:10px;border-radius:8px;background:#fbfff9;border:1px solid rgba(34,197,94,0.06);" class="muted">
+                      Lat: <span id="lat">—</span><br>Lng: <span id="lng">—</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="actions">
+                  <button type="button" class="btn ghost" id="back-2">Voltar</button>
+                  <button type="button" class="btn" id="next-2">Próximo</button>
+                </div>
+              </fieldset>
+
+              <!-- STEP 3 -->
+              <fieldset data-step="3" style="display:none">
+                <label for="photos">Fotos (até 6)</label>
+                <input id="photos" type="file" accept="image/*" multiple>
+                <div class="muted" style="margin-top:6px">Imagens são redimensionadas no navegador para reduzir tamanho.</div>
+                <div class="photos" id="photos-preview" aria-live="polite"></div>
+
+                <div class="actions">
+                  <button type="button" class="btn ghost" id="back-3">Voltar</button>
+                  <button type="button" class="btn" id="next-3">Próximo</button>
+                </div>
+              </fieldset>
+
+              <!-- STEP 4 -->
+              <fieldset data-step="4" style="display:none">
+                <label>Revisar denúncia</label>
+                <div id="review-area" class="report-card" aria-live="polite"></div>
+
+                <div style="display:flex;gap:10px;align-items:center;margin-top:10px">
+                  <input id="anonymous" name="anonymous" type="checkbox"> <label for="anonymous" style="margin:0;font-weight:700">Enviar anonimamente (simulação)</label>
+                </div>
+
+                <div class="actions">
+                  <button type="button" class="btn ghost" id="back-4">Voltar</button>
+                  <button type="submit" class="btn" id="submit-report">Enviar denúncia</button>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <aside class="right">
+          <div class="card preview">
+            <h3 style="margin:0 0 8px">Visualização rápida</h3>
+            <div class="report-card">
+              <div class="meta">
+                <div><strong>Categoria:</strong> <span id="pv-category">—</span></div>
+                <div class="muted" id="pv-severity">—</div>
               </div>
+              <div id="pv-desc" class="muted" style="margin-top:10px">—</div>
+              <div id="pv-photos" style="display:flex;gap:8px;margin-top:10px"></div>
             </div>
 
-            <div class="step-actions">
-              <button type="button" class="btn ghost" id="back-2">Voltar</button>
-              <button type="button" class="btn" id="next-2">Próximo</button>
+            <div style="margin-top:12px; display:flex; justify-content:flex-end;">
+              <button class="btn" id="open-review">Ir para revisão</button>
             </div>
-          </fieldset>
-
-          <!-- STEP 3: photos (with client-side compression) -->
-          <fieldset data-step="3" style="display:none">
-            <label for="photos">Fotos (até 6) — recomendamos imagens pequenas</label>
-            <input id="photos" type="file" accept="image/*" multiple>
-            <div class="muted" style="margin-top:6px">As imagens são redimensionadas no navegador para reduzir tamanho do envio.</div>
-            <div class="photos" id="photos-preview" aria-live="polite"></div>
-
-            <div class="step-actions">
-              <button type="button" class="btn ghost" id="back-3">Voltar</button>
-              <button type="button" class="btn" id="next-3">Próximo</button>
-            </div>
-          </fieldset>
-
-          <!-- STEP 4: review & submit -->
-          <fieldset data-step="4" style="display:none">
-            <label>Revisar denúncia</label>
-            <div id="review-area" class="report-card" aria-live="polite"></div>
-
-            <div style="display:flex;gap:10px;align-items:center;margin-top:10px">
-              <input id="anonymous" name="anonymous" type="checkbox"> <label for="anonymous" style="margin:0;font-weight:700">Enviar anonimamente (simulação)</label>
-            </div>
-
-            <div class="step-actions">
-              <button type="button" class="btn ghost" id="back-4">Voltar</button>
-              <button type="submit" class="btn" id="submit-report">Enviar denúncia</button>
-            </div>
-          </fieldset>
-        </form>
-      </div>
-
-      <!-- RIGHT: preview + saved -->
-      <aside>
-        <div class="card preview">
-          <h3 style="margin:0 0 8px">Visualização rápida</h3>
-          <div class="report-card">
-            <div class="meta">
-              <div><strong>Categoria:</strong> <span id="pv-category">—</span></div>
-              <div class="muted" id="pv-severity">—</div>
-            </div>
-            <div id="pv-desc" class="muted" style="margin-top:10px">—</div>
-            <div id="pv-photos" style="display:flex;gap:8px;margin-top:10px"></div>
           </div>
 
-          <div style="margin-top:12px; display:flex; justify-content:flex-end;">
-            <button class="btn" id="open-review">Ir para revisão</button>
+          <div class="card" style="margin-top:14px">
+            <h3 style="margin:0 0 8px">Denúncias simuladas (local)</h3>
+            <div class="saved-list" id="saved-list"></div>
+            <div style="margin-top:10px; display:flex; justify-content:flex-end;"><button class="btn ghost" id="clear-storage">Limpar todas</button></div>
           </div>
-        </div>
+        </aside>
+      </main>
 
-        <div class="card" style="margin-top:14px">
-          <h3 style="margin:0 0 8px">Denúncias simuladas (local)</h3>
-          <div class="saved-list" id="saved-list"></div>
-          <div style="margin-top:10px; display:flex; justify-content:flex-end;"><button class="btn ghost" id="clear-storage">Limpar todas</button></div>
-        </div>
-      </aside>
-    </div>
-
-    <footer>Protótipo escolar — uso apenas para demonstração educacional.</footer>
-  </main>
-
-  <!-- mobile bottom navigation -->
-  <div class="mobile-bottom" id="mobile-bottom" aria-hidden="true">
-    <div id="mobile-step" style="font-weight:800;color:#234">Passo</div>
-    <div style="display:flex;gap:8px">
-      <button class="btn ghost" id="mb-back">Voltar</button>
-      <button class="btn" id="mb-next">Próximo</button>
+      <footer style="margin-top:18px">Protótipo escolar — uso apenas para demonstração educacional.</footer>
     </div>
   </div>
 
+  <!-- Mobile bottom (keeps Next/Back) -->
+  <div style="display:none" id="mobile-bottom" aria-hidden="true"></div>
+
   <script>
-  // State
+  /* ====== State & Elements ====== */
   const state = { step:1, lat:null, lng:null, photos: [], map:null, marker:null };
 
-  // Elements
   const form = document.getElementById('report-form');
   const fieldsets = Array.from(form.querySelectorAll('fieldset[data-step]'));
   const progressBar = document.getElementById('progress-bar');
 
-  // Step buttons
   const next1 = document.getElementById('next-1'), next2 = document.getElementById('next-2'), next3 = document.getElementById('next-3');
   const back2 = document.getElementById('back-2'), back3 = document.getElementById('back-3'), back4 = document.getElementById('back-4');
   const openReview = document.getElementById('open-review');
-  const submitBtn = document.getElementById('submit-report');
 
-  // Preview elements
   const pvCategory = document.getElementById('pv-category'), pvSeverity = document.getElementById('pv-severity'), pvDesc = document.getElementById('pv-desc'), pvPhotos = document.getElementById('pv-photos');
   const reviewArea = document.getElementById('review-area');
+  const photosInput = document.getElementById('photos'), photosPreview = document.getElementById('photos-preview');
+  const photosDataInput = document.getElementById('photos-data');
 
-  // Map and geo search
   const geoInput = document.getElementById('geo-input'), geoList = document.getElementById('geo-list'), geoClear = document.getElementById('geo-clear');
   const addressEl = document.getElementById('address'), latEl = document.getElementById('lat'), lngEl = document.getElementById('lng');
 
-  // Photos
-  const photosInput = document.getElementById('photos'), photosPreview = document.getElementById('photos-preview'), photosDataInput = document.getElementById('photos-data');
-
-  // Saved reports
   const savedList = document.getElementById('saved-list'), clearStorageBtn = document.getElementById('clear-storage');
 
-  // Mobile controls
-  const mobileBottom = document.getElementById('mobile-bottom'), mbBack = document.getElementById('mb-back'), mbNext = document.getElementById('mb-next'), mobileStep = document.getElementById('mobile-step');
-
-  // Utility: show step
+  /* ====== Helpers ====== */
   function showStep(n){
     state.step = n;
     fieldsets.forEach(fs => fs.style.display = Number(fs.dataset.step) === n ? '' : 'none');
     updateProgress();
     updatePreview();
-    updateMobileBar();
     if(n === 2) initMapOnce();
-    if(state.map) setTimeout(()=> state.map.invalidateSize(), 150);
+    if(state.map) setTimeout(()=>state.map.invalidateSize(), 150);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
   function updateProgress(){
-    const percent = (state.step - 1) / (fieldsets.length - 1) * 100;
+    const percent = ((state.step-1) / (fieldsets.length-1)) * 100;
     progressBar.style.width = percent + '%';
   }
-
   function updatePreview(){
     const cat = document.getElementById('category').value || '—';
     const sev = document.getElementById('severity').value || '—';
     const desc = document.getElementById('description').value || '—';
-    pvCategory.textContent = cat;
-    pvSeverity.textContent = sev;
-    pvDesc.textContent = desc;
+    pvCategory.textContent = cat; pvSeverity.textContent = sev; pvDesc.textContent = desc;
     pvPhotos.innerHTML = '';
-    state.photos.slice(0,4).forEach(url => {
-      const img = document.createElement('img'); img.src = url; img.className = 'photo-thumb'; pvPhotos.appendChild(img);
-    });
+    state.photos.slice(0,4).forEach(u => { const img = document.createElement('img'); img.src = u; img.className = 'photo-thumb'; pvPhotos.appendChild(img); });
   }
-
-  // STEP navigation
-  next1.addEventListener('click', ()=> { if(validateStep1()) showStep(2); });
-  back2.addEventListener('click', ()=> showStep(1));
-  next2.addEventListener('click', ()=> showStep(3));
-  back3.addEventListener('click', ()=> showStep(2));
-  next3.addEventListener('click', ()=> { populateReview(); showStep(4); });
-  back4.addEventListener('click', ()=> showStep(3));
-  openReview.addEventListener('click', ()=> { if(validateStep1()){ populateReview(); showStep(4); } else showStep(1); });
-
-  // Mobile bar
-  function updateMobileBar(){
-    if(window.innerWidth > 720){ mobileBottom.style.display = 'none'; mobileBottom.setAttribute('aria-hidden','true'); return; }
-    mobileBottom.style.display = 'flex'; mobileBottom.setAttribute('aria-hidden','false');
-    mobileStep.textContent = `Passo ${state.step} de ${fieldsets.length}`;
-    mbBack.style.display = state.step === 1 ? 'none' : 'inline-flex';
-    mbNext.style.display = state.step === fieldsets.length ? 'none' : 'inline-flex';
-  }
-  mbBack.addEventListener('click', ()=> { if(state.step>1) showStep(state.step-1); });
-  mbNext.addEventListener('click', ()=> {
-    if(state.step === 1){ if(validateStep1()) showStep(2); }
-    else if(state.step === 2) showStep(3);
-    else if(state.step === 3){ populateReview(); showStep(4); }
-  });
-  window.addEventListener('resize', updateMobileBar);
-
   function validateStep1(){
     const cat = document.getElementById('category').value;
     const sev = document.getElementById('severity').value;
@@ -392,68 +329,76 @@
     return true;
   }
 
-  // ---------- MAP & GEOSEARCH (Brazil-only) ----------
+  /* ====== Map and geosearch (Brazil only) ====== */
   function initMapOnce(){
     if(state.map) return;
     const mapEl = document.getElementById('map');
-    state.map = L.map(mapEl, { scrollWheelZoom:false }).setView([-15.7801, -47.9292], 4); // Brazil center
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap contributors' }).addTo(state.map);
-    state.marker = L.marker([-15.7801, -47.9292], { draggable:true }).addTo(state.map);
+    state.map = L.map(mapEl, { scrollWheelZoom:false }).setView([-15.7801, -47.9292], 4);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(state.map);
+
+    state.marker = L.marker([-15.7801,-47.9292], { draggable:true }).addTo(state.map);
     state.marker.on('dragend', function(e){
       const p = e.target.getLatLng(); state.lat = p.lat; state.lng = p.lng;
       latEl.textContent = state.lat.toFixed(6); lngEl.textContent = state.lng.toFixed(6);
     });
+
+    // click map to move marker
+    state.map.on('click', function(e){
+      const lat = e.latlng.lat, lon = e.latlng.lng;
+      state.marker.setLatLng([lat,lon]);
+      state.lat = lat; state.lng = lon;
+      latEl.textContent = lat.toFixed(6); lngEl.textContent = lon.toFixed(6);
+      addressEl.value = ''; // user can fill manual address or use search
+    });
   }
 
   document.getElementById('detect-location')?.addEventListener('click', function(){
-    if(!navigator.geolocation){ alert('Geolocalização não suportada no navegador.'); return; }
+    if(!navigator.geolocation){ alert('Geolocalização não suportada'); return; }
     if(location.protocol !== 'https:' && location.hostname !== 'localhost'){ if(!confirm('Geolocalização funciona melhor em HTTPS. Tentar mesmo assim?')) return; }
     this.textContent = 'Detectando…';
-    navigator.geolocation.getCurrentPosition(pos=>{
+    navigator.geolocation.getCurrentPosition(pos => {
       this.textContent = 'Detectar minha posição';
       const lat = pos.coords.latitude, lng = pos.coords.longitude;
       state.lat = lat; state.lng = lng; latEl.textContent = lat.toFixed(6); lngEl.textContent = lng.toFixed(6);
       if(!state.map) initMapOnce();
       state.map.setView([lat,lng], 16); state.marker.setLatLng([lat,lng]);
       addressEl.value = '';
-    }, err=>{
+    }, err => {
       this.textContent = 'Detectar minha posição';
       alert('Não foi possível obter a localização: ' + (err.message || 'erro'));
     }, { enableHighAccuracy:true, timeout:10000, maximumAge:60000 });
   });
 
-  // Nominatim search restricted to BRA (countrycodes=br)
   let geoTimer = null;
   geoInput.addEventListener('input', function(){
     const q = this.value.trim();
     geoList.style.display = 'none'; geoList.innerHTML = '';
     if(geoTimer) clearTimeout(geoTimer);
     if(!q) return;
-    geoTimer = setTimeout(()=> nominatimSearch(q), 350);
+    geoTimer = setTimeout(()=> nominatimSearch(q), 300);
   });
-
-  geoClear.addEventListener('click', ()=> { geoInput.value=''; geoList.innerHTML=''; geoList.style.display='none'; });
+  geoClear.addEventListener('click', ()=> { geoInput.value=''; geoList.style.display='none'; geoList.innerHTML=''; });
 
   async function nominatimSearch(query){
-    geoList.innerHTML = '<div style="padding:10px;color:#6b7280">Buscando...</div>'; geoList.style.display = 'block';
+    geoList.style.display = 'block';
+    geoList.innerHTML = '<div style="padding:10px;color:#6b7280">Buscando...</div>';
     try{
+      // limit to Brazil
       const url = 'https://nominatim.openstreetmap.org/search?format=json&countrycodes=br&limit=8&q=' + encodeURIComponent(query);
-      const res = await fetch(url, { headers: { 'Accept-Language': 'pt-BR' }});
+      const res = await fetch(url, { headers: { 'Accept-Language':'pt-BR' } });
       const data = await res.json();
       if(!data || !data.length){ geoList.innerHTML = '<div style="padding:10px;color:#6b7280">Nenhum resultado</div>'; return; }
       geoList.innerHTML = '';
-      data.forEach(item => {
-        const div = document.createElement('div'); div.className = 'geo-item';
-        div.textContent = item.display_name;
+      data.forEach(item=>{
+        const div = document.createElement('div'); div.className='geo-item'; div.textContent = item.display_name;
         div.addEventListener('click', ()=> {
           if(!state.map) initMapOnce();
           const lat = parseFloat(item.lat), lon = parseFloat(item.lon);
-          state.map.setView([lat, lon], 16);
-          state.marker.setLatLng([lat, lon]);
+          state.map.setView([lat,lon], 16);
+          state.marker.setLatLng([lat,lon]);
           state.lat = lat; state.lng = lon;
           latEl.textContent = lat.toFixed(6); lngEl.textContent = lon.toFixed(6);
-          addressEl.value = item.display_name;
-          geoInput.value = item.display_name;
+          addressEl.value = item.display_name; geoInput.value = item.display_name;
           geoList.style.display = 'none';
         });
         geoList.appendChild(div);
@@ -463,59 +408,65 @@
     }
   }
 
-  // ---------- IMAGE COMPRESSION (client-side) ----------
+  /* ====== Image compression client-side ====== */
   photosInput.addEventListener('change', async function(){
     const files = Array.from(this.files).slice(0,6);
     photosPreview.innerHTML = ''; state.photos = [];
     if(!files.length) return;
-    for(const file of files){
+    for(const f of files){
       try{
-        const compressed = await compressImage(file, 1200, 0.75); // max width 1200, quality 0.75
-        state.photos.push(compressed);
-        const img = document.createElement('img'); img.src = compressed; img.className = 'photo-thumb'; photosPreview.appendChild(img);
+        const dataUrl = await compressImage(f, 1200, 0.75);
+        state.photos.push(dataUrl);
+        const img = document.createElement('img'); img.src = dataUrl; img.className = 'photo-thumb'; photosPreview.appendChild(img);
         updatePreview();
-      }catch(err){
-        console.error('compress error', err);
+      }catch(e){
+        console.error('compress', e);
       }
     }
   });
 
   function compressImage(file, maxWidth=1200, quality=0.75){
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = function(){
-        const scale = Math.min(1, maxWidth / img.width);
-        const w = Math.round(img.width * scale);
-        const h = Math.round(img.height * scale);
-        const canvas = document.createElement('canvas');
-        canvas.width = w; canvas.height = h;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, w, h);
-        // toDataURL with quality
-        canvas.toDataURL('image/jpeg', quality, (/*ignored*/)=>{});
-        // Some browsers don't accept callback in toDataURL; use synchronous
-        try{
-          const dataUrl = canvas.toDataURL('image/jpeg', quality);
-          resolve(dataUrl);
-        }catch(e){
-          reject(e);
-        }
-      };
-      img.onerror = reject;
+    return new Promise((resolve, reject)=>{
       const reader = new FileReader();
-      reader.onload = e => { img.src = e.target.result; };
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = function(){
+          const scale = Math.min(1, maxWidth / img.width);
+          const w = Math.round(img.width * scale);
+          const h = Math.round(img.height * scale);
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img,0,0,w,h);
+          // toDataURL
+          try{
+            const dataUrl = canvas.toDataURL('image/jpeg', quality);
+            resolve(dataUrl);
+          }catch(err){ reject(err); }
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
   }
 
-  // ---------- Review & submit ----------
+  /* ====== Steps navigation & preview ====== */
+  next1.addEventListener('click', ()=> { if(validateStep1()) showStep(2); });
+  back2.addEventListener('click', ()=> showStep(1));
+  next2.addEventListener('click', ()=> showStep(3));
+  back3.addEventListener('click', ()=> showStep(2));
+  next3.addEventListener('click', ()=> { populateReview(); showStep(4); });
+  back4.addEventListener('click', ()=> showStep(3));
+  openReview.addEventListener('click', ()=> { if(validateStep1()){ populateReview(); showStep(4); } else showStep(1); });
+
   function populateReview(){
     const cat = document.getElementById('category').value || '—';
     const sev = document.getElementById('severity').value || '—';
     const desc = document.getElementById('description').value || '—';
     const addr = addressEl.value || '—';
-    const dt = document.getElementById('datetime') ? document.getElementById('datetime').value : '';
+    const dt = document.getElementById('datetime')?.value || '';
     const photosHtml = state.photos.map(u => `<img src="${u}" style="width:140px;height:110px;object-fit:cover;border-radius:8px;margin-right:8px">`).join('');
     reviewArea.innerHTML = `
       <div><strong>Categoria:</strong> ${escapeHtml(cat)}</div>
@@ -528,72 +479,65 @@
     photosDataInput.value = JSON.stringify(state.photos);
   }
 
-  function escapeHtml(s){ if(!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+  function updatePreview(){
+    const cat = document.getElementById('category').value || '—', sev = document.getElementById('severity').value || '—', desc = document.getElementById('description').value || '—';
+    pvCategory.textContent = cat; pvSeverity.textContent = sev; pvDesc.textContent = desc;
+    pvPhotos.innerHTML = ''; state.photos.slice(0,4).forEach(u => { const img=document.createElement('img'); img.src=u; img.className='photo-thumb'; pvPhotos.appendChild(img); });
+  }
 
-  // Save locally + submit via FormSubmit in new tab
+  // Submit handler: save local + FormSubmit in new tab
   form.addEventListener('submit', function(ev){
     if(!validateStep1()){ ev.preventDefault(); showStep(1); return; }
-    // compose report
     const report = {
-      id: 'r' + Date.now(),
+      id:'r'+Date.now(),
       category: document.getElementById('category').value,
       severity: document.getElementById('severity').value,
       description: document.getElementById('description').value,
-      datetime: document.getElementById('datetime') ? document.getElementById('datetime').value : '',
+      datetime: document.getElementById('datetime')?.value || '',
       reported_by: document.getElementById('reported-by')?.value || '',
       contact: document.getElementById('contact')?.value || '',
-      est_volume: document.getElementById('est-volume')?.value || '',
-      hazards: [
-        !!document.getElementById('risk-animals')?.checked,
-        !!document.getElementById('risk-fire')?.checked,
-        !!document.getElementById('risk-chemical')?.checked,
-        !!document.getElementById('risk-health')?.checked
-      ],
       address: addressEl.value || '',
-      lat: state.lat,
-      lng: state.lng,
+      lat: state.lat, lng: state.lng,
       photos: state.photos.slice(),
-      anonymous: document.getElementById('anonymous')?.checked,
+      anonymous: document.getElementById('anonymous')?.checked || false,
       createdAt: new Date().toISOString()
     };
     saveReport(report);
     populateSavedList();
     photosDataInput.value = JSON.stringify(report.photos || []);
 
-    // submit in new tab (temporary form)
+    // submit to FormSubmit in new tab (temporary form)
     ev.preventDefault();
-    const tmp = document.createElement('form'); tmp.method='POST'; tmp.action = form.action; tmp.target='_blank'; tmp.style.display='none';
+    const tmp = document.createElement('form'); tmp.method='POST'; tmp.action=form.action; tmp.target='_blank'; tmp.style.display='none';
     const payload = {
-      _subject: 'Denúncia simulada — Limpaê', _captcha:'false', source:'limpae-prototipo-escolar',
-      category: report.category, severity: report.severity, description: report.description,
-      datetime: report.datetime, reported_by: report.reported_by, contact: report.contact,
-      est_volume: report.est_volume, address: report.address, lat: report.lat, lng: report.lng,
+      _subject:'Denúncia simulada — Limpaê', _captcha:'false', source:'limpae-prototipo-escolar',
+      category:report.category, severity:report.severity, description:report.description, datetime:report.datetime,
+      reported_by:report.reported_by, contact:report.contact, address:report.address, lat:report.lat, lng:report.lng,
       anonymous: report.anonymous ? 'Sim' : 'Não', photos_data: JSON.stringify(report.photos || [])
     };
-    for(const k in payload){ const i = document.createElement('input'); i.type='hidden'; i.name = k; i.value = payload[k] || ''; tmp.appendChild(i); }
-    document.body.appendChild(tmp); tmp.submit(); setTimeout(()=>tmp.remove(), 800);
+    for(const k in payload){ const i=document.createElement('input'); i.type='hidden'; i.name=k; i.value = payload[k] || ''; tmp.appendChild(i); }
+    document.body.appendChild(tmp); tmp.submit(); setTimeout(()=>tmp.remove(),800);
 
-    // feedback & reset
     showThanksLocal();
-    form.reset(); state.photos = []; photosPreview.innerHTML = ''; updatePreview();
-    state.lat = null; state.lng = null; latEl.textContent='—'; lngEl.textContent='—';
+    form.reset(); state.photos=[]; photosPreview.innerHTML=''; updatePreview();
+    state.lat=null; state.lng=null; latEl.textContent='—'; lngEl.textContent='—';
     showStep(1);
   });
 
-  // ---------- local storage for saved reports ----------
+  /* ======= local storage ======= */
   function getReports(){ try{ return JSON.parse(localStorage.getItem('limpae_reports')||'[]'); }catch(e){ return []; } }
-  function saveReport(r){ const arr = getReports(); arr.unshift(r); localStorage.setItem('limpae_reports', JSON.stringify(arr.slice(0,200))); }
+  function saveReport(r){ const arr=getReports(); arr.unshift(r); localStorage.setItem('limpae_reports', JSON.stringify(arr.slice(0,200))); }
   function populateSavedList(){
     const arr = getReports(); savedList.innerHTML = '';
     if(!arr.length){ savedList.innerHTML = '<div style="color:#6b7280">Nenhuma denúncia simulada ainda.</div>'; return; }
     arr.forEach(item=>{
       const el = document.createElement('div'); el.style.display='flex'; el.style.justifyContent='space-between'; el.style.alignItems='center'; el.style.padding='8px'; el.style.borderRadius='8px'; el.style.border='1px solid rgba(2,6,23,0.04)'; el.style.background='#fff';
       el.innerHTML = `<div style="display:flex;gap:10px;align-items:center;min-width:0">
-        <div style="width:56px;height:56px;border-radius:8px;overflow:hidden;background:#f3f4f6;display:flex;align-items:center;justify-content:center">${item.photos && item.photos[0] ? `<img src="${item.photos[0]}" style="width:56px;height:56px;object-fit:cover">` : '🗑️'}</div>
+        <div style="width:56px;height:56px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#f3f4f6">${item.photos && item.photos[0] ? `<img src="${item.photos[0]}" style="width:56px;height:56px;object-fit:cover">` : '🗑️'}</div>
         <div style="min-width:0">
           <div style="font-weight:700;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:180px">${escapeHtml(item.category)} · ${escapeHtml(item.severity)}</div>
-          <div class="muted" style="max-width:220px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden">${escapeHtml(item.description)}</div>
-          <div class="muted" style="margin-top:4px">${new Date(item.createdAt).toLocaleString()}</div>
+          <div style="color:#6b7280;font-size:13px;max-width:220px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden">${escapeHtml(item.description)}</div>
+          <div style="color:#6b7280;font-size:12px;margin-top:4px">${new Date(item.createdAt).toLocaleString()}</div>
         </div>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
@@ -610,17 +554,20 @@
     }));
     Array.from(savedList.querySelectorAll('.view-btn')).forEach(btn=> btn.addEventListener('click', function(){
       const id = this.dataset.id; const item = getReports().find(x=>x.id===id); if(!item) return;
-      alert(JSON.stringify(item, null, 2)); // simple viewer for prototype
+      // basic viewer (prototype)
+      const w = window.open('about:blank','_blank');
+      w.document.write('<pre>'+JSON.stringify(item,null,2)+'</pre>');
     }));
-    Array.from(savedList.querySelectorAll('.download-btn')).forEach(btn => btn.addEventListener('click', function(){
+    Array.from(savedList.querySelectorAll('.download-btn')).forEach(btn=> btn.addEventListener('click', function(){
       const id = this.dataset.id; const item = getReports().find(x=>x.id===id); if(!item) return;
-      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(item, null, 2)], { type: 'application/json' })); a.download = `${id}.json`; document.body.appendChild(a); a.click(); a.remove();
+      const blob = new Blob([JSON.stringify(item,null,2)], { type:'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = id + '.json'; document.body.appendChild(a); a.click(); a.remove();
     }));
   }
 
   clearStorageBtn.addEventListener('click', ()=> { if(confirm('Limpar todas as denúncias simuladas armazenadas localmente?')){ localStorage.removeItem('limpae_reports'); populateSavedList(); } });
 
-  // ---------- keyboard behavior: Enter goes to next step (except textarea) ----------
+  // Enter key behavior: advance step (not submit), except textarea
   form.addEventListener('keydown', function(e){
     if(e.key === 'Enter'){
       const active = document.activeElement;
@@ -632,31 +579,25 @@
     }
   });
 
-  // ---------- helpers ----------
-  function populateReview(){ updatePreview(); const cat = document.getElementById('category').value || '—'; const sev = document.getElementById('severity').value || '—'; const desc = document.getElementById('description').value || '—'; const addr = addressEl.value || '—'; const dt = document.getElementById('datetime') ? document.getElementById('datetime').value : ''; const photosHtml = state.photos.map(u => `<img src="${u}" style="width:140px;height:110px;object-fit:cover;border-radius:8px;margin-right:8px">`).join(''); reviewArea.innerHTML = `<div><strong>Categoria:</strong> ${escapeHtml(cat)}</div><div><strong>Gravidade:</strong> ${escapeHtml(sev)}</div><div style="margin-top:8px"><strong>Descrição:</strong><div style="margin-top:6px">${escapeHtml(desc)}</div></div><div style="margin-top:8px"><strong>Local:</strong> ${escapeHtml(addr)} <small style="display:block;color:#6b7280">Lat: ${state.lat||'—'} Lng: ${state.lng||'—'}</small></div><div style="margin-top:8px"><strong>Data/Hora:</strong> ${escapeHtml(dt)}</div><div style="margin-top:12px"><strong>Fotos:</strong><div style="display:flex;gap:8px;margin-top:8px">${photosHtml || '<span style="color:#6b7280">Sem fotos</span>'}</div></div>`; photosDataInput.value = JSON.stringify(state.photos); }
+  // small helpers
+  function escapeHtml(s){ if(!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
 
-  function showThanksLocal(){ const el = document.createElement('div'); el.style.position='fixed'; el.style.left='50%'; el.style.top='50%'; el.style.transform='translate(-50%,-50%)'; el.style.zIndex=99999; el.style.background='#fff'; el.style.padding='18px'; el.style.borderRadius='12px'; el.style.boxShadow='0 18px 40px rgba(2,6,23,0.2)'; el.innerHTML = `<h3 style="margin:0 0 8px;color:#14532d">Denúncia simulada enviada</h3><p style="margin:0 0 12px;color:#374151">A denúncia foi salva localmente e uma cópia foi encaminhada (simulação).</p><div style="text-align:right"><button id="close-thanks" style="background:linear-gradient(90deg,#15803d,#14532d);color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer">Fechar</button></div>`; document.body.appendChild(el); document.body.style.overflow='hidden'; document.getElementById('close-thanks').addEventListener('click', ()=>{ el.remove(); document.body.style.overflow=''; }); }
+  // small feedback modal
+  function showThanksLocal(){ const el = document.createElement('div'); el.style.position='fixed'; el.style.left='50%'; el.style.top='50%'; el.style.transform='translate(-50%,-50%)'; el.style.zIndex=99999; el.style.background='#fff'; el.style.padding='18px'; el.style.borderRadius='12px'; el.style.boxShadow='0 18px 40px rgba(2,6,23,0.2)'; el.innerHTML = `<h3 style="margin:0 0 8px;color:#14532d">Denúncia simulada enviada</h3><p style="margin:0 0 12px;color:#374151">A denúncia foi salva localmente e uma simulação de envio foi realizada.</p><div style="text-align:right"><button id="close-thanks" style="background:linear-gradient(90deg,#15803d,#14532d);color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer">Fechar</button></div>`; document.body.appendChild(el); document.body.style.overflow='hidden'; document.getElementById('close-thanks').addEventListener('click', ()=>{ el.remove(); document.body.style.overflow=''; }); }
 
-  // progress bar init
+  // init
+  updateProgress = () => { const percent = ((state.step-1)/(fieldsets.length-1))*100; progressBar.style.width = percent + '%'; };
   updateProgress();
-
-  // init display
   showStep(1);
   populateSavedList();
   updatePreview();
-  updateMobileBar();
 
-  // ensure map resizing when visible
+  // Resize observer to fix Leaflet when map becomes visible
   const obs = new MutationObserver(()=>{ if(state.map) state.map.invalidateSize(); });
   obs.observe(document.getElementById('form-panel'), { childList:true, subtree:true });
 
-  // util: small debounce for resize events
-  function debounce(fn, wait=100){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), wait); }; }
-  window.addEventListener('resize', debounce(updateMobileBar, 120));
-  function updateMobileBar(){ if(window.innerWidth > 720){ mobileBottom.style.display = 'none'; mobileBottom.setAttribute('aria-hidden','true'); return; } mobileBottom.style.display = 'flex'; mobileBottom.setAttribute('aria-hidden','false'); mobileStep.textContent = `Passo ${state.step} de ${fieldsets.length}`; mbBack.style.display = state.step===1 ? 'none' : 'inline-flex'; mbNext.style.display = state.step===fieldsets.length ? 'none' : 'inline-flex'; }
-
-  // small helper
-  function escapeHtml(s){ if(!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+  // Debounce utility for resize/search improvements
+  function debounce(fn, wait=200){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), wait); }; }
   </script>
 </body>
 </html>
